@@ -1,42 +1,25 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 export const HeroContainer = styled.div`
-    background: #312e2b ;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background: #312e2b;
     position: relative;
-    z-index: 1;
-`;
-
-export const HeroContent = styled.div`
-    z-index: 3;
-    max-width: 1200px;
-    position: absolute;
-    padding: 8px 24px;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-grow: 1;
+    margin: 15px 10%;
 `;
 
-export const HeroTitle = styled.h1`
-    color: #fff;
-    font-size: 48px;
+export const Title = styled.div`
+    margin-left: auto;
+    width: 400px;
     text-align: center;
-    @media screen and (max-width: 768px) {
-        font-size: 40px;
-    }
-    
-    @media screen and (max-width: 480px) {
-        font-size: 32px;
-    }
+    color: #fff;
+    line-height: 1.2;
+    font-weight: bold;
+    font-size: 24px;
 `;
 
-export const Label = styled.span`
-  display: flex;
-  align-items: center;
-  line-height: 1.2;
+export const Header = styled.h1`
+   display: block; 
 `;
 
 export const HeroText = styled.p`

@@ -1,5 +1,11 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
+export const Container = styled.div`
+    display: flex;
+    width: 100%;
+    position: relative;
+`;
+
 export const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
@@ -7,5 +13,10 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
         background: #312e2b ;
         font-family: 'Encode Sans Expanded', sans-serif;
+    }
+    html, body {
+        position: relative;
+        width: 100%;
+        height: 100%;
     }
 `;

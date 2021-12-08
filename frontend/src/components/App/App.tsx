@@ -1,12 +1,16 @@
-import { GlobalStyle } from './App.styles';
+import { GlobalStyle, Container } from './App.styles';
 import React from 'react';
 import HeroSection from '../HeroSection/HeroSection';
+import SideBar from '../SideBar/SideBar';
 
 export default () => {
-return(
-    <>
-        <GlobalStyle/>
-        <HeroSection/>
-    </>
+    return(
+        <>
+            <GlobalStyle />
+            <Container>
+                <SideBar/>
+                <HeroSection/>
+            </Container>
+        </>
     );
 }

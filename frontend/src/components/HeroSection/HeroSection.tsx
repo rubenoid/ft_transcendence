@@ -1,16 +1,15 @@
 import React from 'react';
-import { HeroContainer, HeroTitle, HeroContent, Label } from './HeroSectionElements';
+import SideBar from '../SideBar/SideBar';
+import { HeroContainer, Title, Header } from './HeroSectionElements';
 
 const HeroSection = () => {
     return (
         <HeroContainer>
-            <HeroContent>
-               <HeroTitle>
-                   <Label> Play Pong </Label>
-                   <Label> for Free </Label>
-                   <Label> on the #1 Site! </Label>
-               </HeroTitle>
-            </HeroContent>
+            <Title>
+                   <Header>Play Pong</Header>
+                   <Header>for Free</Header>
+                   <Header>on the #1 Site!</Header>
+            </Title>
         </HeroContainer>
     );
 }
