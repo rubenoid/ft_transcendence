@@ -5,10 +5,11 @@ export const HeroContainer = styled.div`
     position: relative;
     display: flex;
     flex-grow: 1;
-    margin: 15px 10%;
+    margin: 15px 20%;
 `;
 
 export const Title = styled.div`
+    margin-top: 30px;
     margin-left: auto;
     width: 400px;
     text-align: center;
