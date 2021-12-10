@@ -1,15 +1,12 @@
 import React from 'react';
-import SideBar from '../SideBar/SideBar';
-import { HeroContainer, Title, Header } from './HeroSectionElements';
+import { HeroContainer, Logo, Title, Header } from './HeroSectionElements';
+import DashBoard from '../DashBoard/DashBoard';
 
 const HeroSection = () => {
     return (
         <HeroContainer>
-            <Title>
-                   <Header>Play Pong</Header>
-                   <Header>for Free</Header>
-                   <Header>on the #1 Site!</Header>
-            </Title>
+            <Logo to='/'>Pong.com</Logo>
+            <DashBoard/>
         </HeroContainer>
     );
 }

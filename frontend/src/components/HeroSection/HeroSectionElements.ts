@@ -1,11 +1,16 @@
 import styled, { createGlobalStyle } from 'styled-components';
+import { Link as LinkR } from 'react-router-dom';
 
 export const HeroContainer = styled.div`
-    background: #312e2b;
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    margin: 15px 20%;
+    padding: 5px 10px;
+`;
+
+export const Logo = styled(LinkR)`
+    color: green;
+    cursor: pointer;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
 `;
 
 export const Title = styled.div`
