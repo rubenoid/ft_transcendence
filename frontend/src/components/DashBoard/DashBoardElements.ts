@@ -8,9 +8,9 @@ export const DashBoardContainer = styled.div`
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: 200px 400px 200px;
     grid-template-areas: 
-    " col1 col2 col3 col4"
-    " col5 game game chat"
-    " col6 game game chat"; 
+    " sideBar col2 col3 col4"
+    " sideBar game game chat"
+    " sideBar game game chat"; 
     grid-gap: 10px;
     background-color: #fff;
     color: #444;
