@@ -5,13 +5,14 @@ import Widget from '../Widget/Widget';
 const DashBoard = () => {
     return (
         <DashBoardContainer>
-            <Box gridColumn='1' gridRow='1' ><Widget/></Box>
-            <Box gridColumn='2 / span 1' gridRow='' ><Widget/></Box>
-            <Box gridColumn='3' gridRow='1'><Widget/></Box>
-            <Box gridColumn='3' gridRow='2'><Widget/></Box>
-            <Box gridColumn='3' gridRow='2'><Widget/></Box>
-            <Box gridColumn='1' gridRow='2'><Widget/></Box>
-            <Box gridColumn='2' gridRow='2'><Widget/></Box>
+            <Box gridArea='col1'><Widget/></Box>
+            <Box gridArea='col2'><Widget/></Box>
+            <Box gridArea='col3'><Widget/></Box>
+            <Box gridArea='col4'><Widget/></Box>
+            <Box gridArea='col5'><Widget/></Box>
+            <Box gridArea='col6'><Widget/></Box>
+            <Box gridArea='game'><Widget/></Box>
+            <Box gridArea='chat'><Widget/></Box>
         </DashBoardContainer>
     );
 }

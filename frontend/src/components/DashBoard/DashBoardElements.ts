@@ -5,6 +5,12 @@ import { string } from 'prop-types';
 export const DashBoardContainer = styled.div`
     height: 100%;
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 200px 400px 200px;
+    grid-template-areas: 
+    " col1 col2 col3 col4"
+    " col5 game game chat"
+    " col6 game game chat"; 
     grid-gap: 10px;
     background-color: #fff;
     color: #444;
@@ -17,8 +23,7 @@ export const DashBoardContainer = styled.div`
 `;
 
 type BoxProps = {
-    gridColumn: string,
-    gridRow: string
+    gridArea: string
 }
 
 export const Box = styled.div<BoxProps>`
@@ -26,6 +31,5 @@ export const Box = styled.div<BoxProps>`
     color: #fff;
     padding: 20px;
     border-radius: 5px;
-    grid-column: ${(props: BoxProps) => props.gridColumn};
-    grid-row: ${(props: BoxProps) => props.gridRow};
+    grid-area: ${(props: BoxProps) => props.gridArea};
 `;
