@@ -10,17 +10,17 @@ export class UserService {
 		@Inject('USER_REPOSITORY')
 		private UserRepository: Repository<UserEntity>
 		) {}
-	async getUser(id: number): Promise<UserEntity[]>
+	async getUser(toFind: number): Promise<UserEntity>
 	{
-		const User = await this.UserRepository.find({ where: { id: id } });
-		if (User.length === 0)
+		const User = await this.UserRepository.findOne({where: {id: toFind}});
+		if (User === undefined)
 			throw "user not found";
 		return User;
 	}
 
 	async addUser()
 	{
-		console.log("hallo");
+		console.log("adding user");
 		let newUser: UserEntity = new UserEntity();
 
 		newUser.firstName = "i dont know";
@@ -30,6 +30,11 @@ export class UserService {
 		newUser.wins = 99;
 		newUser.losses = 1;
 		await this.UserRepository.save(newUser);
+	}
+
+	async getUsers()
+	{
+		return await this.UserRepository.find();
 	}
 
 	async deleteUser(id: number): Promise<boolean>
