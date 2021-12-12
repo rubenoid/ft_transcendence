@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const TitleContainer = styled.div`
     margin-left: auto;
-    width: 400px;
     text-align: center;
     color: #444;
     line-height: 1.2;

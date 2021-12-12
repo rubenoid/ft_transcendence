@@ -6,6 +6,7 @@ export const Nav = styled.div`
     display: flex;
 	flex-direction: column;
     height: 100%;
+    padding: 10px;
     position: relative;
 `;
 
@@ -35,6 +36,7 @@ export const LongList = styled.ul`
 `
 
 export const Item = styled.li`
+    list-style-type: none;
     width: 100%;
     padding: 5px 0;
 `;

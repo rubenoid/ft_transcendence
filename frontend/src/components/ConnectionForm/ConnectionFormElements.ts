@@ -1,8 +1,16 @@
 import styled from 'styled-components';
 
-export const Form = styled.form`
+export const FormContainer = styled.div`
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    background-color: #444;
+`;
+
+export const Form = styled.form`
     text-align: center;
 `;
 

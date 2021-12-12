@@ -4,6 +4,7 @@ import Widget from '../Widget/Widget';
 import SideBar from '../SideBar/SideBar';
 import Title from '../Title/Title';
 import ConnectionForm from '../ConnectionForm/ConnectionForm';
+import Pong from '../Pong/Pong';
 
 export const DashBoard = () => {
     return (
@@ -12,8 +13,8 @@ export const DashBoard = () => {
             <Box gridArea='col2'><Widget/></Box>
             <Box gridArea='col3'><Widget/></Box>
             <Box bgColor="#fff" gridArea='col4' alignSelf='center'><Title/></Box>
-            <Box gridArea='game'><Widget/></Box>
-            <Box gridArea='chat' alignSelf='center'><ConnectionForm/></Box>
+            <Box bgColor="#fff" gridArea='game'><Pong/></Box>
+            <Box bgColor="#fff" gridArea='chat' alignSelf='center'><ConnectionForm/></Box>
         </DashBoardContainer>
     );
 }
