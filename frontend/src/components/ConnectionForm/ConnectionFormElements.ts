@@ -23,7 +23,7 @@ export const TextInput = styled.input`
 `;
 
 export const Text = styled.p`
-    margin-top: 24px;
+    padding: 0px 30px;
     color: #fff;
     font-size: 24px;
     text-align: center;
