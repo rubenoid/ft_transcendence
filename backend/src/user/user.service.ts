@@ -69,30 +69,30 @@ export class UserService {
 		return true;
 	}
 
-	async addFriend(id: number, id2: number)
-	{
-		if (id == id2)
-			throw "Cannot add yourself";
-		const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
-		const friend = await this.UserRepository.findOne(id2, {relations: ["friends"]});
-		if (!user || !friend)
-			throw "friend or user not loaded";
-		if (!user.friends)
-			user.friends = [];
-		if (!friend.friends)
-			friend.friends = [];
-		user.friends.push(friend);
-		friend.friends.push(user);
-		const result2 = await this.UserRepository.save(user);
-		const result = await this.UserRepository.save(friend);
-	}
+	// async addFriend(id: number, id2: number)
+	// {
+	// 	if (id == id2)
+	// 		throw "Cannot add yourself";
+	// 	const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
+	// 	const friend = await this.UserRepository.findOne(id2, {relations: ["friends"]});
+	// 	if (!user || !friend)
+	// 		throw "friend or user not loaded";
+	// 	if (!user.friends)
+	// 		user.friends = [];
+	// 	if (!friend.friends)
+	// 		friend.friends = [];
+	// 	user.friends.push(friend);
+	// 	friend.friends.push(user);
+	// 	const result2 = await this.UserRepository.save(user);
+	// 	const result = await this.UserRepository.save(friend);
+	// }
 
-	async getFriends(id: number) : Promise<UserEntity>
-	{
-		console.log(id);
-		const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
-		return user;
-	}
+	// async getFriends(id: number) : Promise<UserEntity>
+	// {
+	// 	console.log(id);
+	// 	const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
+	// 	return user;
+	// }
 
 	async getAllUsers(): Promise<UserEntity[]>
 	{

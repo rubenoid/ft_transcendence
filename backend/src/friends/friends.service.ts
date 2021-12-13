@@ -51,10 +51,6 @@ export class FriendsService {
 		const useridx = friend.friends.findIndex((x) => x.id == user.id);
 		user.friends.splice(friendidx, 1);
 		friend.friends.splice(useridx, 1);
-		console.log("idx:", friendidx, useridx);
-		console.log("new user friends", user.friends);
-		console.log("new friends friends", friend.friends);
-		
 		const result2 = await this.userService.saveUser(user);
 		const result = await this.userService.saveUser(friend);
         console.log(result);

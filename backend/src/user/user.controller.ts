@@ -29,19 +29,6 @@ export class UserController {
 		return await this.userService.getAllUsers();
 	}
 
-	@Get('addFriend/:id/:id2')
-	async addFriend(@Param() param, @Param() param2)
-	{
-		console.log("in b4");
-		return await this.userService.addFriend(param.id as number, param2.id2 as number);
-	}
-
-	@Get('getFriends/:id')
-	async getFriends(@Param() param)
-	{
-		console.log("in b4");
-		return await this.userService.getFriends(param.id as number);
-	}
 	@Get('deleteAllUsers')
 	async deleteAllUsers()
 	{
