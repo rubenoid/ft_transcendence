@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from './user.entity';
-import { Repository } from 'typeorm';
+import { Repository, FindOneOptions} from 'typeorm';
 
 
 @Injectable()
@@ -14,15 +14,34 @@ export class UserService {
 	{
 		const User = await this.UserRepository.find({ where: { id: id } });
 		if (User.length === 0)
-			throw "user not found";
+			throw "User not found";
 		return User;
+	}
+
+	async getUserQuery(query: FindOneOptions<UserEntity>): Promise<UserEntity[]>
+	{
+		const User = await this.UserRepository.find(query);
+		if (User.length === 0)
+			throw "User not found";
+		return User;
+	}
+
+	async getUserQueryOne(query: FindOneOptions<UserEntity>): Promise<UserEntity>
+	{
+		const User = await this.UserRepository.findOne(query);
+		if (!User)
+			throw "User not found";
+		return User;
+	}
+
+	async saveUser(user: UserEntity): Promise<void>
+	{
+		await this.UserRepository.save(user);
 	}
 
 	async addUser()
 	{
-		console.log("hallo");
 		let newUser: UserEntity = new UserEntity();
-
 		newUser.firstName = "i dont know";
 		newUser.lastName = "hallo";
 		newUser.userName = "woohoo";
@@ -50,7 +69,7 @@ export class UserService {
 		return true;
 	}
 
-	async addFriend(id: number, id2: number) //: Promise<bool>
+	async addFriend(id: number, id2: number)
 	{
 		if (id == id2)
 			throw "Cannot add yourself";
@@ -73,8 +92,6 @@ export class UserService {
 		console.log(id);
 		const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
 		return user;
-		// var allFriends = user.friends;
-		// return allFriends
 	}
 
 	async getAllUsers(): Promise<UserEntity[]>
