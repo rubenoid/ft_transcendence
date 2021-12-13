@@ -16,7 +16,7 @@ export class UserController {
 	{
 		return await this.userService.deleteUser(param.id as number);
 	}
-	@Get('changeFirstName/:id')
+	@Get('changeFirstName/:id') // @post
 	async changeFirstName(@Param() param)
 	{
 		console.log("before change");
@@ -41,6 +41,11 @@ export class UserController {
 	{
 		console.log("in b4");
 		return await this.userService.getFriends(param.id as number);
+	}
+	@Get('deleteAllUsers')
+	async deleteAllUsers()
+	{
+		return await this.userService.deleteAllUsers();
 	}
 
 	@Get(':id')

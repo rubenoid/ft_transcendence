@@ -26,7 +26,7 @@ export class UserEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToMany( () => UserEntity, UserEntity => UserEntity.friends)//, UserEntity => UserEntity.Friends)
+  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true})//, UserEntity => UserEntity.Friends)
   @JoinTable()
   friends: UserEntity[];
 }

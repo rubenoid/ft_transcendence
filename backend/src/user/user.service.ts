@@ -41,12 +41,10 @@ export class UserService {
 	}
 	async changeFirstName(id: number): Promise<boolean>
 	{
-		const user = await this.UserRepository.find({ where: { id: id } });
-		var oldfirstname = user[0].firstName;
-		user[0].firstName = "CHANGED";
+		const user = await this.UserRepository.findOne(id);
+		var oldfirstname = user.firstName;
+		user.firstName = "CHANGED";
 		const result = await this.UserRepository.save(user);
-		console.log(result);
-		console.log(typeof result);
 		if (oldfirstname == user[0].firstName)
 			return false;
 		return true;
@@ -54,34 +52,29 @@ export class UserService {
 
 	async addFriend(id: number, id2: number) //: Promise<bool>
 	{
-		var friendly: UserEntity = new UserEntity();
-		const user = await this.UserRepository.find({ where: { id: id } });
-		const friend = await this.UserRepository.find({ where: { id: id2 } });
-		friendly = friend[0];
-		if (!user[0].friends)
-			user[0].friends = [];
-		user[0].friends.push(friendly);
-		console.log("user[0]:");
-		console.log(user[0]);
-		const result = await this.UserRepository.save(user);
-		const result2 = await this.UserRepository.save(user[0]);
-		// if (result.affected)
-		// 	return true;
-		// return false;
+		if (id == id2)
+			throw "Cannot add yourself";
+		const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
+		const friend = await this.UserRepository.findOne(id2, {relations: ["friends"]});
+		if (!user || !friend)
+			throw "friend or user not loaded";
+		if (!user.friends)
+			user.friends = [];
+		if (!friend.friends)
+			friend.friends = [];
+		user.friends.push(friend);
+		friend.friends.push(user);
+		const result2 = await this.UserRepository.save(user);
+		const result = await this.UserRepository.save(friend);
 	}
 
-	async getFriends(id: number) : Promise<UserEntity[]>
+	async getFriends(id: number) : Promise<UserEntity>
 	{
-		console.log("id: getFriends?");
 		console.log(id);
-		const user = await this.UserRepository.findOne(id, {relations: ['friends']});
-		var allFriends = user.friends;
-		console.log("user[0]: getFriends?");
-		console.log(user[0]);
-		console.log(user);
-		console.log("allFriends: getFriends?");
-		console.log(allFriends);
-		return allFriends
+		const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
+		return user;
+		// var allFriends = user.friends;
+		// return allFriends
 	}
 
 	async getAllUsers(): Promise<UserEntity[]>
@@ -90,5 +83,9 @@ export class UserService {
 		if (User.length === 0)
 			throw "user not found";
 		return User;
+	}
+
+	async deleteAllUsers() {
+		await this.UserRepository.remove(await this.getAllUsers());
 	}
 }
