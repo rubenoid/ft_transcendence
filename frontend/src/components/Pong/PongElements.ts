@@ -8,6 +8,7 @@ export const PongContainer = styled.div`
 `;
 
 export const PongImg = styled.img`
+    border-radius: 10px;
     position: relative;
     max-height: 100%;
     max-width: 100%;

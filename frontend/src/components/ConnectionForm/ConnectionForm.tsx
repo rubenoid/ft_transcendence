@@ -1,7 +1,7 @@
 import React from 'react'
-import { Form, TextInput, Text, Label, Button, FormContainer } from './ConnectionFormElements';
-
-import { List, LongList, Item } from '../SideBar/SideBarElements';
+import { Form, Label, Button, FormContainer } from './ConnectionFormElements';
+import { TextInput, Text } from '../Utils/Utils'
+import { List, LongList, Item } from '../Utils/Utils';
 
 const ConnectionForm = () => {
     return (

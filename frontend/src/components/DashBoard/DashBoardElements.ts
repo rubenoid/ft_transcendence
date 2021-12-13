@@ -3,17 +3,19 @@ import { ContextReplacementPlugin } from 'webpack';
 import { string } from 'prop-types';
 
 export const DashBoardContainer = styled.div`
+    margin-left: auto;
+    margin-right: auto;
     height: 100vh;
     display: grid;
-    grid-template-columns: 200px 1fr 1fr 1fr;
-    /*grid-template-rows: 200px 500px 200px;*/
+    grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas: 
-    " sideBar col2 col3 col4"
-    " sideBar game game chat "
-    " sideBar game game chat"; 
+    " col2 col3 col4"
+    " game game chat "
+    " game game chat"; 
     grid-gap: 10px;
     background-color: #fff;
     color: #444;
+    padding: 10px;
     
     @media screen and (max-width: 768px) {
         display: flex;
@@ -25,8 +27,6 @@ type BoxProps = {
     gridArea: string,
     alignSelf?: string,
     bgColor?: string,
-    fontColor?: string,
-    
 }
 
 export const Box = styled.div<BoxProps>`

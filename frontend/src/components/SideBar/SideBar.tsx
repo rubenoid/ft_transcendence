@@ -1,5 +1,6 @@
 import React from 'react';
-import { Nav, Logo, List, LongList, Item, Button } from './SideBarElements';
+import { Nav, Logo,  Button } from './SideBarElements';
+import { List, LongList, Item } from '../Utils/Utils';
 
 const SideBar = () => {
     return (

@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { Link as LinkR } from 'react-router-dom';
 
 export const Nav = styled.div`
+    width: 150px;
+    height: 100%;
+    background-color: #444;
     margin: 0;
     display: flex;
 	flex-direction: column;
-    height: 100%;
     padding: 10px;
-    position: relative;
 `;
 
 export const Logo = styled(LinkR)`
@@ -18,28 +19,6 @@ export const Logo = styled(LinkR)`
     text-decoration: none;
 `;
 
-export const List = styled.ul`
-    width: 100%;
-    display: block;
-    padding: 10px 0 0 0;
-    list-style-type: none;
-`;
-
-export const LongList = styled.ul`
-    width: 100%;
-    margin: 10px 0;
-    list-style-type: none;
-    height: 100%;
-    display: block;
-    padding: 10px 0;
-    position: relative;
-`
-
-export const Item = styled.li`
-    list-style-type: none;
-    width: 100%;
-    padding: 5px 0;
-`;
 
 export const Button = styled(LinkR)`
     color: #dad8d6;
