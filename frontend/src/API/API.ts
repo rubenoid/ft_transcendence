@@ -1,4 +1,4 @@
-type User = {
+export type User = {
   id: number,
   userName: string,
   fistName: string,
@@ -16,8 +16,7 @@ export async function fetchData<T>(url: string): Promise<T> {
 }
 
 export const fetchUsers = async() => {
-  const users = await fetchData<{users: string}>('http://localhost:5000/user/all')
-  console.log('users' + users);
+  const users = await fetchData<User[]>('http://localhost:5000/user/all');
   return users;
 }
   
