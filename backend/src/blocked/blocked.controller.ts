@@ -16,13 +16,17 @@ export class BlockedController {
     @Get('getall/:id')
     async getAll(@Param() param)
     {
+        console.log("getall controller");
+        
         return await this.blockedService.getAll(param.id as number);
     }
 
-	@Get('remove/:id')
-    async remove(@Param() param)
+	@Get('remove/:id/:id2')
+    async remove(@Param() param, @Param() param2)
     {
-        return await this.blockedService.remove(param.id as number);
+        console.log("unblock controller");
+        
+        return await this.blockedService.remove(param.id as number, param2.id2 as number);
     }
 
 	// @Get('add/:idMe/:id2block')
