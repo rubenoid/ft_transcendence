@@ -29,4 +29,10 @@ export class UserEntity {
   @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true})//, UserEntity => UserEntity.Friends)
   @JoinTable()
   friends: UserEntity[];
+
+  @Column("int", { array: true })
+  blockedUsers: number[];
+
+  @Column("int", { array: true })
+  blockedBy: number[];
 }

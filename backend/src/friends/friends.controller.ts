@@ -12,6 +12,7 @@ export class FriendsController {
 		console.log("in b4");
 		return await this.friendsService.getFriends(param.id as number);
 	}
+
 	@Get('add/:id/:id2')
 	async addFriend(@Param() param, @Param() param2)
 	{
@@ -23,6 +24,5 @@ export class FriendsController {
 	async remove(@Param() param, @Param() param2)
 	{
 		return await this.friendsService.remove(param.id as number, param2.id2 as number);
-
 	}
 }

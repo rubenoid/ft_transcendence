@@ -28,9 +28,7 @@ export class FriendsService {
 	}
 	async getFriends(id: number) : Promise<UserEntity[]>
 	{
-		console.log(id);
 		const user = await this.userService.getUserQuery({where: {id: id}, relations: ["friends"]});
-		// const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
 		return user;
 	}
 	async remove(id: number, id2: number)
@@ -53,8 +51,5 @@ export class FriendsService {
 		friend.friends.splice(useridx, 1);
 		const result2 = await this.userService.saveUser(user);
 		const result = await this.userService.saveUser(friend);
-        console.log(result);
-        console.log(result2);
 	}
-
 }

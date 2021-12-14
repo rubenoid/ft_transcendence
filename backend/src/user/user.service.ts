@@ -30,7 +30,7 @@ export class UserService {
 	{
 		const User = await this.UserRepository.findOne(query);
 		if (!User)
-			throw "User not found";
+			throw "User not found getUserQueryOne";
 		return User;
 	}
 
@@ -48,6 +48,9 @@ export class UserService {
 		newUser.rating = 10000;
 		newUser.wins = 99;
 		newUser.losses = 1;
+		newUser.blockedBy = [];
+		newUser.blockedUsers = [];
+
 		await this.UserRepository.save(newUser);
 	}
 
@@ -80,6 +83,8 @@ export class UserService {
 		newUser.rating = 1500;
 		newUser.wins = 0;
 		newUser.losses = 0;
+		newUser.blockedBy = [];
+		newUser.blockedUsers= [];
 		await this.UserRepository.save(newUser);
 		return newUser.id;
 	}
