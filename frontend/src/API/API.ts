@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export type User = {
   id: number,
   userName: string,
@@ -9,14 +11,23 @@ export type User = {
   isActive: boolean
 }
 
-export async function fetchData<T>(url: string): Promise<T> {
-    const response = await fetch(url);
-    const body = await response.json();
-    return body;
-}
+const instance = axios.create({
+  baseURL: "http://localhost:5000",
+});
 
-export const fetchUsers = async() => {
-  const users = await fetchData<User[]>('http://localhost:5000/user/all');
+export const fetchUsers = async () => {
+
+  let users: User[];
+
+  await instance.get<User[]>('/user/all')
+  .then( response => {
+      users = response.data;
+    }
+  )
+  .catch(error => {
+    console.log('ERROR->' + error);
+  });
+
   return users;
 }
   
