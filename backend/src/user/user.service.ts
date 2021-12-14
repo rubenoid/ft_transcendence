@@ -58,43 +58,8 @@ export class UserService {
 			return true;
 		return false;
 	}
-	async changeFirstName(id: number): Promise<boolean>
-	{
-		const user = await this.UserRepository.findOne(id);
-		var oldfirstname = user.firstName;
-		user.firstName = "CHANGED";
-		const result = await this.UserRepository.save(user);
-		if (oldfirstname == user[0].firstName)
-			return false;
-		return true;
-	}
 
-	// async addFriend(id: number, id2: number)
-	// {
-	// 	if (id == id2)
-	// 		throw "Cannot add yourself";
-	// 	const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
-	// 	const friend = await this.UserRepository.findOne(id2, {relations: ["friends"]});
-	// 	if (!user || !friend)
-	// 		throw "friend or user not loaded";
-	// 	if (!user.friends)
-	// 		user.friends = [];
-	// 	if (!friend.friends)
-	// 		friend.friends = [];
-	// 	user.friends.push(friend);
-	// 	friend.friends.push(user);
-	// 	const result2 = await this.UserRepository.save(user);
-	// 	const result = await this.UserRepository.save(friend);
-	// }
-
-	// async getFriends(id: number) : Promise<UserEntity>
-	// {
-	// 	console.log(id);
-	// 	const user = await this.UserRepository.findOne(id, {relations: ["friends"]});
-	// 	return user;
-	// }
-
-	async getAllUsers(): Promise<UserEntity[]>
+	async getAll(): Promise<UserEntity[]>
 	{
 		const User = await this.UserRepository.find();
 		if (User.length === 0)
@@ -102,11 +67,11 @@ export class UserService {
 		return User;
 	}
 
-	async deleteAllUsers() {
-		await this.UserRepository.remove(await this.getAllUsers());
+	async deleteAll() {
+		await this.UserRepository.remove(await this.getAll());
 	}
 
-	async insertUser(firstName: string, lastName: string, userName: string)
+	async insert(firstName: string, lastName: string, userName: string)
 	{
 		let newUser: UserEntity = new UserEntity();
 		newUser.firstName = firstName;
@@ -117,5 +82,16 @@ export class UserService {
 		newUser.losses = 0;
 		await this.UserRepository.save(newUser);
 		return newUser.id;
+	}
+
+	async update(id: number, firstName: string, lastName: string, userName: string)
+	{
+		let user = await this.getUserQueryOne({where: {id: id}});
+		user.firstName = firstName;
+		user.lastName = lastName;
+		user.userName = userName;	
+		await this.UserRepository.save(user);		
+		return user.id;	
+
 	}
 }

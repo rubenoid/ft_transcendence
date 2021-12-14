@@ -4,7 +4,16 @@ import { UserService } from './user.service';
 @Controller('user')
 export class UserController {
 	constructor (private readonly userService: UserService) {}
-
+	@Get('getAll')
+	async getAll()
+	{
+		return await this.userService.getAll();
+	}
+	@Get('get/:id')
+	async getUserById(@Param() param)
+	{
+		return await this.userService.getUser(param.id as number);
+	}
 
 	@Get('random')
 	async addUserRand()
@@ -17,44 +26,33 @@ export class UserController {
 	{
 		return await this.userService.deleteUser(param.id as number);
 	}
-	@Get('changeFirstName/:id') // @post
-	async changeFirstName(@Param() param)
+
+	@Get('deleteAll')
+	async deleteAll()
 	{
-		console.log("before change");
-		return await this.userService.changeFirstName(param.id as number);
+		return await this.userService.deleteAll();
 	}
 
-	@Get('getAllUsers')
-	async getAllUsers()
-	{
-		return await this.userService.getAllUsers();
-	}
-
-	@Get('deleteAllUsers')
-	async deleteAllUsers()
-	{
-		return await this.userService.deleteAllUsers();
-	}
-
-	@Get(':id')
-	async getUserById(@Param() param)
-	{
-		return await this.userService.getUser(param.id as number);
-	}
-
-	@Post()
-	insertUser(
+	@Post('add')
+	insert(
 		@Body('firstName') firstName: string,
 		@Body('lastName') lastName: string,
 		@Body('userName') userName: string,
-	) {
-		const userId = this.userService.insertUser(firstName, lastName, userName);
+	) 
+	{
+		const userId = this.userService.insert(firstName, lastName, userName);
 		return userId;
+	}
 
-		/* return by JSON not working? */
-		// return {
-		// 	id: userId,
-		// }
+	@Put('update/:id')
+	async update(
+		@Param() param,
+		@Body('firstName') firstName: string,
+		@Body('lastName') lastName: string,
+		@Body('userName') userName: string,
+		//@Body('password') password: string,	
+	) {
+		return this.userService.update(param.id as number, firstName, lastName, userName);
 	}
 
 }
