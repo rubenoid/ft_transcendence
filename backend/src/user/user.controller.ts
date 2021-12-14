@@ -1,10 +1,11 @@
-import { Controller, Get, Injectable, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Injectable, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
 	constructor (private readonly userService: UserService) {}
-	
+
+
 	@Get('random')
 	async addUserRand()
 	{
@@ -41,4 +42,19 @@ export class UserController {
 		return await this.userService.getUser(param.id as number);
 	}
 
+	@Post()
+	insertUser(
+		@Body('firstName') firstName: string,
+		@Body('lastName') lastName: string,
+		@Body('userName') userName: string,
+	) {
+		const userId = this.userService.insertUser(firstName, lastName, userName);
+		return userId;
+		// return {
+		// 	id: userId,
+		// }
+	}
+
+	// @Put(':id')
+	// update()
 }

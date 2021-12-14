@@ -105,4 +105,22 @@ export class UserService {
 	async deleteAllUsers() {
 		await this.UserRepository.remove(await this.getAllUsers());
 	}
+
+	async insertUser(firstName: string, lastName: string, userName: string)
+	{
+		let newUser: UserEntity = new UserEntity();
+		newUser.firstName = firstName;
+		newUser.lastName = lastName;
+		newUser.userName = userName;
+		console.log('>>>>');
+		console.log(firstName);
+		console.log(lastName);
+		console.log(userName);
+		console.log('<<<<');
+		newUser.rating = 1500;
+		newUser.wins = 0;
+		newUser.losses = 0;
+		await this.UserRepository.save(newUser);
+		return newUser.id;
+	}
 }
