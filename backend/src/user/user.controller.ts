@@ -50,11 +50,11 @@ export class UserController {
 	) {
 		const userId = this.userService.insertUser(firstName, lastName, userName);
 		return userId;
+
+		/* return by JSON not working? */
 		// return {
 		// 	id: userId,
 		// }
 	}
 
-	// @Put(':id')
-	// update()
 }

@@ -112,11 +112,6 @@ export class UserService {
 		newUser.firstName = firstName;
 		newUser.lastName = lastName;
 		newUser.userName = userName;
-		console.log('>>>>');
-		console.log(firstName);
-		console.log(lastName);
-		console.log(userName);
-		console.log('<<<<');
 		newUser.rating = 1500;
 		newUser.wins = 0;
 		newUser.losses = 0;
