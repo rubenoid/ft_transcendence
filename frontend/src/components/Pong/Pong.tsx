@@ -3,14 +3,16 @@ import { PongContainer, PongImg, Button, ButtonContainer } from './PongElements'
 
 import  PongImgUrl  from '../../../public/pong.png';
 
+import { TextInput, Text } from '../Utils/Utils'
+
 const Pong = () => {
     return (
         <>
             <PongContainer>
                 <PongImg src={PongImgUrl}/>
                 <ButtonContainer>
-                    <Button>Play Online</Button>
-                    <Button>Play Computer</Button>
+                    <Button><Text fontSize='20px'>Play Online</Text></Button>
+                    <Button><Text fontSize='20px'>Play Computer</Text></Button>
                 </ButtonContainer>
             </PongContainer>
         </>

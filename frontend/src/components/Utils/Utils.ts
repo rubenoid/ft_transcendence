@@ -17,10 +17,14 @@ export const TextInput = styled.input`
     }
 `;
 
+type TextProps = {
+    color?: string,
+    fontSize?: string
+}
+
 export const Text = styled.p`
-    padding: 0px 30px;
     color: #fff;
-    font-size: 24px;
+    font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '24px'};
     text-align: center;
     max-width: 600px;
     
@@ -54,4 +58,20 @@ export const Item = styled.li`
     list-style-type: none;
     width: 100%;
     padding: 5px 0;
+`;
+
+
+export const RoundButton = styled.button`
+    height: 50px;
+    width: 50px;
+    text-align: center;
+    background-color: #444;
+    color: white;
+    border-radius: 50px;
+    border: 2px solid #04AA6D;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #abc;
+    }
 `;

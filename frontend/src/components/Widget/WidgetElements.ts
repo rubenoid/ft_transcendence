@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
 export const WidgetWrapper = styled.div`
-    background-color: #abc;
+    padding: 0 10px;
+    color: #fff;
 `;

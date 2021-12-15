@@ -1,10 +1,10 @@
-import { GlobalStyle, Container } from './App.styles';
+import { GlobalStyle } from './App.styles';
 import React from 'react';
 import HeroSection from '../HeroSection/HeroSection';
-import { BrowserRouter as Router } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom';
 
 export default () => {
-    return(
+    return (
         <>
             <GlobalStyle />
             <Router>

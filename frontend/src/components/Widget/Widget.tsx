@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { WidgetWrapper } from './WidgetElements';
-import { fetchUsers } from '../../API/API';
+import { fetchUsers, User } from '../../API/API';
+import { List, LongList, Item } from '../Utils/Utils';
 
-type User = {
-  id: number,
-  userName: string,
-  fistName: string,
-  lastName: string,
-  nbWin: number,
-  nbLost: number,
-  rating: number,
-  isActive: boolean
-}
 
 
 const Widget = () => {
-    const data = fetchUsers();
-    console.log('DATA->' + data.then((val) => {
-        console.log('VAL->' + val.users);
-    }));
+
+    const [users, setUsers] = useState<User[]>([]);
+
+    useEffect(() => {
+        async function getUsers(): Promise<User[]> {
+            const users: User[] = await fetchUsers();
+            setUsers(users);
+            return users;
+        }
+        getUsers();
+    }, [fetchUsers]);
+
+    console.log('USERS');
+    console.log(users);
+    const listUsers = users.map((user: User, key: number) => {
+        console.log('FIRSTNAME')
+        console.log(user.firstName)
+        return <Item key={key}>{user.firstName}</Item>;
+    });
     return (
         <WidgetWrapper>
+            <List>
+                {listUsers != undefined ? listUsers : <Item>Loading</Item>}
+            </List>
         </WidgetWrapper>
     );
 }
