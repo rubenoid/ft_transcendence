@@ -2,15 +2,16 @@ import styled from 'styled-components';
 
 export const FormContainer = styled.div`
     display: flex;
-    justify-content: center;
     position: relative;
+    justify-content: center;
     height: 100%;
     width: 100%;
-    padding: 10px;
     background-color: #444;
+    padding: 10px;
 `;
 
 export const Form = styled.form`
+    padding: 10px;
     text-align: center;
 `;
 

@@ -9,15 +9,22 @@ export const DashBoardContainer = styled.div`
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-areas: 
-    " col2 col3 col4"
-    " game game chat "
-    " game game chat"; 
+    "info1 game game title"
+    "info2 game game chat "
+    "info3 game game chat"; 
     grid-gap: 10px;
     background-color: #fff;
     color: #444;
     padding: 10px;
     
+    @media screen and (max-width: 1300px) {
+        grid-template-areas: 
+        " info1 info2 title"
+        " game game chat "
+        " game game chat"; 
+    }
     @media screen and (max-width: 768px) {
+        height: 100%;
         display: flex;
         flex-direction: column;
     }

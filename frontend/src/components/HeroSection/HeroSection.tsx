@@ -6,7 +6,6 @@ import SideBar from '../SideBar/SideBar';
 const HeroSection = () => {
     return (
         <HeroContainer>
-            <SideBar/>
             <DashBoard/>
         </HeroContainer>
     );
