@@ -30,9 +30,9 @@ export class UserEntity {
   @JoinTable()
   friends: UserEntity[];
 
-  @Column("int", { array: true })
+  @Column("int", { array: true, nullable: true })
   blockedUsers: number[];
 
-  @Column("int", { array: true })
+  @Column("int", { array: true, nullable: true })
   blockedBy: number[];
 }
