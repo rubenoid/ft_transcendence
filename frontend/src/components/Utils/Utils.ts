@@ -9,9 +9,16 @@ export const TextInput = styled.input`
     border-radius: 4px;
     box-sizing: border-box;
     resize: vertical;
+    caret-color: #fff;
+
+    ::placeholder{
+        color: #fff;
+        font-size: 14px;
+    }
 
     &:focus
     {
+        color: #fff;
         border: 1px solid #04AA6D;
         box-shadow: none;
     }
@@ -94,4 +101,39 @@ export const TableCell = styled.td`
 
 export const TableBody = styled.tbody`
 
+`;
+
+
+export const ButtonContainer = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 5px;
+    background-color: #444;
+    transform: translate(-50%, -50%);
+    padding: 50px;
+    opacity: 0.9;
+`;
+
+export const Button = styled.button`
+    margin: 10px;
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #abc;
+    }
+`;
+
+export const WidgetContainer = styled.div`
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background-color: #444;
+    padding: 20px;
 `;
