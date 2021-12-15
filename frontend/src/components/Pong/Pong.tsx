@@ -3,7 +3,7 @@ import { PongContainer, PongImg, Button, ButtonContainer } from './PongElements'
 
 import  PongImgUrl  from '../../../public/pong.png';
 
-import { TextInput, Text } from '../Utils/Utils'
+import { Text } from '../Utils/Utils'
 
 const Pong = () => {
     return (

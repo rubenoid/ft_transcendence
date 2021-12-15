@@ -5,8 +5,8 @@ export type User = {
   userName: string,
   firstName: string,
   lastName: string,
-  nbWin: number,
-  nbLost: number,
+  wins: number,
+  losses: number,
   rating: number,
   isActive: boolean
 }

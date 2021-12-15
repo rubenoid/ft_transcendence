@@ -25,7 +25,6 @@ type TextProps = {
 export const Text = styled.p`
     color: #fff;
     font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '24px'};
-    text-align: center;
     max-width: 600px;
     
     @media screen and (max-width: 768px) {
@@ -74,4 +73,25 @@ export const RoundButton = styled.button`
     &:hover {
         background-color: #abc;
     }
+`;
+
+export const Table = styled.table`
+    width: 100%;
+`;
+
+export const TableHeader = styled.thead`
+    background-color: #04AA6D;
+`;
+
+export const TableHeaderCell = styled.th`
+    text-align: left;
+`;
+
+export const TableRow = styled.tr`
+`;
+export const TableCell = styled.td`
+`;
+
+export const TableBody = styled.tbody`
+
 `;

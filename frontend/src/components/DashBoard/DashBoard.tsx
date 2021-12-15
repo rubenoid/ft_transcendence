@@ -10,7 +10,6 @@ export const DashBoard = () => {
         <DashBoardContainer>
             <Box gridArea='info1'><Widget/></Box>
             <Box gridArea='info2'><Widget/></Box>
-            <Box gridArea='info3'><Widget/></Box>
             <Box bgColor="#fff" gridArea='title' alignSelf='center'><Title/></Box>
             <Box bgColor="#fff" gridArea='game'><Pong/></Box>
             <Box bgColor="#fff" gridArea='chat' alignSelf='center'><ConnectionForm/></Box>
