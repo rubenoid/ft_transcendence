@@ -10,7 +10,7 @@ export class UserService {
 		@Inject('USER_REPOSITORY')
 		private UserRepository: Repository<UserEntity>
 		) {}
-	async getUser(id: number): Promise<UserEntity[]>
+	async getUser(toFind: number): Promise<UserEntity>
 	{
 		const User = await this.UserRepository.find({ where: { id: id } });
 		if (User.length === 0)
@@ -52,6 +52,11 @@ export class UserService {
 		newUser.blockedUsers = [];
 
 		await this.UserRepository.save(newUser);
+	}
+
+	async getUsers()
+	{
+		return await this.UserRepository.find();
 	}
 
 	async deleteUser(id: number): Promise<boolean>
