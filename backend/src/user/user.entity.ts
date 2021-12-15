@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class UserEntity {
@@ -26,4 +26,13 @@ export class UserEntity {
   @Column({ default: true })
   isActive: boolean;
 
+  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true})//, UserEntity => UserEntity.Friends)
+  @JoinTable()
+  friends: UserEntity[];
+
+  @Column("int", { array: true })
+  blockedUsers: number[];
+
+  @Column("int", { array: true })
+  blockedBy: number[];
 }
