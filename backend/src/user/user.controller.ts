@@ -14,6 +14,11 @@ export class UserController {
 	{
 		return await this.userService.getUser(param.id as number);
 	}
+    @Get('getByUserName/:username')
+    async getUserByUsername(@Param() param)
+    {
+        return await this.userService.getUserByName(param.username as string);
+    }
 
 	@Get('random')
 	async addUserRand()
