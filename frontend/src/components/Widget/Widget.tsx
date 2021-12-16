@@ -18,17 +18,15 @@ const Widget = () => {
         getUsers();
     }, [fetchUsers]);
 
-    console.log('USERS');
-    console.log(users);
     const listUsers = users.map((user: User, key: number) => {
-        console.log('FIRSTNAME')
-        console.log(user.userName)
-        return <TableRow>
+        return( 
+            <TableRow key = {key}>
                     <TableCell><Text fontSize='10'>{user.id}</Text></TableCell>
                     <TableCell><Text fontSize='10'>{user.userName}</Text></TableCell>
                     <TableCell><Text fontSize='10'>{user.wins}</Text></TableCell> 
                     <TableCell><Text fontSize='10'>{user.losses}</Text></TableCell> 
-            </TableRow> 
+            </TableRow>
+        );
     });
     return (
         <WidgetWrapper>
