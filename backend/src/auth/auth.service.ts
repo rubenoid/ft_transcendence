@@ -12,7 +12,7 @@ export class AuthService {
     console.log("findUserFromFourtyTwoId METHOD:")
     console.log(id);
     return user;
-      } 
+    }
 }
 
 
