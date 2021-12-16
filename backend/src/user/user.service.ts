@@ -17,7 +17,16 @@ export class UserService {
 			throw "User not found";
 		return User;
 	}
-
+    async getUserByName(toFind: string): Promise<UserEntity>
+    {
+		console.log(toFind);
+        const User = await this.UserRepository.find({ where: { userName: toFind } });
+        if (User === undefined)
+            throw "User not found";
+		console.log(User);
+		console.log(User[0]);
+        return User[0];
+    }
 	async getUserQuery(query: FindOneOptions<UserEntity>): Promise<UserEntity[]>
 	{
 		const User = await this.UserRepository.find(query);
