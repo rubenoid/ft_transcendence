@@ -15,6 +15,24 @@ const instance: AxiosInstance = axios.create({
   baseURL: "http://localhost:5000",
 });
 
+axios.interceptors.request.use(function(config) {
+  console.log('HELLO');
+  return config;
+},
+  function(error) {
+    console.log('HELLO');
+    return Promise.reject(error);
+  }
+)
+
+axios.interceptors.response.use(function (response) {
+  console.log('HELLO');
+  return response;
+}, function(error) {
+  console.log('HELLO');
+    return Promise.reject(error);
+})
+
 export const fetchUsers = async (): Promise<User[]> => {
 
   let users: User[];
@@ -28,4 +46,22 @@ export const fetchUsers = async (): Promise<User[]> => {
   });
   return users;
 }
+
+export const fetchUserByUserName = async (userName: string): Promise<User> => {
   
+  let user: User;
+
+  const endpoint = `/user/getByUserName/${userName}`;
+  console.log('ENDPOINT->');
+  console.log(endpoint);
+
+  await instance.get<User>(endpoint)
+  .then(response => {
+    user = response.data;
+  })
+  .catch((error) => {
+    return Promise.reject(error);
+  });
+  console.log(user);
+  return user;
+}

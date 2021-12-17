@@ -39,7 +39,9 @@ const Widget = () => {
                         <TableHeaderCell>losses</TableHeaderCell>
                     </TableRow>
                 </TableHeader>
+                <TableBody>
                     { listUsers ? listUsers : <Item>Loading</Item>}
+                </TableBody>
             </Table>
         </WidgetWrapper>
     );
