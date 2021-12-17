@@ -129,10 +129,15 @@ export const Button = styled.button`
     }
 `;
 
-export const WidgetContainer = styled.div`
+
+type BoxProps =  {
+    height ?: string;
+}
+
+export const WidgetContainer = styled.div<BoxProps>`
     justify-content: center;
     text-align: center;
-    height: 100%;
+    height: ${(props: BoxProps) => props.height ? props.height : '100%'};
     width: 100%;
     background-color: #444;
     padding: 20px;
