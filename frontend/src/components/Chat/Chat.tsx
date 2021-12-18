@@ -1,25 +1,15 @@
 import React from 'react';
-import { ChatGrid, ChatBoxContainer, ChatContainer, ChatSideBar } from './ChatElements';
+import { ChatGrid, ChatContainer} from './ChatElements';
 import { Text, TextInput, WidgetContainer } from '../Utils/Utils';
 import { List, LongList, Item } from '../Utils/Utils';
+import ChatBox from './ChatBox/ChatBox';
+import ChatSideBar from './ChatSideBar/ChatSideBar';
 
 const Chat = () => {
     return (
                 <ChatGrid>
-                    <ChatSideBar>
-                    <List>
-                            <Item><Text>friend</Text></Item>
-                            <Item><Text>friend</Text></Item>
-                            <Item><Text>friend</Text></Item>
-                            <Item><Text>friend</Text></Item>
-                            <Item><Text>friend</Text></Item>
-                    </List>
-                    </ChatSideBar>
-                    <ChatBoxContainer>
-                    <Item>
-                        <TextInput type="text" onChange={(e) => ({})}></TextInput>
-                    </Item>
-                    </ChatBoxContainer>
+                    <ChatSideBar/>
+                    <ChatBox/>
                 </ChatGrid>
     );
 }

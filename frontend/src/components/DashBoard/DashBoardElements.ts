@@ -17,8 +17,9 @@ export const DashBoardContainer = styled.div`
     padding: 10px;
     
     @media screen and (max-width: 1300px) {
+    grid-template-columns: 1fr 1.5fr 1.5fr;
         grid-template-areas: 
-        " info1 info2 chat"
+        " info2 info1 chat"
         " game game chat "
         " game game chat"; 
     }
