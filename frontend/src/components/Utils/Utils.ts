@@ -139,6 +139,6 @@ export const WidgetContainer = styled.div<BoxProps>`
     text-align: center;
     height: ${(props: BoxProps) => props.height ? props.height : '100%'};
     width: 100%;
-    background-color: #444;
+    background-color: #393b4c;
     padding: 20px;
 `;

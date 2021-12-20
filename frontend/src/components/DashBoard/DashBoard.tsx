@@ -12,8 +12,8 @@ export const DashBoard = () => {
         <DashBoardContainer>
             <Box gridArea='info1'><Widget/></Box>
             <Box bgColor="#fff" gridArea='info2'><AddFriend/></Box>
-            <Box bgColor="#fff" gridArea='game'><Pong/></Box>
-            <Box bgColor="#fff" gridArea='chat' alignSelf='center'><Chat/></Box>
+            <Box  gridArea='game'><Pong/></Box>
+            <Box  gridArea='chat' alignSelf='center'><Chat/></Box>
         </DashBoardContainer>
     );
 }

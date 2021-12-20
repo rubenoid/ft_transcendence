@@ -12,7 +12,9 @@ export const DashBoardContainer = styled.div`
     ". info2 game chat ."
     ". info3 game chat ."; 
     grid-gap: 10px;
-    background-color: #fff;
+    background-color: #8EC5FC;
+background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+
     color: #444;
     padding: 10px;
     
@@ -40,7 +42,7 @@ type BoxProps = {
 export const Box = styled.div<BoxProps>`
     width: 100%;
     height: ${(props: BoxProps) => props.height ? props.height : '100%'};
-    background-color: #444;
+    background-color: transparent;
     background-color: ${(props: BoxProps) => props.bgColor};
     border-radius: 5px;
     grid-area: ${(props: BoxProps) => props.gridArea};

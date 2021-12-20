@@ -5,6 +5,7 @@ export const PongContainer = styled.div`
     display: flex;
     position: relative;
     justify-content: center;
+    background-color: transparent;
 `;
 
 export const PongImg = styled.img`
@@ -20,7 +21,7 @@ export const ButtonContainer = styled.div`
     top: 50%;
     left: 50%;
     border-radius: 5px;
-    background-color: #444;
+    background-color: #393b4c;
     transform: translate(-50%, -50%);
     padding: 50px;
     opacity: 0.9;

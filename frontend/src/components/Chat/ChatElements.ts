@@ -5,7 +5,6 @@ export const ChatContainer = styled.div`
     height: 100%;
     justify-content: center;
     text-align: center;
-    background-color: #666;
     padding: 20px;
 `;
 

@@ -16,20 +16,20 @@ const instance: AxiosInstance = axios.create({
 });
 
 axios.interceptors.request.use(function(config) {
-  console.log('HELLO');
+  console.log('Test Interceptor request->');
   return config;
 },
   function(error) {
-    console.log('HELLO');
+    console.log('Test Interceptor request Error->');
     return Promise.reject(error);
   }
 )
 
 axios.interceptors.response.use(function (response) {
-  console.log('HELLO');
+  console.log('Test interceptor response->');
   return response;
 }, function(error) {
-  console.log('HELLO');
+  console.log('Test interceptor response error->');
     return Promise.reject(error);
 })
 

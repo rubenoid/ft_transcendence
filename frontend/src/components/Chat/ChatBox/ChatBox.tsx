@@ -1,13 +1,18 @@
 import React from 'react';
-import {ChatBoxContainer} from './ChatBoxElements';
-import { TextInput, List, LongList, Item } from '../../Utils/Utils';
+import {TopContainer, ChatBoxContainer, InputContainer} from './ChatBoxElements';
+import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
+import { ChatContainer } from '../ChatElements';
 
 const ChatBox = () => {
     return (
         <ChatBoxContainer>
-            <Item>
+            <TopContainer>
+                <Text>friend</Text>
+            </TopContainer>
+            <ChatContainer>
+
+            </ChatContainer>
                 <TextInput type="text" onChange={(e) => ({})}></TextInput>
-            </Item>
         </ChatBoxContainer>
     );
 }

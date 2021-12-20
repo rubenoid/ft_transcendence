@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const AddFriendContainer = styled.div`
-    background-color: #444;
+    background-color: #393b4c;
     width: 100%;
 
 `;
@@ -13,7 +13,6 @@ export const SearchBox = styled.input`
     width: 100%;
     padding: 10px;
     outline: 0;
-    background: rgba(0, 255, 0, .1);
     ::placeholder{
         color: #fff;
         font-size: 14px;

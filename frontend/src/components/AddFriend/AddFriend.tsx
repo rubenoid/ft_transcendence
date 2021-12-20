@@ -35,4 +35,4 @@ const AddFriend = () => {
     );
 }
 
-export default AddFriend
+export default AddFriend;
