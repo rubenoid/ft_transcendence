@@ -1,6 +1,10 @@
-import { Controller, Get, Req, UseGuards,} from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Post, Res} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
+import { verifyUser } from "./auth.guard";
+import { JwtService } from "@nestjs/jwt";
+import { Response, Request } from "express";
+
 
 @Controller('auth')
 export class AuthController
@@ -29,17 +33,36 @@ export class AuthController
 	async hi2(@Req() req)
     {
         console.log("req");
-        console.log(req);
+        // console.log(req);
         console.log("req.user");
         console.log(req.user);
         return "logged in ok";
     }
 
-    @Get('guarded')
 	@UseGuards(AuthGuard('FourtyTwo'))
-	async hi3(@Req() req)
+    @Get('guarded')
+	async hi3(@Req() req, @Res({passthrough: true}) response: Response)
     {
+        await response.cookie('clientID', req.user, {httpOnly: true});
         return "wow thinks work!";
     }
+
+	@UseGuards(verifyUser)
+    @Get('guarded-jwt')
+	async hi4(@Req() req)
+    {
+        return "wow jwt thinks work!";
+    }
+  @UseGuards(AuthGuard('FourtyTwo'))
+  @Post('auth/login')
+  async login(@Req() req) {
+    // return this.authService.login(req.user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('profile')
+  getProfile(@Req() req) {
+    return req.user;
+  }
 
 }
