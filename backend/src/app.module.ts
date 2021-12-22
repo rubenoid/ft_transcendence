@@ -8,11 +8,16 @@ import { FriendsModule } from './friends/friends.module';
 import { SettingsModule } from './settings/settings.module';
 // import { BlockedController } from './blocked/blocked.controller';
 import { BlockedModule } from './blocked/blocked.module';
+// import { AuthController } from './auth/auth.controller';
+// import { AuthService } from './auth/auth.service';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [ UserModule, DatabaseModule, FriendsModule, SettingsModule, BlockedModule],
+  imports: [ UserModule, DatabaseModule, FriendsModule, SettingsModule, BlockedModule, AuthModule],
   // controllers: [AppController, DatabaseController, BlockedController],
+  // controllers: [AppController, DatabaseController, AuthController],
   controllers: [AppController, DatabaseController],
+  // providers: [AppService, AuthService],
   providers: [AppService],
 })
 export class AppModule {}
