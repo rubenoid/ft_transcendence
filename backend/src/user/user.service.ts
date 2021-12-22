@@ -34,6 +34,18 @@ export class UserService {
 		return User;
 	}
 
+	async findByLogin(toFind: string): Promise<UserEntity>
+	{
+		const User = await this.UserRepository.findOne({ where: { userName: toFind } });;
+		if (!User)
+			throw "User not found getUserQueryOne";
+		return User;
+	}
+
+	async findByPayload({ username }: any): Promise<UserEntity> {
+		return await this.UserRepository.findOne({ where: { username } });
+	  }
+
 	async saveUser(user: UserEntity): Promise<void>
 	{
 		await this.UserRepository.save(user);
@@ -45,6 +57,20 @@ export class UserService {
 		newUser.firstName = "i dont know";
 		newUser.lastName = "hallo";
 		newUser.userName = "woohoo";
+		newUser.rating = 10000;
+		newUser.wins = 99;
+		newUser.losses = 1;
+		newUser.blockedBy = [];
+		newUser.blockedUsers = [];
+
+		await this.UserRepository.save(newUser);
+	}
+	async addwithDetails(username: string, firstname: string, lastname: string)
+	{
+		let newUser: UserEntity = new UserEntity();
+		newUser.firstName = firstname;
+		newUser.lastName = lastname;
+		newUser.userName = username;
 		newUser.rating = 10000;
 		newUser.wins = 99;
 		newUser.losses = 1;
