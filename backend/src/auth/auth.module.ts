@@ -19,6 +19,6 @@ import { PassportModule } from '@nestjs/passport';
           expiresIn: '600s',
         },     }),],
     providers: [AuthService, FourtyTwoStrategy, JwtStrategy],
-    controllers: [AuthController, JwtModule]
+    controllers: [AuthController]//, JwtModule]
 })
 export class AuthModule {}

@@ -50,15 +50,17 @@ export class AuthController
     {
         return "wow thinks work jwt!";
     }
+
     @Post('register')  
-    public async register(@Body() createUserDto: UserEntity,  ): Promise<RegistrationStatus> {    
+    public async register(@Body() createUserDto: UserEntity): Promise<RegistrationStatus> {    
     const result: 
-    RegistrationStatus = await this.authService.register(createUserDto,);
-    if (!result.success) {
-        throw 'new HttpException(result.message, HttpStatus.BAD_REQUEST)';    
+        RegistrationStatus = await this.authService.register(createUserDto,);
+        if (!result.success) {
+            throw 'new HttpException(result.message, HttpStatus.BAD_REQUEST)';    
+        }
+        return result;  
     }
-    return result;  
-    }
+
     @Post('login')  
     public async login(@Body() loginUserDto: UserEntity): Promise<LoginStatus> {
         return await this.authService.login(loginUserDto);  
