@@ -1,7 +1,7 @@
 import { Controller, Get, Req, UseGuards, Post, Res} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-import { verifyUser } from "./auth.guard";
+import { localAuthGaurd } from "./auth.guard";
 import { JwtService } from "@nestjs/jwt";
 import { Response, Request } from "express";
 
@@ -30,12 +30,13 @@ export class AuthController
 
     @Get('redirect')
 	@UseGuards(AuthGuard('FourtyTwo'))
-	async hi2(@Req() req)
+	async hi2(@Req() req, @Res({passthrough: true}) response: Response)
     {
         console.log("req");
         // console.log(req);
         console.log("req.user");
         console.log(req.user);
+        await response.cookie('AuthToken', req.user, {httpOnly: true});
         return "logged in ok";
     }
 
@@ -43,11 +44,10 @@ export class AuthController
     @Get('guarded')
 	async hi3(@Req() req, @Res({passthrough: true}) response: Response)
     {
-        await response.cookie('clientID', req.user, {httpOnly: true});
         return "wow thinks work!";
     }
 
-	@UseGuards(verifyUser)
+	@UseGuards(localAuthGaurd)
     @Get('guarded-jwt')
 	async hi4(@Req() req)
     {

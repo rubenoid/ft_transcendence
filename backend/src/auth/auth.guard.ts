@@ -3,7 +3,7 @@ import {JwtService} from "@nestjs/jwt";
 import { Response, Request } from "express";
 
 @Injectable()
-export class verifyUser implements CanActivate {
+export class localAuthGaurd implements CanActivate {
     constructor(private jwtService: JwtService) {}
 
     canActivate(context: ExecutionContext) {
@@ -16,13 +16,15 @@ export class verifyUser implements CanActivate {
             
             console.log('<<<');
             
-			console.log(request.cookies, request.signedCookies);
+			console.log("Cookies:", request.cookies);
             //console.log("request.headers[authorization]" + request.headers["authorization"]);
-            const jwt = request.headers["authorization"];
-			// const jwt = request.headerField;
+            // const jwt = request.headers["authorization"];
+
+			const jwt = request.cookies["AuthToken"];
 			console.log("TOKEN:", jwt);
             // console.log(request.headers.get('authorization'));
-            return this.jwtService.verify(jwt.split(' ')[1]);
+            // return this.jwtService.verify(jwt.split(' ')[1]);
+            return this.jwtService.verify(jwt);
             // return this.jwtService.verify("..y8Lrw_joy4bWbQ1Bvw-vVAOAWk0Yy6zRi38uQXCokns");
         } catch (e) {
 			console.log("Error logging in")
@@ -30,4 +32,3 @@ export class verifyUser implements CanActivate {
         }
     }
 }
- 
