@@ -9,15 +9,15 @@ export const ChatBoxContainer = styled.div`
     border: 2px solid #04AA6D;
 `;
 
-export const ChatContainer = styled.div`
-    background-color: #000;
-    height: 100%;
-    width: 100%;
-`;
-
 export const TopContainer = styled.div`
     background-color: #393b4c;
     min-height: 40px;
+    width: 100%;
+`;
+
+export const ChatContainer = styled.div`
+    background-color: #000;
+    height: 100%;
     width: 100%;
 `;
 

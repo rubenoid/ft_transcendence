@@ -1,6 +1,4 @@
 import styled from 'styled-components';
-import { ContextReplacementPlugin } from 'webpack';
-import { string } from 'prop-types';
 
 export const DashBoardContainer = styled.div`
     height: 100vh;
@@ -13,18 +11,17 @@ export const DashBoardContainer = styled.div`
     ". info3 game chat ."; 
     grid-gap: 10px;
     background-color: #8EC5FC;
-background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
-
-    color: #444;
-    padding: 10px;
+    background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
+    padding: 10px 0;
     
     @media screen and (max-width: 1300px) {
-    grid-template-columns: 1fr 1.5fr 1.5fr;
+        grid-template-columns: 1fr 1.5fr 1.5fr;
         grid-template-areas: 
         " info2 info1 chat"
         " game game chat "
         " game game chat"; 
     }
+
     @media screen and (max-width: 768px) {
         height: 100%;
         display: flex;
@@ -42,8 +39,7 @@ type BoxProps = {
 export const Box = styled.div<BoxProps>`
     width: 100%;
     height: ${(props: BoxProps) => props.height ? props.height : '100%'};
-    background-color: transparent;
-    background-color: ${(props: BoxProps) => props.bgColor};
+    background-color: ${(props: BoxProps) => props.bgColor ? props.bgColor : 'transparent'};
     border-radius: 5px;
     grid-area: ${(props: BoxProps) => props.gridArea};
     place-self: ${(props: BoxProps) => props.alignSelf};
