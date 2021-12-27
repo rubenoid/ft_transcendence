@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { ChatEntity } from 'src/chat/chat.entity';
 
 @Entity()
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()

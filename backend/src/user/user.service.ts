@@ -13,8 +13,8 @@ export class UserService {
 	async getUser(toFind: number): Promise<UserEntity>
 	{
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
-		if (User === undefined)
-			throw "User not found";
+		// if (User === undefined)
+		// 	throw "User not found";
 		return User;
 	}
 
@@ -52,6 +52,25 @@ export class UserService {
 		newUser.blockedUsers = [];
 
 		await this.UserRepository.save(newUser);
+	}
+
+	async addwithDetails(id: number, username: string, firstname: string, lastname: string)
+	{
+		console.log("start here" + id +"username:" + username + "firstname:" + firstname, + "lastname" + lastname);
+		let newUser: UserEntity = new UserEntity();
+		newUser.id = id;
+		newUser.firstName = firstname;
+		newUser.lastName = lastname;
+		newUser.userName = username;
+		newUser.rating = 10000;
+		newUser.wins = 99;
+		newUser.losses = 1;
+		newUser.blockedBy = [];
+		newUser.blockedUsers = [];
+		console.log("end here");
+		console.log("CREATED AS ID" + id);
+		await this.UserRepository.save(newUser);
+		
 	}
 
 	async getUsers()
@@ -105,8 +124,8 @@ export class UserService {
 	}
 	async findByUsername(username: string): Promise<UserEntity> {
 		const User = await this.UserRepository.findOne({ where: { userName: username } });
-		if (User === undefined)
-			throw "User not found findOne";
+		// if (User === undefined)
+		// 	throw "User not found findOne";
 		return User;
 	  }
 }
