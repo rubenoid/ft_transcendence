@@ -25,7 +25,13 @@ export class UserService {
 			throw "User not found";
 		return User.avatar;
 	}
-
+    async getUserByName(toFind: string): Promise<UserEntity>
+    {
+        const User = await this.UserRepository.findOne({ where: { userName: toFind } });
+        if (User === undefined)
+            throw "User not found";
+        return User;
+    }
 	async getUserQuery(query: FindOneOptions<UserEntity>): Promise<UserEntity[]>
 	{
 		const User = await this.UserRepository.find(query);
