@@ -15,6 +15,7 @@ const instance: AxiosInstance = axios.create({
   baseURL: "http://localhost:5000",
 });
 
+/*
 axios.interceptors.request.use(function(config) {
   console.log('Test Interceptor request->');
   return config;
@@ -32,6 +33,7 @@ axios.interceptors.response.use(function (response) {
   console.log('Test interceptor response error->');
     return Promise.reject(error);
 })
+*/
 
 export const fetchUsers = async (): Promise<User[]> => {
 
@@ -64,4 +66,17 @@ export const fetchUserByUserName = async (userName: string): Promise<User> => {
   });
   console.log(user);
   return user;
+}
+
+export const loginThroughIntra = async () => {
+  const endpoint = '/auth/auth/login';
+
+  await instance.post(endpoint, {})
+  .then(response => {
+    console.log('RESPONSE LOGIN: ');
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
 }
