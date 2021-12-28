@@ -16,6 +16,9 @@ export class UserEntity {
   lastName: string;
 
   @Column()
+  avatar: string;
+
+  @Column()
   wins: number;
 
   @Column()

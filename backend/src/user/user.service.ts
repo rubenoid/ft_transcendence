@@ -18,6 +18,14 @@ export class UserService {
 		return User;
 	}
 
+	async getUserAvatarById(toFind: number)
+	{
+		const User = await this.UserRepository.findOne({ where: { id: toFind } });
+		if (User === undefined)
+			throw "User not found";
+		return User.avatar;
+	}
+
 	async getUserQuery(query: FindOneOptions<UserEntity>): Promise<UserEntity[]>
 	{
 		const User = await this.UserRepository.find(query);
@@ -45,6 +53,7 @@ export class UserService {
 		newUser.firstName = "i dont know";
 		newUser.lastName = "hallo";
 		newUser.userName = "woohoo";
+		newUser.avatar = "backend/src/avatars/thispersondoesnotexist.jpeg"
 		newUser.rating = 10000;
 		newUser.wins = 99;
 		newUser.losses = 1;
@@ -62,6 +71,7 @@ export class UserService {
 		newUser.firstName = firstname;
 		newUser.lastName = lastname;
 		newUser.userName = username;
+		newUser.avatar = "backend/src/avatars/thispersondoesnotexist.jpeg"
 		newUser.rating = 10000;
 		newUser.wins = 99;
 		newUser.losses = 1;
@@ -70,7 +80,7 @@ export class UserService {
 		console.log("end here");
 		console.log("CREATED AS ID" + id);
 		await this.UserRepository.save(newUser);
-		
+
 	}
 
 	async getUsers()
@@ -118,7 +128,7 @@ export class UserService {
 		let user = await this.getUserQueryOne({where: {id: id}});
 		user.firstName = firstName;
 		user.lastName = lastName;
-		user.userName = userName;	
+		user.userName = userName;
 		await this.UserRepository.save(user);		
 		return user.id;	
 	}

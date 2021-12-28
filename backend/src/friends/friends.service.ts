@@ -9,6 +9,7 @@ export class FriendsService {
 
 	async addFriend(id: number, id2: number)
 	{
+		// add here that cannot add as a friend if already blocked
 		if (id == id2)
 			throw "Cannot add yourself";
 		const user = await this.userService.getUserQueryOne({where: {id: id}, relations: ["friends"]});
