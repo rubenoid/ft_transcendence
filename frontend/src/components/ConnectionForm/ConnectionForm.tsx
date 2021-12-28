@@ -7,7 +7,6 @@ const ConnectionForm = () => {
     return (
         <FormContainer>
             <Form>
-            
                     <Item><RoundButton><Text fontSize='20px'>42</Text></RoundButton></Item>
                     <Item><Label> <Text fontSize='20px'>Email</Text></Label><TextInput type='text'/></Item>
                     <Item><Label><Text fontSize='20px'>Password</Text></Label><TextInput type='password'/></Item>
