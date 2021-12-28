@@ -108,6 +108,11 @@ export class UserService {
 		user.userName = userName;	
 		await this.UserRepository.save(user);		
 		return user.id;	
-
 	}
+	async findByUsername(username: string): Promise<UserEntity> {
+		const User = await this.UserRepository.findOne({ where: { userName: username } });
+		if (User === undefined)
+			throw "User not found findOne";
+		return User;
+	  }
 }
