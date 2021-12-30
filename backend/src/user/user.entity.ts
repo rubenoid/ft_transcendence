@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { ChatEntity } from 'src/chat/chat.entity';
 
 @Entity()
 export class UserEntity {
@@ -35,4 +36,8 @@ export class UserEntity {
 
   @Column("int", { array: true, nullable: true })
   blockedBy: number[];
+
+  
+  @ManyToMany( () => ChatEntity, (chat) => chat.users)//, UserEntity => UserEntity.Friends)
+  channels: ChatEntity[];
 }

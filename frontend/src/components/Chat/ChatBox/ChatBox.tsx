@@ -6,6 +6,8 @@ import { ChatContainer } from '../ChatElements';
 // const { Server } = require("socket.io");
 // const io = new Server(Server);
 
+// holding the messages 
+<div id= "messages"></div>
 const ChatBox = () => {
     return (
         <ChatBoxContainer>

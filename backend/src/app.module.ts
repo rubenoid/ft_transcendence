@@ -11,9 +11,10 @@ import { BlockedModule } from './blocked/blocked.module';
 // import { AuthController } from './auth/auth.controller';
 // import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
-  imports: [ UserModule, DatabaseModule, FriendsModule, SettingsModule, BlockedModule, AuthModule],
+  imports: [ UserModule, DatabaseModule, FriendsModule, SettingsModule, BlockedModule, AuthModule, ChatModule],
   // controllers: [AppController, DatabaseController, BlockedController],
   // controllers: [AppController, DatabaseController, AuthController],
   controllers: [AppController, DatabaseController],
