@@ -7,10 +7,11 @@ import { ChatContainer } from '../ChatElements';
 // const io = new Server(Server);
 
 // holding the messages 
-<div id= "messages"></div>
+
 const ChatBox = () => {
     return (
         <ChatBoxContainer>
+            <div id= "messages"></div>
             <TopContainer>
                 <Text>friend</Text>
             </TopContainer>
