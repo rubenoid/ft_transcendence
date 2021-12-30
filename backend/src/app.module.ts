@@ -12,13 +12,16 @@ import { BlockedModule } from './blocked/blocked.module';
 // import { AuthService } from './auth/auth.service';
 import { AuthModule } from './auth/auth.module';
 import { ChatModule } from './chat/chat.module';
+import { MatchController } from './match/match.controller';
+import { MatchService } from './match/match.service';
+import { MatchModule } from './match/match.module';
 
 @Module({
-  imports: [ UserModule, DatabaseModule, FriendsModule, SettingsModule, BlockedModule, AuthModule, ChatModule],
+  imports: [ UserModule, DatabaseModule, FriendsModule, SettingsModule, BlockedModule, AuthModule, ChatModule, MatchModule],
   // controllers: [AppController, DatabaseController, BlockedController],
   // controllers: [AppController, DatabaseController, AuthController],
-  controllers: [AppController, DatabaseController],
+  controllers: [AppController, DatabaseController, MatchController],
   // providers: [AppService, AuthService],
-  providers: [AppService],
+  providers: [AppService, MatchService],
 })
 export class AppModule {}

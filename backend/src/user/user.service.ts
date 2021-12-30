@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UserEntity } from './user.entity';
 import { Repository, FindOneOptions} from 'typeorm';
 
-
+var current_id : number = 0;
 @Injectable()
 export class UserService {
 
@@ -25,13 +25,7 @@ export class UserService {
 			throw "User not found";
 		return User.avatar;
 	}
-    async getUserByName(toFind: string): Promise<UserEntity>
-    {
-        const User = await this.UserRepository.findOne({ where: { userName: toFind } });
-        if (User === undefined)
-            throw "User not found";
-        return User;
-    }
+
 	async getUserQuery(query: FindOneOptions<UserEntity>): Promise<UserEntity[]>
 	{
 		const User = await this.UserRepository.find(query);
@@ -56,6 +50,7 @@ export class UserService {
 	async addUser()
 	{
 		let newUser: UserEntity = new UserEntity();
+		newUser.id = current_id++;
 		newUser.firstName = "i dont know";
 		newUser.lastName = "hallo";
 		newUser.userName = "woohoo";
@@ -117,6 +112,7 @@ export class UserService {
 	async insert(firstName: string, lastName: string, userName: string)
 	{
 		let newUser: UserEntity = new UserEntity();
+		newUser.id = current_id++;
 		newUser.firstName = firstName;
 		newUser.lastName = lastName;
 		newUser.userName = userName;
@@ -138,7 +134,7 @@ export class UserService {
 		await this.UserRepository.save(user);		
 		return user.id;	
 	}
-	async findByUsername(username: string): Promise<UserEntity> {
+	async getUserByName(username: string): Promise<UserEntity> {
 		const User = await this.UserRepository.findOne({ where: { userName: username } });
 		// if (User === undefined)
 		// 	throw "User not found findOne";

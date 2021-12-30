@@ -30,7 +30,7 @@ export class UserEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true})//, UserEntity => UserEntity.Friends)
+  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true, nullable: true })// ADDED nullable: true ?? 
   @JoinTable()
   friends: UserEntity[];
 
@@ -40,7 +40,6 @@ export class UserEntity {
   @Column("int", { array: true, nullable: true })
   blockedBy: number[];
 
-  
   @ManyToMany( () => ChatEntity, (chat) => chat.users)//, UserEntity => UserEntity.Friends)
   channels: ChatEntity[];
 }
