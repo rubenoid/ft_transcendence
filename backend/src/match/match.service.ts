@@ -76,5 +76,11 @@ export class MatchService {
 			throw "user not found";
 		return Match;
     }
+    async getQueuedPlayer()
+    {
+        if (!quedplayer)
+            return "No queued players";
+        return ("Queued player with id" + quedplayer);
+    }
 
 }
