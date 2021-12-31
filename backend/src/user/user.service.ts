@@ -99,7 +99,7 @@ export class UserService {
 
 	async getAll(): Promise<UserEntity[]>
 	{
-		const User = await this.UserRepository.find();
+		const User = await this.UserRepository.find({relations: ["friends", "matches"]});
 		if (User.length === 0)
 			throw "user not found";
 		return User;

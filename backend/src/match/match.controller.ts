@@ -31,7 +31,7 @@ export class MatchController {
 	@Get('getAllMatchs')
 	async getAllMatchs()
 	{
-		return await this.matchService.getAllMatchs();
+		return await this.matchService.getAllMatches();
 	}
 	@Get('getQueuedPlayer')
 	async getQueuedPlayer()
