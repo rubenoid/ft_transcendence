@@ -20,6 +20,12 @@ export class UserController {
         return await this.userService.getUserByName(param.username as string);
     }
 
+	@Get('getAvatar/:id')
+	async getUserAvatarById(@Param() param)
+	{
+		return await this.userService.getUserAvatarById(param.id as number);
+	}
+
 	@Get('random')
 	async addUserRand()
 	{
