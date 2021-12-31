@@ -18,7 +18,7 @@ const Content = (usr: UserProps) => {
 const HeroSection = () => {
     return (
         <HeroContainer>
-            <Content isConnected ={true}/>
+            <Content isConnected ={false}/>
         </HeroContainer>
     );
 }
