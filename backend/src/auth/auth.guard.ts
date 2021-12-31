@@ -10,22 +10,14 @@ export class localAuthGaurd implements CanActivate {
 		const request = <Request>context.switchToHttp().getRequest();
 		//console.log("Checking user", typeof request, request);
         try {
-            console.log('>>>');
-            
-			// console.log(request);
-            
-            console.log('<<<');
-            
 			console.log("Cookies:", request.cookies);
-            //console.log("request.headers[authorization]" + request.headers["authorization"]);
-            // const jwt = request.headers["authorization"];
+            console.log("request.headers[authorization]" + request.headers["authorization"]);
+            // const jwt = request.headers["a7uthorization"];
 
 			const jwt = request.cookies["AuthToken"];
 			console.log("TOKEN:", jwt);
             // console.log(request.headers.get('authorization'));
-            // return this.jwtService.verify(jwt.split(' ')[1]);
             return this.jwtService.verify(jwt);
-            // return this.jwtService.verify("..y8Lrw_joy4bWbQ1Bvw-vVAOAWk0Yy6zRi38uQXCokns");
         } catch (e) {
 			console.log("Error logging in")
             throw new UnauthorizedException('unauthorized');

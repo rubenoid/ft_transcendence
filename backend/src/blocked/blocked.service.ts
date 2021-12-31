@@ -40,16 +40,16 @@ export class BlockedService {
 	{		
         let user = await this.userService.getUserQueryOne({where: {id: id}});
 		let userBlocked = await this.userService.getUserQueryOne({where: {id: idToUnblock}});
-
+		
 		let indexBlocked = user.blockedUsers.findIndex(e => e == idToUnblock); // returns -1 if not found
 		if (indexBlocked < 0)
             throw "Can not unblock, because user is not blocked";
 		user.blockedUsers.splice(indexBlocked, 1);
 
-        let indexBlockedBy = userBlocked.blockedBy.find(element => element == id);
-        if (!indexBlockedBy)
+        let indexBlockedBy = userBlocked.blockedBy.findIndex(e => e == id);
+        if (indexBlockedBy < 0)
             throw "Can not find index of blockedBy. Serieus issue because this should not be able happen";
-        userBlocked.blockedBy.splice(indexBlockedBy, 1);
+		userBlocked.blockedBy.splice(indexBlockedBy, 1);
 
         const result2 = await this.userService.saveUser(user);
 		const result = await this.userService.saveUser(userBlocked);

@@ -9,6 +9,7 @@ export class FriendsService {
 
 	async addFriend(id: number, id2: number)
 	{
+		// add here that cannot add as a friend if already blocked
 		if (id == id2)
 			throw "Cannot add yourself";
 		const user = await this.userService.getUserQueryOne({where: {id: id}, relations: ["friends"]});
@@ -17,6 +18,11 @@ export class FriendsService {
 			throw "User can not be loaded";
         if (!friend)
             throw "Friend does not exist or can not be loaded";
+		// need to test!!
+		if (user.blockedUsers.includes(friend.id))
+			throw ("Blocked User " + friend.id + "first unblock then you can add as a friend");
+		if (user.blockedBy.includes(friend.id))
+			throw ("Unfortunately you cannot add " + friend.id + "as a friend");
 		if (!user.friends)
 			user.friends = [];
 		if (!friend.friends)

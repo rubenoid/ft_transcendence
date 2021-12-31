@@ -1,8 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { ChatEntity } from 'src/chat/chat.entity';
+import { MatchEntity } from 'src/match/match.entity';
 
 @Entity()
 export class UserEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
@@ -13,6 +15,9 @@ export class UserEntity {
 
   @Column()
   lastName: string;
+
+  @Column()
+  avatar: string;
 
   @Column()
   wins: number;
@@ -26,13 +31,19 @@ export class UserEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true})//, UserEntity => UserEntity.Friends)
+  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true, nullable: true })// ADDED nullable: true ?? 
   @JoinTable()
   friends: UserEntity[];
+
+  @ManyToMany( () => MatchEntity, (match) => match.players )
+  matches: MatchEntity[];
 
   @Column("int", { array: true, nullable: true })
   blockedUsers: number[];
 
   @Column("int", { array: true, nullable: true })
   blockedBy: number[];
+
+  @ManyToMany( () => ChatEntity, (chat) => chat.users )//, UserEntity => UserEntity.Friends)
+  channels: ChatEntity[];
 }
