@@ -78,6 +78,14 @@ export class MatchService {
 		return Match;
     }
 
+	async getUserMatches(id: number)
+	{
+		const user: UserEntity = await this.userService.getUserQueryOne({where: {id: id}, relations: ["matches"] } );
+
+		return user.matches;
+	}
+
+
     async getAllMatches()
     {
 		const Match = await this.MatchRepository.find({relations: ["players"]});

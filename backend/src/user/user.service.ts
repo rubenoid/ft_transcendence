@@ -12,7 +12,7 @@ export class UserService {
 		) {}
 	async getUser(toFind: number): Promise<UserEntity>
 	{
-		const User = await this.UserRepository.findOne({ where: { id: toFind } });
+		const User = await this.UserRepository.findOne({ where: { id: toFind }});
 		// if (User === undefined)
 		// 	throw "User not found";
 		return User;
@@ -54,7 +54,7 @@ export class UserService {
 		newUser.firstName = "i dont know";
 		newUser.lastName = "hallo";
 		newUser.userName = "woohoo";
-		newUser.avatar = "backend/src/avatars/thispersondoesnotexist.jpeg"
+		newUser.avatar = "img/test.jpeg"
 		newUser.rating = 10000;
 		newUser.wins = 99;
 		newUser.losses = 1;
@@ -72,7 +72,7 @@ export class UserService {
 		newUser.firstName = firstname;
 		newUser.lastName = lastname;
 		newUser.userName = username;
-		newUser.avatar = "backend/src/avatars/thispersondoesnotexist.jpeg"
+		newUser.avatar = "img/test.jpeg"
 		newUser.rating = 10000;
 		newUser.wins = 99;
 		newUser.losses = 1;

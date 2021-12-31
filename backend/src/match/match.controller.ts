@@ -28,6 +28,13 @@ export class MatchController {
 	{
 		return await this.matchService.getMatch(param.id as number);
 	}
+
+	@Get("getUserHistory/:id")
+	async getUserHistory(@Param() param)
+	{
+		return await this.matchService.getUserMatches(param.id as number);
+	}
+
 	@Get('getAllMatchs')
 	async getAllMatchs()
 	{
