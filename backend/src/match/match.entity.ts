@@ -1,5 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, ManyToMany, JoinTable } from 'typeorm';
-import { UserEntity } from 'src/user/user.entity';
+import {
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	JoinColumn,
+	OneToOne,
+	ManyToMany,
+	JoinTable,
+} from "typeorm";
+import { UserEntity } from "src/user/user.entity";
 @Entity()
 export class MatchEntity {
 	@PrimaryGeneratedColumn()
