@@ -9,11 +9,11 @@ const ConnectionForm = () => {
     function login(e: any) {
       e.preventDefault();
       console.log('Login');
-      const test = async () => {
+      const apiLogin = async () => {
         console.log('IT WORKS');
         await loginThroughIntra();
       }
-      test();
+      apiLogin();
     }
     
     return (
@@ -26,7 +26,7 @@ const ConnectionForm = () => {
                     <Text fontSize='15px'>Sign Up</Text>
             </Form>
         </FormContainer>
-    )
+    );
 }
 
 export default ConnectionForm;

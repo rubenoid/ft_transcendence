@@ -69,9 +69,9 @@ export const fetchUserByUserName = async (userName: string): Promise<User> => {
 }
 
 export const loginThroughIntra = async () => {
-  const endpoint = '/auth/auth/login';
+  const endpoint = '/auth/login';
 
-  await instance.post(endpoint)
+  await instance.get(endpoint)
   .then(response => {
     console.log('RESPONSE LOGIN: ');
     console.log(response);
