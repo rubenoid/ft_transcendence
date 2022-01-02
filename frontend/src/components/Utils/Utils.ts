@@ -66,7 +66,6 @@ export const Item = styled.li`
     padding: 5px 0;
 `;
 
-
 export const RoundButton = styled.button`
     height: 50px;
     width: 50px;
@@ -141,4 +140,9 @@ export const WidgetContainer = styled.div<BoxProps>`
     width: 100%;
     background-color: #393b4c;
     padding: 20px;
+`;
+
+export const Link = styled.a`
+    text-decoration: none;
+    color: #fff;
 `;
