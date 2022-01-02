@@ -27,7 +27,7 @@ export class AuthController {
 				"first_name",
 				"last_name",
 			);
-		return "logged in ok";
+		return response.redirect('http://localhost:8080');
 	}
 
 	@UseGuards(localAuthGaurd)
