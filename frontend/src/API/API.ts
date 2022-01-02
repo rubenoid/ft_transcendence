@@ -5,8 +5,8 @@ export type User = {
   userName: string,
   firstName: string,
   lastName: string,
-  nbWin: number,
-  nbLost: number,
+  wins: number,
+  losses: number,
   rating: number,
   isActive: boolean
 }
@@ -14,6 +14,26 @@ export type User = {
 const instance: AxiosInstance = axios.create({
   baseURL: "http://localhost:5000",
 });
+
+/*
+axios.interceptors.request.use(function(config) {
+  console.log('Test Interceptor request->');
+  return config;
+},
+  function(error) {
+    console.log('Test Interceptor request Error->');
+    return Promise.reject(error);
+  }
+)
+
+axios.interceptors.response.use(function (response) {
+  console.log('Test interceptor response->');
+  return response;
+}, function(error) {
+  console.log('Test interceptor response error->');
+    return Promise.reject(error);
+})
+*/
 
 export const fetchUsers = async (): Promise<User[]> => {
 
@@ -28,4 +48,35 @@ export const fetchUsers = async (): Promise<User[]> => {
   });
   return users;
 }
+
+export const fetchUserByUserName = async (userName: string): Promise<User> => {
   
+  let user: User;
+
+  const endpoint = `/user/getByUserName/${userName}`;
+  console.log('ENDPOINT->');
+  console.log(endpoint);
+
+  await instance.get<User>(endpoint)
+  .then(response => {
+    user = response.data;
+  })
+  .catch((error) => {
+    return Promise.reject(error);
+  });
+  console.log(user);
+  return user;
+}
+
+export const loginThroughIntra = async () => {
+  const endpoint = '/auth/login';
+
+  await instance.get(endpoint)
+  .then(response => {
+    console.log('RESPONSE LOGIN: ');
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+}

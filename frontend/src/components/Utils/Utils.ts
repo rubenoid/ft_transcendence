@@ -9,9 +9,16 @@ export const TextInput = styled.input`
     border-radius: 4px;
     box-sizing: border-box;
     resize: vertical;
+    caret-color: #fff;
+
+    ::placeholder{
+        color: #fff;
+        font-size: 14px;
+    }
 
     &:focus
     {
+        color: #fff;
         border: 1px solid #04AA6D;
         box-shadow: none;
     }
@@ -25,7 +32,6 @@ type TextProps = {
 export const Text = styled.p`
     color: #fff;
     font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '24px'};
-    text-align: center;
     max-width: 600px;
     
     @media screen and (max-width: 768px) {
@@ -74,4 +80,65 @@ export const RoundButton = styled.button`
     &:hover {
         background-color: #abc;
     }
+`;
+
+export const Table = styled.table`
+    width: 100%;
+`;
+
+export const TableHeader = styled.thead`
+    background-color: #04AA6D;
+`;
+
+export const TableHeaderCell = styled.th`
+    text-align: left;
+`;
+
+export const TableRow = styled.tr`
+`;
+export const TableCell = styled.td`
+`;
+
+export const TableBody = styled.tbody`
+
+`;
+
+
+export const ButtonContainer = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 5px;
+    background-color: #444;
+    transform: translate(-50%, -50%);
+    padding: 50px;
+    opacity: 0.9;
+`;
+
+export const Button = styled.button`
+    margin: 10px;
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #abc;
+    }
+`;
+
+
+type BoxProps =  {
+    height ?: string;
+}
+
+export const WidgetContainer = styled.div<BoxProps>`
+    justify-content: center;
+    text-align: center;
+    height: ${(props: BoxProps) => props.height ? props.height : '100%'};
+    width: 100%;
+    background-color: #393b4c;
+    padding: 20px;
 `;

@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
 export const HeroContainer = styled.div`
+    min-height: 100vh;
+    width: 100%;
     display: flex;
-    gap: 10px;
+    align-items: center;
+    justify-content: center;
 `;

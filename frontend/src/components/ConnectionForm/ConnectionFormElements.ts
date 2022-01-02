@@ -2,11 +2,13 @@ import styled from 'styled-components';
 
 export const FormContainer = styled.div`
     display: flex;
-    position: relative;
+    align-items: center;
     justify-content: center;
     height: 100%;
     width: 100%;
+    max-width: 400px;
     background-color: #444;
+    border-radius: 10px;
     padding: 10px;
 `;
 
