@@ -15,26 +15,6 @@ const instance: AxiosInstance = axios.create({
   baseURL: "http://localhost:5000",
 });
 
-/*
-axios.interceptors.request.use(function(config) {
-  console.log('Test Interceptor request->');
-  return config;
-},
-  function(error) {
-    console.log('Test Interceptor request Error->');
-    return Promise.reject(error);
-  }
-)
-
-axios.interceptors.response.use(function (response) {
-  console.log('Test interceptor response->');
-  return response;
-}, function(error) {
-  console.log('Test interceptor response error->');
-    return Promise.reject(error);
-})
-*/
-
 export const fetchUsers = async (): Promise<User[]> => {
 
   let users: User[];
@@ -71,6 +51,18 @@ export const fetchUserByUserName = async (userName: string): Promise<User> => {
 export const loginThroughIntra = async () => {
   const endpoint = '/auth/login';
 
+  await instance.get(endpoint)
+  .then(response => {
+    console.log('RESPONSE LOGIN: ');
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+}
+
+export const isLogedIn = async () => {
+  const endpoint = '/auth/guarded-jwt';
   await instance.get(endpoint)
   .then(response => {
     console.log('RESPONSE LOGIN: ');

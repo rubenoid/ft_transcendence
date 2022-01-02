@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { HeroContainer } from './HeroSectionElements';
 import DashBoard from '../DashBoard/DashBoard';
-import ConnectionForm from '../ConnectionForm/ConnectionForm';
+import  ConnectionForm from '../ConnectionForm/ConnectionForm';
+import  RegistrationForm from '../ConnectionForm/RegistrationForm';
 
 type UserProps = {
     isConnected: boolean
@@ -18,7 +19,7 @@ const Content = (usr: UserProps) => {
 const HeroSection = () => {
     return (
         <HeroContainer>
-            <Content isConnected ={true}/>
+            <Content isConnected ={false}/>
         </HeroContainer>
     );
 }
