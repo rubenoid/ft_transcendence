@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import Cookies from 'js-cookie';
 
 export type User = {
   id: number,
@@ -62,8 +63,14 @@ export const loginThroughIntra = async () => {
 }
 
 export const isLogedIn = async () => {
+  console.log("Cookies.get(AuthToken): " + Cookies.get("AuthToken"));
   const endpoint = '/auth/guarded-jwt';
-  await instance.get(endpoint)
+
+  await instance.get(endpoint, {headers: {
+	  "Access-Control-Allow-Credentials": "true",
+	  "Access-Control-Allow-Origin": "http://localhost:5000",
+	  'Authorization': Cookies.get("AuthToken"),
+	}})
   .then(response => {
     console.log('RESPONSE LOGIN: ');
     console.log(response);
