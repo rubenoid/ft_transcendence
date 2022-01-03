@@ -1,6 +1,7 @@
 
 
-import { io } from "socket.io-client";
+//import { io } from "socket.io-client";
+const io = require("socket.io-client");
 
 // this needs to be server out of chat.gateway
 
@@ -14,13 +15,14 @@ socket.on("connect", () => {
   });
   
 
+
 //const message = (<HTMLInputElement>document.getElementById('msgtosent'));
 const messages = (<HTMLInputElement>document.getElementById('messages'));
 
 export const handlesSubmitNewMessages = (message:string) => {
     // extract the data property/ looks at inputfield message and then extracts the value. 
     socket.emit('message', message);
-    console.log(message);
+    console.log("handlesubmitmessage");
 } 
 
 // listen to incoming messages, and add it to our list of documents. 

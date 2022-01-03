@@ -41,7 +41,7 @@ import { Logger } from '@nestjs/common';
 // import { ChatMessage } from './chat.entity';
 
 
-@WebSocketGateway()
+@WebSocketGateway({cors: {origin: '*'}})
 export class ChatGateway
 	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 	@WebSocketServer() server: Server;
@@ -60,6 +60,12 @@ export class ChatGateway
 	handleConnection(client: Socket, ...args: any[]) {
 		this.logger.log(`Chat::Client connected: ${client.id}`);
 	}
+
+	@SubscribeMessage('message')
+  		handleMessage(client: any, payload: any): string {
+			this.server.emit("message", "hallo terug")
+    	return 'Hello world!';
+  	}
 
 }
 

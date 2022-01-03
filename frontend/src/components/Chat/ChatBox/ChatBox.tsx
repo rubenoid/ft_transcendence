@@ -39,11 +39,13 @@ import { AiOutlineSend as SendIcon} from 'react-icons/ai';
 //     );
 // }
 
+// let allMsg: string[];
 
 
 
-export const ChatBox: React.FunctionComponent = () => {
+const ChatBox: React.FunctionComponent = () => {
     const [term, setTerm] = useState('');
+    let allMsg = ['Abc', 'def'];
     
     const submitForm = (event: React.FormEvent<HTMLFormElement>) => {
       // Preventing the page from reloading
@@ -51,13 +53,20 @@ export const ChatBox: React.FunctionComponent = () => {
   
       <div id = "message"></div>
         console.log(term);
-  
+        
+        
+            allMsg.push(term);
+          
+            
+           
         handlesSubmitNewMessages(term);
      // alert(term);
     }
   
+    
     return (
       <ChatBoxContainer>
+        
         <InputContainer>
       <div className="container">
         <form onSubmit={submitForm}>
@@ -72,8 +81,14 @@ export const ChatBox: React.FunctionComponent = () => {
         </form>
       </div>
       </InputContainer>
+      
+        <div>
+            {allMsg.map(msg => <h4>{msg}</h4>)}
+        </div>
+    
       </ChatBoxContainer>
     );
   };
+
   
   export default ChatBox;
