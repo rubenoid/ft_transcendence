@@ -22,7 +22,7 @@ export const ChatBox = () => {
                 
                 <div>
                     <TextInput id="message" type="text" onChange={(e) => ({})}></TextInput>
-                    <button onClick={() => handlesSubmitNewMessages('message')}>Submit</button>
+                    {/* <button onClick={() => handlesSubmitNewMessages(id)}>Submit</button> */}
                     
                 </div>
         </ChatBoxContainer>
