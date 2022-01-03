@@ -1,21 +1,30 @@
 
-const { Server } = require("socket.io");
+
+import { io } from "socket.io-client";
+
 // this needs to be server out of chat.gateway
 
-const io = new Server
 
-const socket = io("http:://localhost:5000")
 
-const message = (<HTMLInputElement>document.getElementById('message'));
+const socket = io("http://localhost:5000")
+
+socket.on("connect", () => {
+    console.log(socket.id); 
+    console.log("do something with data");
+  });
+  
+
+//const message = (<HTMLInputElement>document.getElementById('msgtosent'));
 const messages = (<HTMLInputElement>document.getElementById('messages'));
 
 export const handlesSubmitNewMessages = (message:string) => {
     // extract the data property/ looks at inputfield message and then extracts the value. 
     socket.emit('message', message);
+    console.log(message);
 } 
 
 // listen to incoming messages, and add it to our list of documents. 
-socket.on('message', (message:string) =>{
+socket.on('message', (message:string) => {
     handleNewMessage(message);
 
 })
@@ -32,3 +41,5 @@ const buildNewMessage  = (message:string) =>{
     li.appendChild(document.createTextNode(message))
     return li;
 }
+
+export default socket
