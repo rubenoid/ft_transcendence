@@ -32,7 +32,6 @@ type TextProps = {
 export const Text = styled.p`
     color: #fff;
     font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '24px'};
-    max-width: 600px;
     
     @media screen and (max-width: 768px) {
         font-size: 24px;
@@ -65,7 +64,6 @@ export const Item = styled.li`
     width: 100%;
     padding: 5px 0;
 `;
-
 
 export const RoundButton = styled.button`
     height: 50px;
@@ -141,4 +139,9 @@ export const WidgetContainer = styled.div<BoxProps>`
     width: 100%;
     background-color: #393b4c;
     padding: 20px;
+`;
+
+export const Link = styled.a`
+    text-decoration: none;
+    color: #fff;
 `;

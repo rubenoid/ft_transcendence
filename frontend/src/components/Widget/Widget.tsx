@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { WidgetWrapper } from './WidgetElements';
 import { fetchUsers, User } from '../../API/API';
-import { List, LongList, Item } from '../Utils/Utils';
+import { List, LongList, Item, WidgetContainer } from '../Utils/Utils';
 import { Text, Table, TableHeaderCell, TableBody, TableRow, TableHeader, TableCell } from '../Utils/Utils'
 
 
@@ -29,7 +29,8 @@ const Widget = () => {
         );
     });
     return (
-        <WidgetWrapper>
+        <WidgetContainer>
+            <Text>Users</Text>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -43,7 +44,7 @@ const Widget = () => {
                     { listUsers ? listUsers : <Item>Loading</Item>}
                 </TableBody>
             </Table>
-        </WidgetWrapper>
+        </WidgetContainer>
     );
 }
 

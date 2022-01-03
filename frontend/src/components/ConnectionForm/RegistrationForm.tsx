@@ -15,7 +15,7 @@ const RegistrationForm = () => {
                     <Text fontSize='15px'>Sign In</Text>
             </Form>
         </FormContainer>
-    )
+    );
 }
 
 export default RegistrationForm;
