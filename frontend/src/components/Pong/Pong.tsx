@@ -12,7 +12,6 @@ const Pong = () => {
                 <PongImg src={PongImgUrl}/>
                 <ButtonContainer>
                     <Button><Text fontSize='20px'>Play Online</Text></Button>
-                    <Button><Text fontSize='20px'>Play Computer</Text></Button>
                 </ButtonContainer>
             </PongContainer>
         </>
