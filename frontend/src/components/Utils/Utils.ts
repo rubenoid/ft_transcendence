@@ -29,9 +29,13 @@ type TextProps = {
     fontSize?: string
 }
 
+export const TextContainer = styled.div`
+    margin-bottom: 15px;
+`;
+
 export const Text = styled.p`
     color: #fff;
-    font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '24px'};
+    font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '1rem'};
     
     @media screen and (max-width: 768px) {
         font-size: 24px;
@@ -135,7 +139,7 @@ type BoxProps =  {
 export const WidgetContainer = styled.div<BoxProps>`
     justify-content: center;
     text-align: center;
-    height: ${(props: BoxProps) => props.height ? props.height : '100%'};
+    height : 100%;
     width: 100%;
     background-color: #393b4c;
     padding: 20px;
