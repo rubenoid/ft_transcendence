@@ -1,8 +1,9 @@
 import React from 'react';
-import {TopContainer, ChatBoxContainer, InputContainer} from './ChatBoxElements';
+import {TopContainer, ChatBoxContainer, InputContainer, SendIconContainer} from './ChatBoxElements';
 import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
 import { ChatContainer } from '../ChatElements';
 import { handlesSubmitNewMessages } from '../../socket'
+import { AiOutlineSend as SendIcon} from 'react-icons/ai';
 
 // const { Server } = require("socket.io");
 // const io = new Server(Server);
@@ -20,14 +21,19 @@ export const ChatBox = () => {
 
             </ChatContainer>
                 
+            
+            <InputContainer>
                 <div>
                     <TextInput id="message" type="text" onChange={(e) => ({})}></TextInput>
                     {/* <button onClick={() => handlesSubmitNewMessages(id)}>Submit</button> */}
                     
                 </div>
+                <SendIconContainer>
+                    <SendIcon/>
+                </SendIconContainer>
+            </InputContainer>
         </ChatBoxContainer>
     );
 }
 
-//input field. 
 export default ChatBox;

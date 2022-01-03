@@ -23,14 +23,9 @@ const AddFriend = () => {
 
     return (
         <WidgetContainer>
-            <Item><Text>User Manager</Text></Item>
-            <Item>
+            <Text>Search for User</Text>
                 <TextInput type="text" placeholder="Type to search..." onChange={(e) => setUserName(e.target.value)}></TextInput>
-            </Item>
-            <Item><Text>{user ? user.userName : ''}</Text></Item> 
-            <Item>
-                <Button><Text fontSize='20px'>Search</Text></Button>
-            </Item>
+            <Text>{user && user.userName == userName ? user.userName : ''}</Text>
         </WidgetContainer>
     );
 }

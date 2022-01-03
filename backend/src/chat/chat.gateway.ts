@@ -14,6 +14,6 @@ export class ChatGateway {
     // emit a message to everyone on the server 
     this.server.emit('message', message);
   }
-
-
 }
+
+

@@ -1,15 +1,13 @@
-import {Controller, Post, Param, Get, Put} from '@nestjs/common';
+import { Controller, Post, Param, Get, Put } from "@nestjs/common";
 import { SettingsService } from "./settings.service";
-import {UserService} from "../user/user.service";
+import { UserService } from "../user/user.service";
 
-@Controller('settings')
+@Controller("settings")
 export class SettingsController {
-	constructor (private readonly settingsService: SettingsService) {}
+	constructor(private readonly settingsService: SettingsService) {}
 
-	@Put('changeFirstName/:id')
-	async changeFirstName(@Param() param)
-	{
-
+	@Put("changeFirstName/:id")
+	async changeFirstName(@Param() param) {
+		return "";
 	}
 }
-

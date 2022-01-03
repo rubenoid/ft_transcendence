@@ -1,43 +1,60 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinTable, ManyToMany, OneToMany } from 'typeorm';
-import { ChatEntity } from 'src/chat/chat.entity';
+import {
+	Entity,
+	Column,
+	PrimaryColumn,
+	JoinTable,
+	ManyToMany,
+	OneToMany,
+} from "typeorm";
+import { ChatEntity } from "src/chat/chat.entity";
+import { MatchEntity } from "src/match/match.entity";
 
 @Entity()
 export class UserEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryColumn()
+	id: number;
 
-  @Column()
-  userName: string;
+	@Column()
+	userName: string;
 
-  @Column()
-  firstName: string;
+	@Column()
+	firstName: string;
 
-  @Column()
-  lastName: string;
+	@Column()
+	lastName: string;
 
-  @Column()
-  wins: number;
+	@Column()
+	avatar: string;
 
-  @Column()
-  losses: number;
+	@Column()
+	wins: number;
 
-  @Column()
-  rating: number;
+	@Column()
+	losses: number;
 
-  @Column({ default: true })
-  isActive: boolean;
+	@Column()
+	rating: number;
 
-  @ManyToMany( () => UserEntity, {onDelete: "SET NULL", cascade: true})//, UserEntity => UserEntity.Friends)
-  @JoinTable()
-  friends: UserEntity[];
+	@Column({ default: true })
+	isActive: boolean;
 
-  @Column("int", { array: true, nullable: true })
-  blockedUsers: number[];
+	@ManyToMany(() => UserEntity, {
+		onDelete: "SET NULL",
+		cascade: true,
+		nullable: true,
+	}) // ADDED nullable: true ??
+	@JoinTable()
+	friends: UserEntity[];
 
-  @Column("int", { array: true, nullable: true })
-  blockedBy: number[];
+	@ManyToMany(() => MatchEntity, (match) => match.players)
+	matches: MatchEntity[];
 
-  
-  @ManyToMany( () => ChatEntity, (chat) => chat.users)//, UserEntity => UserEntity.Friends)
-  channels: ChatEntity[];
+	@Column("int", { array: true, nullable: true })
+	blockedUsers: number[];
+
+	@Column("int", { array: true, nullable: true })
+	blockedBy: number[];
+
+	@ManyToMany(() => ChatEntity, (chat) => chat.users) //, UserEntity => UserEntity.Friends)
+	channels: ChatEntity[];
 }
