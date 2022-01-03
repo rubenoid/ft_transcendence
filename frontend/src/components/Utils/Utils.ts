@@ -32,7 +32,6 @@ type TextProps = {
 export const Text = styled.p`
     color: #fff;
     font-size: ${(props: TextProps) => props.fontSize ? props.fontSize : '24px'};
-    max-width: 600px;
     
     @media screen and (max-width: 768px) {
         font-size: 24px;
