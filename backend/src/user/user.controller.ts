@@ -6,6 +6,7 @@ import {
 	Body,
 	Injectable,
 	Param,
+	Req,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 
@@ -20,6 +21,11 @@ export class UserController {
 	async getUserById(@Param() param) {
 		return await this.userService.getUser(param.id as number);
 	}
+	@Get("me")
+	async getme(@Req() req, @Param() param) {
+		return await this.userService.getUser(req.user.id as number);
+	}
+
 	@Get("getByUserName/:username")
 	async getUserByUsername(@Param() param) {
 		return await this.userService.getUserByName(param.username as string);
