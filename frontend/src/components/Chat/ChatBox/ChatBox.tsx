@@ -2,25 +2,32 @@ import React from 'react';
 import {TopContainer, ChatBoxContainer, InputContainer} from './ChatBoxElements';
 import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
 import { ChatContainer } from '../ChatElements';
+import { handlesSubmitNewMessages } from '../../socket'
 
 // const { Server } = require("socket.io");
 // const io = new Server(Server);
 
 // holding the messages 
 
-const ChatBox = () => {
+export const ChatBox = () => {
     return (
         <ChatBoxContainer>
-            <div id= "messages"></div>
+            <div> <ul id= "messages"></ul></div>
             <TopContainer>
                 <Text>friend</Text>
             </TopContainer>
             <ChatContainer>
 
             </ChatContainer>
-                <TextInput type="text" onChange={(e) => ({})}></TextInput>
+                
+                <div>
+                    <TextInput id="message" type="text" onChange={(e) => ({})}></TextInput>
+                    <button onClick={() => handlesSubmitNewMessages('message')}>Submit</button>
+                    
+                </div>
         </ChatBoxContainer>
     );
 }
 
+//input field. 
 export default ChatBox;
