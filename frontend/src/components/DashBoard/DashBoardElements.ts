@@ -4,11 +4,11 @@ export const DashBoardContainer = styled.div`
     height: 100vh;
     width: 100%;
     display: grid;
-    grid-template-columns: 0fr 1fr 2fr 1.5fr 0fr;
+    grid-template-columns: 0.1fr 1fr 2fr 1.5fr 0fr;
     grid-template-areas: 
+    ". profile game chat ."
     ". info1 game chat ."
-    ". info2 game chat ."
-    ". info3 game chat ."; 
+    ". info2 game chat ."; 
     grid-gap: 10px;
     background-color: #8EC5FC;
     background-image: linear-gradient(62deg, #8EC5FC 0%, #E0C3FC 100%);
@@ -17,7 +17,7 @@ export const DashBoardContainer = styled.div`
     @media screen and (max-width: 1300px) {
         grid-template-columns: 1fr 1.5fr 1.5fr;
         grid-template-areas: 
-        " info2 info1 chat"
+        " profile info1 info2"
         " game game chat "
         " game game chat"; 
     }
