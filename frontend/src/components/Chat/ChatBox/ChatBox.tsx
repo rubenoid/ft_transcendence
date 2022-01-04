@@ -5,7 +5,6 @@ import { ChatContainer } from '../ChatElements';
 import { handlesSubmitNewMessages} from '../../socket'
 import { AiOutlineSend as SendIcon} from 'react-icons/ai';
 
-
 const ChatBox: React.FunctionComponent = () => {
     const [term, setTerm] = useState('');
     let allMsg = ['Abc', 'def'];
