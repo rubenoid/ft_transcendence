@@ -10,9 +10,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 			ignoreExpiration: false,
 			secretOrKey: "secretKey",
 			jwtFromRequest: ExtractJwt.fromExtractors([
-				(request: Request) => {
-					const data = request.headers["authorization"] || request?.cookies["AuthToken"];
-					if (!data) {
+				(request: Request | any) => {
+					let data = '';
+					try {
+						data = request.headers["authorization"] || request?.cookies["AuthToken"];
+					} catch (er) {
+						data = request.handshake.headers.authorization;
+					}
+					if (data == '') {
 						return null;
 					}
 					return data;
