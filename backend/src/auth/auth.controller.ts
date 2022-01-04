@@ -19,7 +19,7 @@ export class AuthController {
 		await response.cookie("AuthToken", token, { httpOnly: false });
 		// if (!user)
 		// 	return response.redirect("http://localhost:8080/register");
-		return response.redirect("http://localhost:8080/profile");
+		return response.redirect("http://localhost:8080/");
 	}
 
 	@UseGuards(localAuthGaurd)
@@ -50,3 +50,4 @@ export class AuthController {
 		response.clearCookie("AuthToken");
 		return { message: "logged out" };
 	}
+}
