@@ -28,7 +28,7 @@ export class MatchGateway {
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage('addToQueue')
 	handleMessage(client: Socket, payload: any): any {
-		console.log("adding to queueueueueu!!client", client);
+		// console.log("adding to queueueueueu!!client", client);
 		this.matchService.addPlayerToQueue(client, this.server);
     // console.log("req.user as number", req.user);
 		// this.matchService.addPlayerToQueue()

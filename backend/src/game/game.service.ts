@@ -33,7 +33,7 @@ function intersect(p1: Point, p2: Point, p3: Point, p4: Point)
 class RunningGame
 {
 	interval: NodeJS.Timer;
-	players = [];
+	players:Socket[] = [];
 	score = [0, 0];
 
 	decor: Line[] = [];
@@ -47,7 +47,7 @@ class RunningGame
 	playersPos: Point[] = [];
 	server: Server;
 
-	constructor (players: UserEntity[], decor: Line[], roomid: string, server: Server)
+	constructor (players: Socket[], decor: Line[], roomid: string, server: Server)
 	{
 		this.server = server;
 		this.roomId = roomid;
@@ -55,7 +55,9 @@ class RunningGame
 		this.decor = decor;
 		this.ball = new Point(180, 180);
 		this.ballDir = new Point(-1, -1);
-		this.players = [new Point(200, 20), new Point(200, 580)];		
+		this.playersPos = [new Point(200, 20), new Point(200, 580)];
+		
+		this.run();
 	}
 
 	moveSpeed = 100;
@@ -85,11 +87,11 @@ class RunningGame
 		else
 			toCheck.y -= 2.5;
 
-		let player1_end = new Point(this.players[0].x + 50, this.players[0].y + 6);
-		let player2_end = new Point(this.players[1].x + 50, this.players[1].y);
+		let player1_end = new Point(this.playersPos[0].x + 50, this.playersPos[0].y + 6);
+		let player2_end = new Point(this.playersPos[1].x + 50, this.playersPos[1].y);
 		const randomDev = Math.random() * 0.25;
-		this.decor.push(new Line(new Point(this.players[0].x, this.players[0].y + 6), player1_end));
-		this.decor.push(new Line(this.players[1], player2_end));
+		this.decor.push(new Line(new Point(this.playersPos[0].x, this.playersPos[0].y + 6), player1_end));
+		this.decor.push(new Line(this.playersPos[1], player2_end));
 		for (let i = 0; i < this.decor.length; i++) {
 			const e = this.decor[i];
 			if (intersect(oldpos, toCheck, e.p1, e.p2))
@@ -113,26 +115,47 @@ class RunningGame
 		this.server.to(this.roomId).emit("gameUpdate",
 		{
 			positions: this.playersPos,
-
+			ballpos: this.ball,
 		}
-		)
+		);
 	}
 
 	run()
 	{
+		let counter = 0;
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
-			if (this.score[0] > 5 || this.score[1] > 5)
+			if (this.score[0] > 5 || this.score[1] > 5 || counter > 1000)
 			{
 				clearInterval(this.interval);
 			}
 			this.deltaTime = (Date.now() - this.lastTime) / 1000;
 			this.calculate();
 			this.emit();
+			counter++;
 			this.lastTime = Date.now();
-		}, 1000/60)
+		}, 1000/60);
 
+
+	}
+
+	async updatePos(keys: boolean[], player: number)
+	{
+		const playerref = player == 1 ? this.playersPos[0] : this.playersPos[1];
+
+		if (keys[0])
+		{
+			playerref.x -= 200 * this.deltaTime;
+			if (playerref.x < 20 + 1)
+				playerref.x  = 20 + 1;
+		}
+		if (keys[1])
+		{
+			playerref.x  += 200 * this.deltaTime;
+			if (playerref.x  + 50 > 380 - 1)
+				playerref.x  = 380 - 50 - 1;
+		}		
 	}
 }
 
@@ -155,8 +178,19 @@ export class GameService {
 		client1.join(roomid);
 		client2.join(roomid);
 
-		this.games.push(new RunningGame( [], this.decor, roomid, server ));
-		server.to(roomid).emit("startGame");
+		this.games.push(new RunningGame( [client1, client2], this.decor, roomid, server ));
+		server.to(roomid).emit("startMatch");
 	}
 
+	async handlePositionUpdate(client: Socket, keys: boolean[])
+	{
+		console.log("handlePositionUpdate: keys",keys);
+		console.log("handlePositionUpdate: clientid",client.id);
+		const game = this.games.find(x => x.players[0].id == client.id || x.players[1].id == client.id);
+		if (game != undefined)
+		{
+			console.log("FOUND GAME");
+			game.updatePos(keys, game.players[1].id == client.id ? 1 : 0);
+		}
+	}
 }

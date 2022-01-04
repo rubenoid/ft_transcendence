@@ -19,7 +19,7 @@ export const handlesSubmitNewMessages = (message:string) => {
     // extract the data property/ looks at inputfield message and then extracts the value. 
     socket.emit('message', message);
     console.log("handlesubmitmessage");
-} 
+}
 
 // listen to incoming messages, and add it to our list of documents. 
 socket.on('message', (message:string) => {

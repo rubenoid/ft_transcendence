@@ -25,6 +25,6 @@ export class GameGateway {
 		
 	@SubscribeMessage('positionUpdate')
 	handleMessage(client: any, payload: any): any {
-	
+		this.gameService.handlePositionUpdate(client, payload);
 	}
 }

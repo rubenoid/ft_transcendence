@@ -57,8 +57,8 @@ export class MatchService {
 		if (queuedSock.id === connection.id)
 			return "player" + connection.id + "cannot play a match against themselves";
 		const connection2 = queuedSock;
+		this.gameService.startMatch(connection, connection2, server);
 		queuedSock = null;
-		return this.gameService.startMatch(connection, connection2, server);
 		// return this.newMatch(Qid, User.id);
 	}
 
