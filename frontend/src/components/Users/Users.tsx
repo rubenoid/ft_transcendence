@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { WidgetWrapper } from './WidgetElements';
+import { WidgetWrapper } from './UsersElements';
 import { fetchUsers, User } from '../../API/API';
-import { List, LongList, Item, WidgetContainer } from '../Utils/Utils';
+import { List, LongList, Item, WidgetContainer, TextContainer } from '../Utils/Utils';
 import { Text, Table, TableHeaderCell, TableBody, TableRow, TableHeader, TableCell } from '../Utils/Utils'
 
 
-const Widget = () => {
+const Users = () => {
 
     const [users, setUsers] = useState<User[]>([]);
 
@@ -30,7 +30,9 @@ const Widget = () => {
     });
     return (
         <WidgetContainer>
-            <Text>Users</Text>
+            <TextContainer>
+                <Text>Users</Text>
+            </TextContainer>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -48,4 +50,4 @@ const Widget = () => {
     );
 }
 
-export default Widget;
+export default Users;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { WidgetContainer } from '../Utils/Utils';
+import { TextContainer, WidgetContainer } from '../Utils/Utils';
 import { ImgContainer } from './ProfileElements';
 import { Text } from '../Utils/Utils';
 
