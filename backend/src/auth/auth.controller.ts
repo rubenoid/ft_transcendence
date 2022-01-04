@@ -1,74 +1,53 @@
-import { Controller, Get, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, Req, Res, UseGuards, Post } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { localAuthGaurd } from "./auth.guard";
-import { JwtService } from "@nestjs/jwt";
-import { Response, Request } from "express";
-import { UserService } from "src/user/user.service";
+import { Response, Request, request } from "express";
+import { JwtAuthGuard } from "./jwt.guard";
+import { Public } from "./jwt.decorator";
 
 @Controller("auth")
 export class AuthController {
-	constructor(
-		private readonly authService: AuthService,
-		private readonly UserService: UserService,
-		private readonly jwtService: JwtService,
-	) {}
+	constructor(private readonly authService: AuthService) {}
 
+	@Public()
 	@UseGuards(AuthGuard("FourtyTwo"))
 	@Get("login")
 	async login(@Req() req, @Res({ passthrough: true }) response: Response) {
-		await response.cookie("AuthToken", req.user, { httpOnly: true });
-		const client = await this.jwtService.verifyAsync(req.user);
-		const user = await this.UserService.getUser(client["id"]);
-		if (!user)
-			return await this.UserService.addwithDetails(
-				client["id"],
-				"login",
-				"first_name",
-				"last_name",
-			);
-		return response.redirect('http://localhost:8080');
+		console.log("Login user", req.user);
+		const token: string = await this.authService.login(req.user);
+		await response.cookie("AuthToken", token, { httpOnly: false });
+		// if (!user)
+		// 	return response.redirect("http://localhost:8080/register");
+		return response.redirect("http://localhost:8080/");
 	}
 
 	@UseGuards(localAuthGaurd)
+	@Post("register")
+	async register(@Req() req) {
+		console.log(req.user);
+		// await this.UserService.addwithDetails(
+		// 	client["id"],
+		// 	"login",
+		// 	"first_name",
+		// 	"last_name",
+		// 	// replaced by registration form
+		// 		);
+	}
+
+	@UseGuards(JwtAuthGuard)
 	@Get("guarded-jwt")
 	async hi4(@Req() req) {
+		console.log(req.user);
 		return "wow jwt thinks work!";
 	}
 	@UseGuards(localAuthGaurd)
 	@Get("logout")
 	async logout(
-		@Req() request: Request,
+		// @Req() request: Request,
 		@Res({ passthrough: true }) response: Response,
 	) {
 		response.clearCookie("AuthToken");
 		return { message: "logged out" };
 	}
-	//   @UseGuards(AuthGuard('FourtyTwo'))
-	//   @Post('auth/login')
-	//   async login(@Req() req) {
-	//     // return this.authService.login(req.user);
-	//   }
-
-	//   @UseGuards(AuthGuard('jwt'))
-	//   @Get('profile')
-	//   getProfile(@Req() req) {
-	//     return req.user;
-	//   }
-
-	// @Get('FourtyTwo')
-	// @UseGuards(AuthGuard('FourtyTwo'))
-	// async findUserFromFourtyTwoId(@Req() req): Promise<any> {
-	// 	// this.AuthService.findUserFromFourtyTwoId(req.user);
-	// 	// return await this.friendsService.addFriend(param.id as number, param2.id2 as number);
-	//     // return await this.authService.findUserFromFourtyTwoId(req.user.id);
-	//     console.log(req);
-	//     console.log(req.user);
-	// 	return req.user;
-	// }
-	// @Get('always')
-	// async hi(@Req() req)
-	// {
-	//     return "always works";
-	// }
 }

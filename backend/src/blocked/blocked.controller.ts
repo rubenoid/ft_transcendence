@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Req } from "@nestjs/common";
 // import { FriendsService } from 'src/friends/friends.service';
 import { BlockedService } from "./blocked.service";
 
@@ -6,11 +6,11 @@ import { BlockedService } from "./blocked.service";
 export class BlockedController {
 	constructor(private readonly blockedService: BlockedService) {}
 
-	@Get("add/:idMe/:idToBlock")
-	async blockUser(@Param() param, @Param() param2) {
+	@Get("add/:id")
+	async blockUser(@Req() req, @Param() param) {
 		return await this.blockedService.blockUser(
-			param.idMe as number,
-			param2.idToBlock as number,
+			req.user.id as number,
+			param.id as number,
 		);
 	}
 
@@ -21,13 +21,13 @@ export class BlockedController {
 		return await this.blockedService.getAll(param.id as number);
 	}
 
-	@Get("remove/:id/:id2")
-	async remove(@Param() param, @Param() param2) {
+	@Get("remove/:id")
+	async remove(@Req() req, @Param() param) {
 		console.log("unblock controller");
 
 		return await this.blockedService.remove(
+			req.user.id as number,
 			param.id as number,
-			param2.id2 as number,
 		);
 	}
 

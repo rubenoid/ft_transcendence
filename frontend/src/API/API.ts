@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import Cookies from 'js-cookie';
 
 export type User = {
   id: number,
@@ -32,7 +33,11 @@ export const fetchUsers = async (): Promise<User[]> => {
 
   let users: User[];
 
-  await instance.get<User[]>('/user/all')
+  await instance.get<User[]>('/user/all', {headers: {
+	"Access-Control-Allow-Credentials": "true",
+	"Access-Control-Allow-Origin": "http://localhost:5000",
+	'Authorization': Cookies.get("AuthToken"),
+  }})
   .then( response => {
       users = response.data;
     })
@@ -50,7 +55,11 @@ export const fetchUserByUserName = async (userName: string): Promise<User> => {
   console.log('ENDPOINT->');
   console.log(endpoint);
 
-  await instance.get<User>(endpoint)
+  await instance.get<User>(endpoint, {headers: {
+	"Access-Control-Allow-Credentials": "true",
+	"Access-Control-Allow-Origin": "http://localhost:5000",
+	'Authorization': Cookies.get("AuthToken"),
+  }})
   .then(response => {
     user = response.data;
   })
@@ -64,7 +73,11 @@ export const fetchUserByUserName = async (userName: string): Promise<User> => {
 export const loginThroughIntra = async () => {
   const endpoint = '/auth/login';
 
-  await instance.get(endpoint)
+  await instance.get(endpoint, {headers: {
+	"Access-Control-Allow-Credentials": "true",
+	"Access-Control-Allow-Origin": "http://localhost:5000",
+	'Authorization': Cookies.get("AuthToken"),
+  }})
   .then(response => {
     console.log('RESPONSE LOGIN: ');
     console.log(response);
@@ -75,8 +88,14 @@ export const loginThroughIntra = async () => {
 }
 
 export const isLogedIn = async () => {
+  console.log("Cookies.get(AuthToken): " + Cookies.get("AuthToken"));
   const endpoint = '/auth/guarded-jwt';
-  await instance.get(endpoint)
+
+  await instance.get(endpoint, {headers: {
+	  "Access-Control-Allow-Credentials": "true",
+	  "Access-Control-Allow-Origin": "http://localhost:5000",
+	  'Authorization': Cookies.get("AuthToken"),
+	}})
   .then(response => {
     console.log('RESPONSE LOGIN: ');
     console.log(response);

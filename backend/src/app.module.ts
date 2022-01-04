@@ -10,6 +10,9 @@ import { BlockedModule } from "./blocked/blocked.module";
 import { AuthModule } from "./auth/auth.module";
 import { ChatModule } from "./chat/chat.module";
 import { MatchModule } from "./match/match.module";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "./auth/jwt.guard";
+import { GameModule } from "./game/game.module";
 
 @Module({
 	imports: [
@@ -21,8 +24,14 @@ import { MatchModule } from "./match/match.module";
 		AuthModule,
 		ChatModule,
 		MatchModule,
+		GameModule,
 	],
 	controllers: [AppController, DatabaseController],
-	providers: [AppService],
+	providers: [
+		{
+			provide: APP_GUARD,
+			useClass: JwtAuthGuard,
+		},
+		AppService],
 })
 export class AppModule {}

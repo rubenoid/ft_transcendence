@@ -2,6 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
+  entry: './src/index.tsx',
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html'),
@@ -9,6 +10,7 @@ module.exports = {
   ],
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
+    fallback: { "path": false },
   },
   module: {
     rules: [
@@ -31,5 +33,8 @@ module.exports = {
         ],
       },
     ],
+  },
+  devServer: {
+    historyApiFallback: true,
   },
 };

@@ -8,20 +8,26 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	constructor() {
 		super({
 			ignoreExpiration: false,
-			secretOrKey: "My random secret key never let others",
+			secretOrKey: "secretKey",
 			jwtFromRequest: ExtractJwt.fromExtractors([
-				(request: Request) => {
-					const data = request?.cookies["AuthToken"];
-					if (!data) {
+				(request: Request | any) => {
+					let data = '';
+					try {
+						data = request.headers["authorization"] || request?.cookies["AuthToken"];
+					} catch (er) {
+						data = request.handshake.headers.authorization;
+					}
+					if (data == '') {
 						return null;
 					}
-					return data.token;
+					return data;
 				},
 			]),
 		});
 	}
 
 	async validate(payload: any) {
+		console.log("Payload", payload);
 		if (payload === null) {
 			throw new UnauthorizedException();
 		}
