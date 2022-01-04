@@ -50,3 +50,4 @@ export class AuthController {
 		response.clearCookie("AuthToken");
 		return { message: "logged out" };
 	}
+}
