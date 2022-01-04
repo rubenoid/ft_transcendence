@@ -5,43 +5,6 @@ import { ChatContainer } from '../ChatElements';
 import { handlesSubmitNewMessages} from '../../socket'
 import { AiOutlineSend as SendIcon} from 'react-icons/ai';
 
-// const { Server } = require("socket.io");
-// const io = new Server(Server);
-
-// holding the messages 
-
-// export const ChatBox = () => {
-//     return (
-        
-//         <ChatBoxContainer>
-//             {/* <div> <ul id= "msgtosend"></ul></div> */}
-//             <TopContainer>
-//                 <Text>friend</Text>
-//             </TopContainer>
-//             <ChatContainer>
-//             {/* <p id = "message"></p> */}
-//             </ChatContainer>
-                
-            
-//             <InputContainer>
-//                 <div>
-//                     <TextInput id="msgtosent" type="text" onChange={(e) => ({})}></TextInput>
-//                     {/* <button onClick={() => handlesSubmitNewMessages(e)}>Submit</button> */}
-//                     {/* { <button  onClick={handlesSubmitNewMessages()}>click me </button> } */}
-//                     <button onClick ={ handlesSubmitNewMessages} >Submit </button>
-//                 </div>
-//                 <SendIconContainer>
-//                     <SendIcon >  </SendIcon>
-//                 </SendIconContainer>
-//             </InputContainer>
-
-//         </ChatBoxContainer>
-//     );
-// }
-
-// let allMsg: string[];
-
-
 
 const ChatBox: React.FunctionComponent = () => {
     const [term, setTerm] = useState('');
@@ -54,16 +17,13 @@ const ChatBox: React.FunctionComponent = () => {
       <div id = "message"></div>
         console.log(term);
         
-        
-            allMsg.push(term);
-          
-            
-           
+
+        allMsg.push(term); 
         handlesSubmitNewMessages(term);
-     // alert(term);
+    
     }
   
-    
+
     return (
       <ChatBoxContainer>
         
@@ -90,5 +50,5 @@ const ChatBox: React.FunctionComponent = () => {
     );
   };
 
-  
+
   export default ChatBox;

@@ -1,11 +1,7 @@
-
-
 //import { io } from "socket.io-client";
 const io = require("socket.io-client");
 
 // this needs to be server out of chat.gateway
-
-
 
 const socket = io("http://localhost:5000")
 
@@ -13,9 +9,6 @@ socket.on("connect", () => {
     console.log(socket.id); 
     console.log("do something with data");
   });
-  
-
-
 //const message = (<HTMLInputElement>document.getElementById('msgtosent'));
 const messages = (<HTMLInputElement>document.getElementById('messages'));
 

@@ -1,32 +1,4 @@
-// import { MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 
-// import { Socket, Server } from 'socket.io';
-// import { io } from "socket.io-client";
-
-// // server-side
-// io.on("connection", (socket) => {
-//   console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-// });
-
-// @WebSocketGateway({cors:true})
-// export class ChatGateway {
-//   // message to server/ client 
-//   //@SubscribeMessage('message')
-//   // handleMessage(client: any, payload: any): string {
-//   //   return 'Hello world!';
-//   // }
-//   @WebSocketServer()
-//   server;
-//   @SubscribeMessage('message')
-//   handleMessage(client: Socket, payload: any): void {
-//     // emit a message to everyone on the server 
-//     console.log(payload);
-//     this.server.emit('message', 'message');
-//   }
-// }
-
-
-   
 import {
 	SubscribeMessage,
 	WebSocketGateway,
