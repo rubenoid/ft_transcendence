@@ -21,26 +21,8 @@ export const SearchBox = styled.input`
 
 export const SearchResultContainer = styled.div`
     display: flex;
-    background-color: #444;
-    text-align: left;
+    flex-direction: column;
+    text-align: center;
     margin: 20px 0;
     gap: 15px;
-`;
-
-export const AddIconContainer = styled.div`
-    align-content: center;
-    text-align: center;
-    padding-top: 10px;
-    background-color: #04AA6D;
-    height: 50px;
-    width: 50px;
-    font-size: 1rem;
-    color: #fff;
-    cursor: pointer;
-    border-radius: 50%;
-
-    &:hover {
-        color: #393b4c;
-        transition: all ease-in-out;
-    }
 `;
