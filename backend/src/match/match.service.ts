@@ -3,8 +3,10 @@ import { MatchEntity } from "./match.entity";
 import { Repository } from "typeorm";
 import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
+import { Server, Socket } from "socket.io";
+import { GameService } from "src/game/game.service";
 
-let quedplayer: UserEntity;
+let queuedSock: Socket;
 
 @Injectable()
 export class MatchService {
@@ -12,6 +14,7 @@ export class MatchService {
 		@Inject("MATCH_REPOSITORY")
 		private MatchRepository: Repository<MatchEntity>,
 		private userService: UserService,
+		private gameService: GameService
 	) {}
 
 	async newMatch(Playerid1: number, Playerid2: number) {
@@ -46,20 +49,17 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQue(Playerid: number) {
-		const User = await this.userService.getUserQueryOne({
-			where: { id: Playerid },
-		});
-		if (!User) throw "User one not found";
-		if (!quedplayer) {
-			quedplayer = User;
-			return "playerr" + User.id + "qued";
+	async addPlayerToQueue(connection: Socket, server: Server) {
+		if (!queuedSock) {
+			queuedSock = connection;
+			return "playerr" + connection.id + "qued";
 		}
-		if (quedplayer.id === User.id)
-			return "player" + User.id + "cannot play a match against themselves";
-		const Qid = quedplayer.id;
-		quedplayer = null;
-		return this.newMatch(Qid, User.id);
+		if (queuedSock.id === connection.id)
+			return "player" + connection.id + "cannot play a match against themselves";
+		const connection2 = queuedSock;
+		queuedSock = null;
+		return this.gameService.startMatch(connection, connection2, server);
+		// return this.newMatch(Qid, User.id);
 	}
 
 	async increaseScore(Matchid: number, Playerid: number) {
@@ -96,7 +96,7 @@ export class MatchService {
 		return Match;
 	}
 	async getQueuedPlayer() {
-		if (!quedplayer) return "No queued players";
-		return "Queued player with id" + quedplayer;
+		if (!queuedSock) return "No queued players";
+		return "Queued player with id" + queuedSock;
 	}
 }

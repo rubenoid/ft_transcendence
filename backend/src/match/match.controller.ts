@@ -13,10 +13,10 @@ export class MatchController {
 		);
 	}
 
-	@Get("addPlayerToQueue/:id")
-	async addPlayerToQue(@Param() param) {
-		return await this.matchService.addPlayerToQue(param.id as number);
-	}
+	// @Get("addPlayerToQueue/:id")
+	// async addPlayerToQue(@Param() param) {
+	// 	return await this.matchService.addPlayerToQue(param.id as number);
+	// }
 
 	@Get("increaseScore/:matchid/:playerid")
 	async increaseScore(@Param() param) {

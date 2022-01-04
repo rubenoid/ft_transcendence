@@ -5,9 +5,10 @@ import { MatchService } from "./match.service";
 import { DatabaseModule } from "src/database/database.module";
 import { MatchProvider } from "./match.provider";
 import { MatchGateway } from "./match.gateway";
+import { GameModule } from "src/game/game.module";
 
 @Module({
-	imports: [DatabaseModule, UserModule],
+	imports: [DatabaseModule, UserModule, GameModule],
 	controllers: [MatchController],
 	providers: [MatchService, ...MatchProvider, MatchGateway],
 	exports: [MatchService, ...MatchProvider],
