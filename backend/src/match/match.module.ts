@@ -4,11 +4,12 @@ import { MatchController } from "./match.controller";
 import { MatchService } from "./match.service";
 import { DatabaseModule } from "src/database/database.module";
 import { MatchProvider } from "./match.provider";
+import { MatchGateway } from "./match.gateway";
 
 @Module({
 	imports: [DatabaseModule, UserModule],
 	controllers: [MatchController],
-	providers: [MatchService, ...MatchProvider],
+	providers: [MatchService, ...MatchProvider, MatchGateway],
 	exports: [MatchService, ...MatchProvider],
 })
 export class MatchModule {}
