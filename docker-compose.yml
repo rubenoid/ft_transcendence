@@ -19,6 +19,7 @@ services:
       POSTGRES_DB: pongping
 
   front:
+    container_name: frontend
     build: frontend/.
     volumes:
       - "./frontend:/serv"

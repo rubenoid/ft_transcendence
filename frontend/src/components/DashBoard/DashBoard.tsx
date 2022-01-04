@@ -1,6 +1,6 @@
 import React from 'react';
 import { DashBoardContainer, Box } from './DashBoardElements';
-import Widget from '../Widget/Widget';
+import Users from '../Users/Users';
 import Title from '../Title/Title';
 import ConnectionForm from '../ConnectionForm/ConnectionForm';
 import Pong from '../Pong/Pong';
@@ -11,7 +11,7 @@ import Profile from '../Profile/Profile';
 export const DashBoard = () => {
     return (
         <DashBoardContainer>
-            <Box gridArea='info1'><Widget/></Box>
+            <Box gridArea='info1'><Users/></Box>
             <Box gridArea='profile'><Profile></Profile></Box>
             <Box gridArea='info2'><AddFriend/></Box>
             <Box  gridArea='game'><Pong/></Box>

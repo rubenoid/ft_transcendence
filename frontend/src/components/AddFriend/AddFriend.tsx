@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Item, TextInput ,Text, Button, WidgetContainer } from '../Utils/Utils';
+import { Item, TextInput ,Text, Button, WidgetContainer, TextContainer } from '../Utils/Utils';
 import { fetchUserByUserName, User } from '../../API/API';
+import { AddIconContainer, SearchResultContainer } from './AddFriendElements';
+import { MdPersonAdd as AddIcon } from 'react-icons/md';
 
 const AddFriend = () => {
     
@@ -21,13 +23,22 @@ const AddFriend = () => {
     console.log(user);
     console.log('UserName->' + userName);
 
+    const SearchResult = () => {
+        return (
+            <SearchResultContainer>
+                <Text>{user.userName}</Text>
+            </SearchResultContainer>
+        );
+    }
     return (
         <WidgetContainer>
-            <Text>Search for User</Text>
+            <TextContainer>
+                <Text>Search for User</Text>
+            </TextContainer>
                 <TextInput type="text" placeholder="Type to search..." onChange={(e) => setUserName(e.target.value)}></TextInput>
-            <Text>{user && user.userName == userName ? user.userName : ''}</Text>
+                <Text>{user && user.userName == userName ? SearchResult() : ''}</Text>
         </WidgetContainer>
-    );
+    ); 
 }
 
 export default AddFriend;
