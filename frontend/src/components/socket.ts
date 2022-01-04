@@ -1,15 +1,18 @@
-//import { io } from "socket.io-client";
-const io = require("socket.io-client");
+import Cookies from "js-cookie";
+import { io, Socket } from "socket.io-client";
 
-// this needs to be server out of chat.gateway
+var socketOptions = {
+  extraHeaders: {
+    Authorization: Cookies.get("AuthToken"),
+  }
+};
 
-const socket = io("http://localhost:5000")
+const socket: Socket = io("http://localhost:5000", socketOptions);
 
 socket.on("connect", () => {
     console.log(socket.id); 
     console.log("do something with data");
   });
-//const message = (<HTMLInputElement>document.getElementById('msgtosent'));
 const messages = (<HTMLInputElement>document.getElementById('messages'));
 
 export const handlesSubmitNewMessages = (message:string) => {
