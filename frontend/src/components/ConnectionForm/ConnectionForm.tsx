@@ -5,20 +5,10 @@ import { RoundButton, Link, Item } from '../Utils/Utils';
 import { isLogedIn, loginThroughIntra } from '../../API/API';
 
 const ConnectionForm = () => {
-    
-    function login(e: any) {
-      e.preventDefault();
-      const apiLogin = async () => {
-        await isLogedIn();
-      }
-      apiLogin();
-    }
-    
     return (
         <FormContainer>
             <Form>
                     <Item><RoundButton><Text fontSize='20px'><Link href="http://localhost:5000/auth/login">42</Link></Text></RoundButton></Item>
-                    <Item><Button onClick={login}>IS LOGED IN ?</Button></Item>
                     <Item><Label> <Text fontSize='20px'>Email</Text></Label><TextInput type='text'/></Item>
                     <Item><Label><Text fontSize='20px'>Password</Text></Label><TextInput type='password'/></Item>
                     <Item><Button type='submit'><Text fontSize='20px'>Connect</Text></Button></Item>
