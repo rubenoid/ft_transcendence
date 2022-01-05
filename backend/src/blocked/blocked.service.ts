@@ -11,7 +11,7 @@ export class BlockedService {
 		private readonly friendService: FriendsService,
 	) {}
 
-	async blockUser(idMe: number, idToBlock: number) {
+	async blockUser(idMe: number, idToBlock: number): Promise<void> {
 		if (idMe == idToBlock) {
 			throw "Cannot block yourself";
 		}
@@ -39,7 +39,7 @@ export class BlockedService {
 		return usersBlocked;
 	}
 
-	async remove(id: number, idToUnblock: number) {
+	async remove(id: number, idToUnblock: number): Promise<boolean> {
 		const user = await this.userService.getUserQueryOne({ where: { id: id } });
 		const userBlocked = await this.userService.getUserQueryOne({
 			where: { id: idToUnblock },

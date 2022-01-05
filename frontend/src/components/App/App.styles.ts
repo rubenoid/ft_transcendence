@@ -1,9 +1,9 @@
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from "styled-components";
 
 export const Container = styled.div`
-    display: flex;
-    width: 100%;
-    position: relative;
+	display: flex;
+	width: 100%;
+	position: relative;
 `;
 
 export const GlobalStyle = createGlobalStyle`
