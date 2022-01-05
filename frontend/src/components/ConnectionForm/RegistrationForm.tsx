@@ -50,13 +50,15 @@ const RegistrationForm = () => {
                     <TextInput type='text' onChange={(e) => {setLastName(e.target.value)}}/>
                   </Item>
                   <Item>
+                      {registered ? '' : 
                       <Button type='submit' onClick={(e) => {registerNewUser(e, userName, firstName, lastName)}}>
                         <Text fontSize='20px'>Register</Text>
-                        {registered ? <Text>Registered now please signin</Text> : ''}
+                        {/* {registered ? <Text>Registered now please signin</Text> : ''} */}
                       </Button>
+                      }
                   </Item>
-                  <Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text>
-
+                  {registered ? <Text>Registered now please signin</Text> : ''}
+                  <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button>
           </Form>
       </FormContainer>
   );
