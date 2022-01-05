@@ -6,3 +6,10 @@ export const ImgContainer = styled.div`
     height: 100px;
     width: 100px;
 `;
+
+export const Img = styled.img`
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+`;

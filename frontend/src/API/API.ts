@@ -6,6 +6,7 @@ export type User = {
   userName: string,
   firstName: string,
   lastName: string,
+  avatar: string,
   wins: number,
   losses: number,
   rating: number,
@@ -27,6 +28,24 @@ export const fetchData = async (url?: string) => {
   .catch(error => {
     console.log(error);
   })
+}
+
+export const fetchMySelf = async (): Promise<User> => {
+
+  let usr: User;
+
+  await instance.get<User>('/user/me', {headers: {
+	"Access-Control-Allow-Credentials": "true",
+	"Access-Control-Allow-Origin": "http://localhost:5000",
+	'Authorization': Cookies.get("AuthToken"),
+  }})
+  .then( response => {
+      usr = response.data;
+    })
+  .catch(error => {
+    console.log('ERROR->' + error);
+  });
+  return usr;
 }
 
 export const fetchUsers = async (): Promise<User[]> => {
