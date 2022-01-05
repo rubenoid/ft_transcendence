@@ -6,7 +6,7 @@ import { UserEntity } from "../user/user.entity";
 export class FriendsService {
 	constructor(private readonly userService: UserService) {}
 
-	async addFriend(id: number, id2: number) {
+	async addFriend(id: number, id2: number): Promise<void> {
 		// add here that cannot add as a friend if already blocked
 		if (id == id2) throw "Cannot add yourself";
 		const user = await this.userService.getUserQueryOne({
@@ -42,7 +42,7 @@ export class FriendsService {
 		});
 		return user;
 	}
-	async remove(id: number, id2: number) {
+	async remove(id: number, id2: number): Promise<void> {
 		if (id == id2) throw "Cannot add yourself";
 		const user = await this.userService.getUserQueryOne({
 			where: { id: id },

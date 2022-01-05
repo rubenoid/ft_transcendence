@@ -11,12 +11,12 @@ import { Response, Request } from "express";
 export class localAuthGaurd implements CanActivate {
 	constructor(private jwtService: JwtService) {}
 
-	canActivate(context: ExecutionContext) {
+	canActivate(context: ExecutionContext): boolean {
 		const request = <Request>context.switchToHttp().getRequest();
 		try {
-			const jwt =
+			const jwt: string =
 				request.headers["authorization"] || request.cookies["AuthToken"];
-			return this.jwtService.verify(jwt);
+			return this.jwtService.verify(jwt) != null;
 		} catch (e) {
 			console.log("Error logging in");
 			throw new UnauthorizedException("unauthorized");
