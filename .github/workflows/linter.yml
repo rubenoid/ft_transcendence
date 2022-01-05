@@ -1,0 +1,26 @@
+name: Linter check
+on: push
+
+jobs:
+  test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: test frontend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: running
+        run: cd backend && npm install && npm run test:lint
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: running
+        run: cd backend && npm install && npm run test:lint
+    

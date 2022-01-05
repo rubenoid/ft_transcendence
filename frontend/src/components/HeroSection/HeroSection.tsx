@@ -3,6 +3,7 @@ import { HeroContainer } from './HeroSectionElements';
 import DashBoard from '../DashBoard/DashBoard';
 import  ConnectionForm from '../ConnectionForm/ConnectionForm';
 import  RegistrationForm from '../ConnectionForm/RegistrationForm';
+import { BrowserRouter, Routes, Route} from 'react-router-dom';
 
 type UserProps = {
     isConnected: boolean
@@ -19,7 +20,13 @@ const Content = (usr: UserProps) => {
 const HeroSection = () => {
     return (
         <HeroContainer>
-            <Content isConnected ={true}/>
+            <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={<ConnectionForm/>} />
+                    <Route path='/register' element={<RegistrationForm/>} />
+                    <Route path='/profile' element={<DashBoard/>} />
+                </Routes>
+            </BrowserRouter>
         </HeroContainer>
     );
 }
