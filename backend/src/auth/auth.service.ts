@@ -15,8 +15,8 @@ export class AuthService {
 		return this.jwtService.sign(payload);
 	}
 
-	async validateUser(username: string): Promise<any> {
-		const user = await this.userService.getUserByName(username);
+	async validateUser(id: number): Promise<any> {
+		const user = await this.userService.getUser(id);
 		if (user) {
 			return user;
 		}

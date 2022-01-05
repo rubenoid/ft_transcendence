@@ -104,3 +104,30 @@ export const isLogedIn = async () => {
     console.log(error);
   })
 }
+
+export const register = async (Username: string, Firstname: string, Lastname: string) => {
+  console.log("Cookies.get(AuthToken): " + Cookies.get("AuthToken"));
+  console.log("register API: Username", Username);
+  console.log("register API: Firstname", Firstname);
+  console.log("register API: Lastname", Lastname);
+  const endpoint = '/auth/register';
+  const data = {
+      userName: Username,
+      firstName: Firstname,
+      lastName: Lastname,
+    }
+  await instance.post(endpoint,   data,
+   {headers: {
+	  "Access-Control-Allow-Credentials": "true",
+	  "Access-Control-Allow-Origin": "http://localhost:5000",
+	  "Authorization": Cookies.get("AuthToken"),
+	},
+})
+  .then(response => {
+    console.log('RESPONSE x: ');
+    console.log(response);
+  })
+  .catch((error) => {
+    console.log(error);
+  })
+}

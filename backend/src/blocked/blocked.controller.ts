@@ -16,15 +16,11 @@ export class BlockedController {
 
 	@Get("getall/:id")
 	async getAll(@Param() param) {
-		console.log("getall controller");
-
 		return await this.blockedService.getAll(param.id as number);
 	}
 
 	@Get("remove/:id")
 	async remove(@Req() req, @Param() param) {
-		console.log("unblock controller");
-
 		return await this.blockedService.remove(
 			req.user.id as number,
 			param.id as number,

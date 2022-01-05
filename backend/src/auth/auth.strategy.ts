@@ -27,16 +27,16 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 		const result = await axios.get("https://api.intra.42.fr/v2/me", {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
-
 		let user = await this.authService.validateUser(result.data.id);
 		if (!user) {
-		await this.userService.addwithDetails(
-			result.data.id,
-			result.data.login,
-			result.data.first_name,
-			result.data.last_name,
-				);
-			user = await this.authService.validateUser(result.data.login);
+			await this.userService.addwithDetails(
+				result.data.id,
+				result.data.login,
+				result.data.first_name,
+				result.data.last_name,
+				false
+			);
+			user = await this.authService.validateUser(result.data.id);
 			if (!user)
 			{
 				throw new UnauthorizedException();

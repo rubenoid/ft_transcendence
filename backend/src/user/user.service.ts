@@ -24,7 +24,7 @@ export class UserService {
 
 	async getUserQuery(query: FindOneOptions<UserEntity>): Promise<UserEntity[]> {
 		const User = await this.UserRepository.find(query);
-		if (User.length === 0) throw "User not found";
+		if (User.length === 0) throw "User not found getUserQuery";
 		return User;
 	}
 
@@ -61,11 +61,9 @@ export class UserService {
 		username: string,
 		firstname: string,
 		lastname: string,
+		registered: boolean
 	) {
-		console.log(
-			"start here" + id + "username:" + username + "firstname:" + firstname,
-			+"lastname" + lastname,
-		);
+		console.log("add w details");
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = id;
 		newUser.firstName = firstname;
@@ -77,9 +75,9 @@ export class UserService {
 		newUser.losses = 1;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
-		console.log("end here");
-		console.log("CREATED AS ID" + id);
+		newUser.registered = registered;
 		await this.UserRepository.save(newUser);
+		console.log("end add w details");
 	}
 
 	async getUsers() {
@@ -121,15 +119,17 @@ export class UserService {
 
 	async update(
 		id: number,
+		userName: string,
 		firstName: string,
 		lastName: string,
-		userName: string,
 	) {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
 		user.userName = userName;
+		user.registered = true;
 		await this.UserRepository.save(user);
+		console.log("finished update with id:" , id, "userName", userName);
 		return user.id;
 	}
 	async getUserByName(username: string): Promise<UserEntity> {
