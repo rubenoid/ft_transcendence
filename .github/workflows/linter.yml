@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: '14'
       - name: running
-        run: cd backend && npm run test:lint
+        run: cd backend && npm install && npm run test:lint
   test-backend:
     runs-on: ubuntu-latest
     steps:
@@ -22,5 +22,5 @@ jobs:
         with:
           node-version: '14'
       - name: running
-        run: cd backend && npm run test:lint
+        run: cd backend && npm install && npm run test:lint
     
