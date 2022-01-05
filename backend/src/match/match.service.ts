@@ -103,9 +103,4 @@ export class MatchService {
 		if (Match.length === 0) throw "user not found";
 		return Match;
 	}
-
-	async getQueuedPlayer(): Promise<string> {
-		if (!quedplayer) return "No queued players";
-		return "Queued player with id" + quedplayer;
-	}
 }

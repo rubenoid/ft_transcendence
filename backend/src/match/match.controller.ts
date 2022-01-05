@@ -38,8 +38,4 @@ export class MatchController {
 	async getAllMatchs(): Promise<MatchEntity[]> {
 		return await this.matchService.getAllMatches();
 	}
-	@Get("getQueuedPlayer")
-	async getQueuedPlayer(): Promise<string> {
-		return await this.matchService.getQueuedPlayer();
-	}
 }
