@@ -32,10 +32,6 @@ const AddFriend = () => {
         );
     }
 
-    const UserInfo = () => {
-
-    }
-    
     return (
         <WidgetContainer>
             <TextContainer>

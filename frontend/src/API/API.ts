@@ -9,7 +9,8 @@ export type User = {
   wins: number,
   losses: number,
   rating: number,
-  isActive: boolean
+  isActive: boolean,
+  registered: boolean
 }
 
 const instance: AxiosInstance = axios.create({
