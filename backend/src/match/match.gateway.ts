@@ -18,6 +18,7 @@ export class MatchGateway {
 	
 	handleDisconnect(client: Socket) {
 		this.logger.log(`Match::Client disconnected: ${client.id}`);
+		this.matchService.removeFromQueue(client);
 	}
 	
 	handleConnection(client: Socket, ...args: any[]) {
@@ -27,10 +28,7 @@ export class MatchGateway {
 	// 	return await this.userService.getUser(req.user.id as number);
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage('addToQueue')
-	handleMessage(client: Socket, payload: any): any {
-		// console.log("adding to queueueueueu!!client", client);
+	handleMessage(client: any, payload: any): any {
 		this.matchService.addPlayerToQueue(client, this.server);
-    // console.log("req.user as number", req.user);
-		// this.matchService.addPlayerToQueue()
   }
 }

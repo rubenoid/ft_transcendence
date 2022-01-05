@@ -184,12 +184,9 @@ export class GameService {
 
 	async handlePositionUpdate(client: Socket, keys: boolean[])
 	{
-		console.log("handlePositionUpdate: keys",keys);
-		console.log("handlePositionUpdate: clientid",client.id);
 		const game = this.games.find(x => x.players[0].id == client.id || x.players[1].id == client.id);
 		if (game != undefined)
 		{
-			console.log("FOUND GAME");
 			game.updatePos(keys, game.players[1].id == client.id ? 1 : 0);
 		}
 	}

@@ -6,7 +6,7 @@ import { UserService } from "src/user/user.service";
 import { Server, Socket } from "socket.io";
 import { GameService } from "src/game/game.service";
 
-let queuedSock: Socket;
+let queuedSock: Socket[] = [];
 
 @Injectable()
 export class MatchService {
@@ -16,6 +16,17 @@ export class MatchService {
 		private userService: UserService,
 		private gameService: GameService
 	) {}
+
+	async removeFromQueue(socket: Socket)
+	{
+		const idx = queuedSock.findIndex(x => x.id == socket.id);
+
+		if (idx != -1)
+		{
+			queuedSock.splice(idx, 1);
+			console.log("removed " + socket.id + " from queue", queuedSock.length);
+		}
+	}
 
 	async newMatch(Playerid1: number, Playerid2: number) {
 		const User1 = await this.userService.getUserQueryOne({
@@ -50,16 +61,18 @@ export class MatchService {
 	}
 
 	async addPlayerToQueue(connection: Socket, server: Server) {
-		if (!queuedSock) {
-			queuedSock = connection;
-			return "playerr" + connection.id + "qued";
+
+		if (queuedSock.find(x => x.id == connection.id))
+			return;
+		queuedSock.push(connection);
+		console.log("playerr " + connection.id + " qued");
+
+		if (queuedSock.length >= 2)
+		{
+			const p1 = queuedSock.pop();
+			const p2 = queuedSock.pop();
+			this.gameService.startMatch(p1, p2, server);
 		}
-		if (queuedSock.id === connection.id)
-			return "player" + connection.id + "cannot play a match against themselves";
-		const connection2 = queuedSock;
-		this.gameService.startMatch(connection, connection2, server);
-		queuedSock = null;
-		// return this.newMatch(Qid, User.id);
 	}
 
 	async increaseScore(Matchid: number, Playerid: number) {
