@@ -6,7 +6,7 @@ import { UserService } from "src/user/user.service";
 import { Server, Socket } from "socket.io";
 import { GameService } from "src/game/game.service";
 
-let queuedSock: Socket[] = [];
+const queuedSock: Socket[] = [];
 
 @Injectable()
 export class MatchService {
@@ -14,15 +14,13 @@ export class MatchService {
 		@Inject("MATCH_REPOSITORY")
 		private MatchRepository: Repository<MatchEntity>,
 		private userService: UserService,
-		private gameService: GameService
+		private gameService: GameService,
 	) {}
 
-	async removeFromQueue(socket: Socket): Promise<void>
-	{
-		const idx = queuedSock.findIndex(x => x.id == socket.id);
+	async removeFromQueue(socket: Socket): Promise<void> {
+		const idx = queuedSock.findIndex((x) => x.id == socket.id);
 
-		if (idx != -1)
-		{
+		if (idx != -1) {
 			queuedSock.splice(idx, 1);
 			console.log("removed " + socket.id + " from queue", queuedSock.length);
 		}
@@ -61,14 +59,11 @@ export class MatchService {
 	}
 
 	async addPlayerToQueue(connection: Socket, server: Server): Promise<string> {
-
-		if (queuedSock.find(x => x.id == connection.id))
-			return;
+		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
 		console.log("playerr " + connection.id + " qued");
 
-		if (queuedSock.length >= 2)
-		{
+		if (queuedSock.length >= 2) {
 			const p1 = queuedSock.pop();
 			const p2 = queuedSock.pop();
 			this.gameService.startMatch(p1, p2, server);

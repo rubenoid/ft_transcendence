@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const PongCanvas = styled.canvas`
 	background-color: black;
-
 `;
 
 export const PongContainer = styled.div`
@@ -23,7 +22,7 @@ export const PongImg = styled.img`
 
 type ButtonProps = {
 	display: boolean;
-}
+};
 
 export const ButtonContainer = styled.div<ButtonProps>`
 	position: absolute;
@@ -32,9 +31,9 @@ export const ButtonContainer = styled.div<ButtonProps>`
 	border-radius: 5px;
 	background-color: #393b4c;
 	transform: translate(-50%, -50%);
-	padding:0px;
+	padding: 0px;
 	opacity: 0.9;
-	display: ${(props: ButtonProps) => props.display ? 'block' : 'none'};
+	display: ${(props: ButtonProps) => (props.display ? "block" : "none")};
 `;
 
 export const Button = styled.button`

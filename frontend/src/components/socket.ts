@@ -21,14 +21,8 @@ export const handlesSubmitNewMessages = (message: string): void => {
 	console.log("handlesubmitmessage");
 };
 
-export const handlesSubmitNewMessages = (message:string) => {
-    // extract the data property/ looks at inputfield message and then extracts the value. 
-    socket.emit('message', message);
-    console.log("handlesubmitmessage");
-}
-
 // for chat history
-const handleNewMessage = (message: string) => {
+const handleNewMessage = (message: string): void => {
 	// new node appendchild
 	console.log(buildNewMessage);
 	//messages.appendChild(buildNewMessage)
