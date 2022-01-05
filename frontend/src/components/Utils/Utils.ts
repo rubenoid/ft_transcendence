@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-
+import {Link as LinkR} from 'react-router-dom';
 
 export const TextInput = styled.input`
     background: rgba(0, 255, 0, .1);
