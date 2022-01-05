@@ -8,6 +8,7 @@ import { register, fetchUserByUserName, User } from '../../API/API';
 const RegistrationForm = () => {
 
   const [user, setUser] = useState<User>(undefined);
+  const [registered, setRegistered] = useState<boolean>(false);
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
@@ -23,8 +24,9 @@ const RegistrationForm = () => {
 
   const registerNewUser = (e: any, username: string, firstname: string, lastname:string) => {
     e.preventDefault();
-    if (username && firstName && lastName) {
+    if (username && firstName && lastName && !user) {
       register(username, firstName, lastName);
+      setRegistered(true);
     }
     else {
       console.log("Error->", username, firstName, lastName);
@@ -50,9 +52,11 @@ const RegistrationForm = () => {
                   <Item>
                       <Button type='submit' onClick={(e) => {registerNewUser(e, userName, firstName, lastName)}}>
                         <Text fontSize='20px'>Register</Text>
+                        {registered ? <Text>Registered now please signin</Text> : ''}
                       </Button>
                   </Item>
-                  <Text fontSize='15px'>Sign In</Text>
+                  <Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text>
+
           </Form>
       </FormContainer>
   );
