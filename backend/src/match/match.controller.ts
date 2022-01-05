@@ -6,42 +6,40 @@ import { MatchService } from "./match.service";
 export class MatchController {
 	constructor(private readonly matchService: MatchService) {}
 	@Get("newMatch/:id1/:id2")
-	async newMatch(@Param() param) {
-		return await this.matchService.newMatch(
-			param.id1 as number,
-			param.id2 as number,
-		);
+	async newMatch(
+		@Param("id") id: string,
+		@Param("id2") id2: string,
+	): Promise<string> {
+		return await this.matchService.newMatch(parseInt(id), parseInt(id2));
 	}
 
-	// @Get("addPlayerToQueue/:id")
-	// async addPlayerToQue(@Param() param) {
-	// 	return await this.matchService.addPlayerToQue(param.id as number);
-	// }
-
 	@Get("increaseScore/:matchid/:playerid")
-	async increaseScore(@Param() param) {
+	async increaseScore(
+		@Param("matchid") matchid: string,
+		@Param("playerid") playerid: string,
+	): Promise<void> {
 		return await this.matchService.increaseScore(
-			param.matchid as number,
-			param.playerid as number,
+			parseInt(matchid),
+			parseInt(playerid),
 		);
 	}
 
 	@Get("getMatch/:id")
-	async getMatch(@Param() param) {
-		return await this.matchService.getMatch(param.id as number);
+	async getMatch(@Param("id") id: string): Promise<MatchEntity> {
+		return await this.matchService.getMatch(parseInt(id));
 	}
 
 	@Get("getUserHistory/:id")
-	async getUserHistory(@Param() param) {
-		return await this.matchService.getUserMatches(param.id as number);
+	async getUserHistory(@Param("id") id: string): Promise<MatchEntity[]> {
+		return await this.matchService.getUserMatches(parseInt(id));
 	}
 
 	@Get("getAllMatchs")
-	async getAllMatchs() {
+	async getAllMatchs(): Promise<MatchEntity[]> {
 		return await this.matchService.getAllMatches();
 	}
 	@Get("getQueuedPlayer")
-	async getQueuedPlayer() {
+	async getQueuedPlayer(): Promise<string> {
 		return await this.matchService.getQueuedPlayer();
 	}
 }

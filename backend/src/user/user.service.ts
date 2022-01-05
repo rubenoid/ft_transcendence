@@ -16,7 +16,7 @@ export class UserService {
 		return User;
 	}
 
-	async getUserAvatarById(toFind: number) {
+	async getUserAvatarById(toFind: number): Promise<string> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
 		if (User === undefined) throw "User not found";
 		return User.avatar;
@@ -40,7 +40,7 @@ export class UserService {
 		await this.UserRepository.save(user);
 	}
 
-	async addUser() {
+	async addUser(): Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
 		newUser.firstName = "i dont know";
@@ -61,7 +61,7 @@ export class UserService {
 		username: string,
 		firstname: string,
 		lastname: string,
-	) {
+	): Promise<void> {
 		console.log(
 			"start here" + id + "username:" + username + "firstname:" + firstname,
 			+"lastname" + lastname,
@@ -82,7 +82,7 @@ export class UserService {
 		await this.UserRepository.save(newUser);
 	}
 
-	async getUsers() {
+	async getUsers(): Promise<UserEntity[]> {
 		return await this.UserRepository.find();
 	}
 
@@ -100,11 +100,15 @@ export class UserService {
 		return User;
 	}
 
-	async deleteAll() {
+	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
 	}
 
-	async insert(firstName: string, lastName: string, userName: string) {
+	async insert(
+		firstName: string,
+		lastName: string,
+		userName: string,
+	): Promise<number> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
 		newUser.firstName = firstName;
@@ -124,7 +128,7 @@ export class UserService {
 		firstName: string,
 		lastName: string,
 		userName: string,
-	) {
+	): Promise<number> {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;

@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 
-
 console.log("this is app server");
 
 @Injectable()

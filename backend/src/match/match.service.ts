@@ -17,7 +17,7 @@ export class MatchService {
 		private gameService: GameService
 	) {}
 
-	async removeFromQueue(socket: Socket)
+	async removeFromQueue(socket: Socket): Promise<void>
 	{
 		const idx = queuedSock.findIndex(x => x.id == socket.id);
 
@@ -28,7 +28,7 @@ export class MatchService {
 		}
 	}
 
-	async newMatch(Playerid1: number, Playerid2: number) {
+	async newMatch(Playerid1: number, Playerid2: number): Promise<string> {
 		const User1 = await this.userService.getUserQueryOne({
 			where: { id: Playerid1 },
 			relations: ["matches"],
@@ -60,7 +60,7 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQueue(connection: Socket, server: Server) {
+	async addPlayerToQueue(connection: Socket, server: Server): Promise<string> {
 
 		if (queuedSock.find(x => x.id == connection.id))
 			return;
@@ -75,7 +75,7 @@ export class MatchService {
 		}
 	}
 
-	async increaseScore(Matchid: number, Playerid: number) {
+	async increaseScore(Matchid: number, Playerid: number): Promise<void> {
 		const Match = await this.MatchRepository.findOne({
 			where: { id: Matchid },
 		});
@@ -85,7 +85,7 @@ export class MatchService {
 		else throw "No player with id " + Playerid + " in match " + Matchid;
 		await this.MatchRepository.save(Match);
 	}
-	async getMatch(id: number) {
+	async getMatch(id: number): Promise<MatchEntity> {
 		const Match = await this.MatchRepository.findOne({
 			where: { id: id },
 			relations: ["players"],
@@ -94,7 +94,7 @@ export class MatchService {
 		return Match;
 	}
 
-	async getUserMatches(id: number) {
+	async getUserMatches(id: number): Promise<MatchEntity[]> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: id },
 			relations: ["matches"],
@@ -103,13 +103,14 @@ export class MatchService {
 		return user.matches;
 	}
 
-	async getAllMatches() {
+	async getAllMatches(): Promise<MatchEntity[]> {
 		const Match = await this.MatchRepository.find({ relations: ["players"] });
 		if (Match.length === 0) throw "user not found";
 		return Match;
 	}
-	async getQueuedPlayer() {
-		if (!queuedSock) return "No queued players";
-		return "Queued player with id" + queuedSock;
+
+	async getQueuedPlayer(): Promise<string> {
+		if (!quedplayer) return "No queued players";
+		return "Queued player with id" + quedplayer;
 	}
 }

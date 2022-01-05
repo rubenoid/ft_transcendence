@@ -1,4 +1,3 @@
-
 import {
 	SubscribeMessage,
 	WebSocketGateway,
@@ -6,38 +5,36 @@ import {
 	WebSocketServer,
 	OnGatewayConnection,
 	OnGatewayDisconnect,
-} from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
+} from "@nestjs/websockets";
+import { Socket, Server } from "socket.io";
 //import { ChatService, IncomingChatMessage } from './chat.service';
-import { Logger } from '@nestjs/common';
+import { Logger } from "@nestjs/common";
+import { GuardedSocket } from "src/overloaded";
 // import { ChatMessage } from './chat.entity';
 
-
-@WebSocketGateway({cors: {origin: '*'}})
+@WebSocketGateway({ cors: { origin: "*" } })
 export class ChatGateway
-	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+	implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
 	@WebSocketServer() server: Server;
-	constructor() {}
 
-	private logger: Logger = new Logger('ChatGateway');
+	private logger: Logger = new Logger("ChatGateway");
 
-	afterInit(server: Server) {
-		this.logger.log('Init');
+	afterInit(server: Server): void {
+		this.logger.log("Init");
 	}
-	
-	handleDisconnect(client: Socket) {
+
+	handleDisconnect(client: GuardedSocket): void {
 		this.logger.log(`Chat::Client disconnected: ${client.id}`);
 	}
-	
-	handleConnection(client: Socket, ...args: any[]) {
+
+	handleConnection(client: GuardedSocket, ...args: string[]): void {
 		this.logger.log(`Chat::Client connected: ${client.id}`);
 	}
 
-	@SubscribeMessage('message')
-  		handleMessage(client: any, payload: any): string {
-			this.server.emit("message", "hallo terug")
-    	return 'Hello world!';
-  	}
-
+	@SubscribeMessage("message")
+	handleMessage(client: GuardedSocket, payload: string): string {
+		this.server.emit("message", "hallo terug");
+		return "Hello world!";
+	}
 }
-
