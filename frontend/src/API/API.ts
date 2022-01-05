@@ -16,6 +16,19 @@ const instance: AxiosInstance = axios.create({
   baseURL: "http://localhost:5000",
 });
 
+export const fetchData = async (url?: string) => {
+  await instance.get('/user/all')
+  .then(response => {
+    console.log('FETCHDATA');
+    console.log(response);
+    console.log(response.data);
+    return(response.data);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+}
+
 export const fetchUsers = async (): Promise<User[]> => {
 
   let users: User[];
