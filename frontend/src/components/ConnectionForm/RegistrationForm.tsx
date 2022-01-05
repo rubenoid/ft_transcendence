@@ -53,7 +53,6 @@ const RegistrationForm = () => {
                       {registered ? '' : 
                       <Button type='submit' onClick={(e) => {registerNewUser(e, userName, firstName, lastName)}}>
                         <Text fontSize='20px'>Register</Text>
-                        {/* {registered ? <Text>Registered now please signin</Text> : ''} */}
                       </Button>
                       }
                   </Item>
