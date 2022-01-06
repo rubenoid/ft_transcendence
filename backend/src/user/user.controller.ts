@@ -8,51 +8,55 @@ import {
 	Param,
 	Req,
 } from "@nestjs/common";
+import { GuardedRequest } from "src/overloaded";
+import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
 
 @Controller("user")
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 	@Get("getAll")
-	async getAll() {
+	async getAll(): Promise<UserEntity[]> {
 		return await this.userService.getAll();
 	}
 	@Get("get/:id")
-	async getUserById(@Param() param) {
-		return await this.userService.getUser(param.id as number);
+	async getUserById(@Param("id") id: string): Promise<UserEntity> {
+		return await this.userService.getUser(parseInt(id));
 	}
 	@Get("me")
-	async getme(@Req() req, @Param() param) {
+	async getme(@Req() req: GuardedRequest): Promise<UserEntity> {
 		return await this.userService.getUser(req.user.id as number);
 	}
 
 	@Get("getByUserName/:username")
-	async getUserByUsername(@Param() param) {
-		return await this.userService.getUserByName(param.username as string);
+	async getUserByUsername(
+		@Param("username") username: string,
+	): Promise<UserEntity> {
+		return await this.userService.getUserByName(username);
 	}
 
 	@Get("getAvatar/:id")
-	async getUserAvatarById(@Param() param) {
-		return await this.userService.getUserAvatarById(param.id as number);
+	async getUserAvatarById(@Param("id") id: string): Promise<string> {
+		return await this.userService.getUserAvatarById(parseInt(id));
 	}
 
 	@Get("random")
-	async addUserRand() {
+	async addUserRand(): Promise<void> {
 		return await this.userService.addUser();
 	}
 
 	@Get("all")
-	async getAllUsers() {
+	async getAllUsers(): Promise<UserEntity[]> {
 		return await this.userService.getUsers();
 	}
 
 	@Get("delete/:id")
-	async deleteUser(@Param() param) {
-		return await this.userService.deleteUser(param.id as number);
+	async deleteUser(@Param("id") id: string): Promise<boolean> {
+		return await this.userService.deleteUser(parseInt(id));
 	}
 
 	@Get("deleteAll")
-	async deleteAll() {
+	async deleteAll(): Promise<void> {
 		return await this.userService.deleteAll();
 	}
 
@@ -61,24 +65,21 @@ export class UserController {
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
-	) {
-		const userId = this.userService.insert(firstName, lastName, userName);
+		@Body("twoFAenabled") twoFAenabled: boolean,
+	): Promise<number> {
+		const userId = this.userService.insert(firstName, lastName, userName, twoFAenabled);
 		return userId;
 	}
 
 	@Put("update/:id")
 	async update(
-		@Param() param,
+		@Param("id") id: string,
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
+		@Body("twoFAenabled") twoFAenabled: boolean
 		//@Body('password') password: string,
-	) {
-		return this.userService.update(
-			param.id as number,
-			firstName,
-			lastName,
-			userName,
-		);
+	): Promise<number> {
+		return this.userService.update(parseInt(id), firstName, lastName, userName, twoFAenabled);
 	}
 }

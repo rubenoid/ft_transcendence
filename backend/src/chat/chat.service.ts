@@ -12,7 +12,7 @@ export class ChatService {
 		private userService: UserService,
 	) {}
 
-	async getAllChats() {
+	async getAllChats(): Promise<ChatEntity[]> {
 		const chats = await this.chatRepository.find({
 			relations: ["users", "messages"],
 		});
@@ -20,7 +20,7 @@ export class ChatService {
 		return chats;
 	}
 
-	async createChat() {
+	async createChat(): Promise<void> {
 		const toadd = new ChatEntity();
 
 		toadd.name = "Oscar, Ruben";
@@ -35,7 +35,7 @@ export class ChatService {
 		this.chatRepository.save(toadd);
 	}
 
-	async createRandMessage(id: number) {
+	async createRandMessage(id: number): Promise<void> {
 		const chat = await this.chatRepository.findOne(id);
 
 		console.log("1");
@@ -58,7 +58,7 @@ export class ChatService {
 		await this.chatRepository.save(chat);
 	}
 
-	async clear() {
+	async clear(): Promise<void> {
 		const chats = await this.chatRepository.find();
 
 		for (let i = 0; i < chats.length; i++) {

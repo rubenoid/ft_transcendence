@@ -5,6 +5,7 @@ import axios from "axios";
 import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { UserService } from "src/user/user.service";
+import { UserEntity } from "src/user/user.entity";
 
 @Injectable()
 export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
@@ -26,7 +27,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 		});
 	}
 
-	async validate(accessToken: string): Promise<any> {
+	async validate(accessToken: string): Promise<UserEntity> {
 		const result = await axios.get("https://api.intra.42.fr/v2/me", {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
@@ -37,6 +38,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 				result.data.login,
 				result.data.first_name,
 				result.data.last_name,
+				false,
 				false,
 			);
 			user = await this.authService.validateUser(result.data.id);

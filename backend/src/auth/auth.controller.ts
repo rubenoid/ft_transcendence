@@ -14,6 +14,7 @@ import { Response, Request, request } from "express";
 import { JwtAuthGuard } from "./jwt.guard";
 import { Public } from "./jwt.decorator";
 import { UserService } from "src/user/user.service";
+import { GuardedRequest } from "src/overloaded";
 
 @Controller("auth")
 export class AuthController {
@@ -25,12 +26,23 @@ export class AuthController {
 	@Public()
 	@UseGuards(AuthGuard("FourtyTwo"))
 	@Get("login")
-	async login(@Req() req, @Res({ passthrough: true }) response: Response) {
+	async login(
+		@Req() req: GuardedRequest,
+		@Res({ passthrough: true }) response: Response,
+	): Promise<void> {
+		console.log("Login user", req.user);
 		const token: string = await this.authService.login(req.user);
 		await response.cookie("AuthToken", token, { httpOnly: false });
 		if (!req.user.registered) {
 			return response.redirect("http://localhost:8080/register");
 		}
+		console.log("2FA not enabled so go straight to profile");
+		if (!req.user.twoFAenabled)
+		{
+			console.log("2FA not enabled so go straight to profile");
+			return response.redirect("http://localhost:8080/profile");
+		}
+		console.log("2FA enabled SO GO THROUGH THIS FLOW FIRST");
 		// this.authService.create2fadiv(req.user.id);
 		return response.redirect("http://localhost:8080/profile");
 	}
@@ -59,21 +71,26 @@ export class AuthController {
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
-		@Req() req,
+		@Body("twoFAenabled") twoFAenabled: boolean,
+		@Req() req : GuardedRequest,
 		@Res() response,
 	) {
-		this.userService.update(req.user.id, userName, firstName, lastName);
+		this.userService.update(req.user.id, userName, firstName, lastName, twoFAenabled);
 		return;
 	}
 
 	@UseGuards(JwtAuthGuard)
 	@Get("guarded-jwt")
-	async hi4(@Req() req) {
+	async hi4(@Req() req: GuardedRequest): Promise<string> {
+		console.log(req.user);
 		return "wow jwt thinks work!";
 	}
 	@UseGuards(localAuthGaurd)
 	@Get("logout")
-	async logout(@Res({ passthrough: true }) response: Response) {
+	async logout(
+		// @Req() req: GuardedRequestuest: Request,
+		@Res({ passthrough: true }) response: Response,
+	): Promise<object> {
 		response.clearCookie("AuthToken");
 		return { message: "logged out" };
 	}

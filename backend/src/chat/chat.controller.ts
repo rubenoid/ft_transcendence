@@ -1,4 +1,5 @@
 import { Controller, Get, Param } from "@nestjs/common";
+import { ChatEntity } from "./chat.entity";
 import { ChatService } from "./chat.service";
 
 @Controller("chat")
@@ -6,22 +7,22 @@ export class ChatController {
 	constructor(private readonly chatService: ChatService) {}
 
 	@Get("all")
-	async returnAllChats() {
+	async returnAllChats(): Promise<ChatEntity[]> {
 		return await this.chatService.getAllChats();
 	}
 
 	@Get("createRandomChat")
-	async createRandomChat() {
+	async createRandomChat(): Promise<void> {
 		return await this.chatService.createChat();
 	}
 
 	@Get("createRandomMessage/:id")
-	async createRandomMessage(@Param() param) {
-		return await this.chatService.createRandMessage(param.id as number);
+	async createRandomMessage(@Param("id") id: string): Promise<void> {
+		return await this.chatService.createRandMessage(parseInt(id));
 	}
 
 	@Get("clear")
-	async clearAll() {
+	async clearAll(): Promise<void> {
 		return await this.chatService.clear();
 	}
 }

@@ -16,7 +16,7 @@ export class UserService {
 		return User;
 	}
 
-	async getUserAvatarById(toFind: number) {
+	async getUserAvatarById(toFind: number): Promise<string> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
 		if (User === undefined) throw "User not found";
 		return User.avatar;
@@ -40,7 +40,7 @@ export class UserService {
 		await this.UserRepository.save(user);
 	}
 
-	async addUser() {
+	async addUser(): Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
 		newUser.firstName = "i dont know";
@@ -52,7 +52,7 @@ export class UserService {
 		newUser.losses = 1;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
-
+		newUser.twoFAenabled = false;
 		await this.UserRepository.save(newUser);
 	}
 
@@ -62,8 +62,8 @@ export class UserService {
 		firstname: string,
 		lastname: string,
 		registered: boolean,
-	) {
-		console.log("add w details");
+		twoFAenabled: boolean,
+	)	: Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = id;
 		newUser.firstName = firstname;
@@ -76,11 +76,12 @@ export class UserService {
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.registered = registered;
+		newUser.twoFAenabled = twoFAenabled;
 		await this.UserRepository.save(newUser);
 		console.log("end add w details");
 	}
 
-	async getUsers() {
+	async getUsers(): Promise<UserEntity[]> {
 		return await this.UserRepository.find();
 	}
 
@@ -98,11 +99,16 @@ export class UserService {
 		return User;
 	}
 
-	async deleteAll() {
+	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
 	}
 
-	async insert(firstName: string, lastName: string, userName: string) {
+	async insert(
+		firstName: string,
+		lastName: string,
+		userName: string,
+		twoFAenabled: boolean,
+	): Promise<number> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
 		newUser.firstName = firstName;
@@ -113,6 +119,7 @@ export class UserService {
 		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
+		newUser.twoFAenabled = twoFAenabled;
 		await this.UserRepository.save(newUser);
 		return newUser.id;
 	}
@@ -122,12 +129,14 @@ export class UserService {
 		userName: string,
 		firstName: string,
 		lastName: string,
-	) {
+		twoFAenabled: boolean,
+	): Promise<number> {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
 		user.userName = userName;
 		user.registered = true;
+		user.twoFAenabled = twoFAenabled;
 		await this.UserRepository.save(user);
 		console.log("finished update with id:", id, "userName", userName);
 		return user.id;

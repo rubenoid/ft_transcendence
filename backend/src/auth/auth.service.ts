@@ -11,13 +11,13 @@ export class AuthService {
 		private jwtService: JwtService,
 	) {}
 
-	async login(user: any) {
+	async login(user: UserEntity): Promise<string> {
 		const payload = { userName: user.userName, id: user.id };
 		console.log("payload", payload);
 		return this.jwtService.sign(payload);
 	}
 
-	async validateUser(id: number): Promise<any> {
+	async validateUser(id: number): Promise<UserEntity | null> {
 		const user = await this.userService.getUser(id);
 		if (user) {
 			return user;
@@ -36,9 +36,5 @@ export class AuthService {
 				<img src="${qrcode}">
 				<p>We will only show this once! so be sure to save it or you're fucked</p>
 		`;
-	}
-
-	async give2fa(id: number) {
-		return await twofa.runexample();
 	}
 }
