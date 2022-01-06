@@ -11,8 +11,7 @@ export class UserService {
 	) {}
 	async getUser(toFind: number): Promise<UserEntity> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
-		// if (User === undefined)
-		// 	throw "User not found";
+		if (User === undefined) throw "User not found";
 		return User;
 	}
 
