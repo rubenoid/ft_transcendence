@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TextContainer, WidgetContainer } from '../Utils/Utils';
 import { ImgContainer, Img } from './ProfileElements';
 import { Text } from '../Utils/Utils';
-import { fetchMySelf, User } from '../../API/API';
+import { fetchData, User } from '../../API/API';
 
 const Profile = () => {
 
@@ -10,7 +10,7 @@ const Profile = () => {
 
     useEffect(() => {
         async function getUser(): Promise<User> {
-            const user: User = await fetchMySelf();
+            const user: User = await fetchData('/user/me');
             setUser(user);
             return user;
         }
