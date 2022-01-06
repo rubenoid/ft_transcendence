@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import { Form, Label, Button, FormContainer } from './ConnectionFormElements';
 import { TextInput, Text } from '../Utils/Utils';
 import { RoundButton, Link, Item } from '../Utils/Utils';
-import { isLogedIn, loginThroughIntra } from '../../API/API';
 
 const ConnectionForm = () => {
     return (

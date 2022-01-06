@@ -21,13 +21,8 @@ export const handlesSubmitNewMessages = (message: string): void => {
 	console.log("handlesubmitmessage");
 };
 
-// listen to incoming messages, and add it to our list of documents.
-socket.on("message", (message: string) => {
-	handleNewMessage(message);
-});
-
 // for chat history
-const handleNewMessage = (message: string) => {
+const handleNewMessage = (message: string): void => {
 	// new node appendchild
 	console.log(buildNewMessage);
 	//messages.appendChild(buildNewMessage)

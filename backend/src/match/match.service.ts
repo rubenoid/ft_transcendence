@@ -3,8 +3,10 @@ import { MatchEntity } from "./match.entity";
 import { Repository } from "typeorm";
 import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
+import { Server, Socket } from "socket.io";
+import { GameService } from "src/game/game.service";
 
-let quedplayer: UserEntity;
+const queuedSock: Socket[] = [];
 
 @Injectable()
 export class MatchService {
@@ -12,7 +14,17 @@ export class MatchService {
 		@Inject("MATCH_REPOSITORY")
 		private MatchRepository: Repository<MatchEntity>,
 		private userService: UserService,
+		private gameService: GameService,
 	) {}
+
+	async removeFromQueue(socket: Socket): Promise<void> {
+		const idx = queuedSock.findIndex((x) => x.id == socket.id);
+
+		if (idx != -1) {
+			queuedSock.splice(idx, 1);
+			console.log("removed " + socket.id + " from queue", queuedSock.length);
+		}
+	}
 
 	async newMatch(Playerid1: number, Playerid2: number): Promise<string> {
 		const User1 = await this.userService.getUserQueryOne({
@@ -46,20 +58,16 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQue(Playerid: number): Promise<string> {
-		const User = await this.userService.getUserQueryOne({
-			where: { id: Playerid },
-		});
-		if (!User) throw "User one not found";
-		if (!quedplayer) {
-			quedplayer = User;
-			return "playerr" + User.id + "qued";
+	async addPlayerToQueue(connection: Socket, server: Server): Promise<string> {
+		if (queuedSock.find((x) => x.id == connection.id)) return;
+		queuedSock.push(connection);
+		console.log("playerr " + connection.id + " qued");
+
+		if (queuedSock.length >= 2) {
+			const p1 = queuedSock.pop();
+			const p2 = queuedSock.pop();
+			this.gameService.startMatch(p1, p2, server);
 		}
-		if (quedplayer.id === User.id)
-			return "player" + User.id + "cannot play a match against themselves";
-		const Qid = quedplayer.id;
-		quedplayer = null;
-		return this.newMatch(Qid, User.id);
 	}
 
 	async increaseScore(Matchid: number, Playerid: number): Promise<void> {
@@ -94,9 +102,5 @@ export class MatchService {
 		const Match = await this.MatchRepository.find({ relations: ["players"] });
 		if (Match.length === 0) throw "user not found";
 		return Match;
-	}
-	async getQueuedPlayer(): Promise<string> {
-		if (!quedplayer) return "No queued players";
-		return "Queued player with id" + quedplayer;
 	}
 }

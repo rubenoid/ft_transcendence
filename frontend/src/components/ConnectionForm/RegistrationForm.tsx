@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
 import { RoundButton, List, LongList, Item, Link } from '../Utils/Utils';
+=======
+import React from 'react';
+import { FormContainer, Form, Label, Button  } from './ConnectionFormElements';
+import { RoundButton, Item } from '../Utils/Utils';
+>>>>>>> main
 import { TextInput, Text } from '../Utils/Utils';
 // import { fetchData, fetchUserByUserName, User } from '../../API/API';
 import { register, fetchUserByUserName, User } from '../../API/API';

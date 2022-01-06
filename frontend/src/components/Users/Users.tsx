@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { WidgetWrapper } from './UsersElements';
-import { fetchData, fetchUsers, User } from '../../API/API';
-import { List, LongList, Item, WidgetContainer, TextContainer } from '../Utils/Utils';
+import { fetchData, User } from '../../API/API';
+import { Item, WidgetContainer, TextContainer } from '../Utils/Utils';
 import { Text, Table, TableHeaderCell, TableBody, TableRow, TableHeader, TableCell } from '../Utils/Utils'
 
 
@@ -11,15 +10,13 @@ const Users = () => {
 
     useEffect(() => {
         async function getUsers(): Promise<User[]> {
-            const users: User[] = await fetchUsers();
-            const data = await fetchData();
-            console.log('DATA');
-            console.log(data);
+            const users: User[] = await fetchData('/user/all');
+            console.log('USERS->', users);
             setUsers(users);
             return users;
         }
         getUsers();
-    }, [fetchUsers]);
+    }, [fetchData]);
 
     const listUsers = users.map((user: User, key: number) => {
         return( 
@@ -31,6 +28,7 @@ const Users = () => {
             </TableRow>
         );
     });
+
     return (
         <WidgetContainer>
             <TextContainer>
