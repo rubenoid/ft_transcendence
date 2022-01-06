@@ -4,7 +4,10 @@ import * as readline from "readline";
 
 const secrets = [];
 
-export function getTwoFactorAuthenticationCode() {
+export function getTwoFactorAuthenticationCode(): {
+	otpauthUrl: "";
+	base32: "";
+} {
 	const secretCode = speakeasy.generateSecret({ name: "Pong online" });
 	return {
 		otpauthUrl: secretCode.otpauth_url,

@@ -63,7 +63,7 @@ export class UserService {
 		lastname: string,
 		registered: boolean,
 		twoFAenabled: boolean,
-	)	: Promise<void> {
+	): Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = id;
 		newUser.firstName = firstname;

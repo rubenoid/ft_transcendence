@@ -37,8 +37,7 @@ export class AuthController {
 			return response.redirect("http://localhost:8080/register");
 		}
 		console.log("2FA not enabled so go straight to profile");
-		if (!req.user.twoFAenabled)
-		{
+		if (!req.user.twoFAenabled) {
 			console.log("2FA not enabled so go straight to profile");
 			return response.redirect("http://localhost:8080/profile");
 		}
@@ -72,10 +71,16 @@ export class AuthController {
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
 		@Body("twoFAenabled") twoFAenabled: boolean,
-		@Req() req : GuardedRequest,
+		@Req() req: GuardedRequest,
 		@Res() response,
 	) {
-		this.userService.update(req.user.id, userName, firstName, lastName, twoFAenabled);
+		this.userService.update(
+			req.user.id,
+			userName,
+			firstName,
+			lastName,
+			twoFAenabled,
+		);
 		return;
 	}
 

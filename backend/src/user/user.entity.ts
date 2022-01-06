@@ -44,7 +44,7 @@ export class UserEntity {
 	@Column({ nullable: true })
 	twoFactorSecret: string;
 
-	@Column({default: false})
+	@Column({ default: false })
 	twoFAenabled: boolean;
 
 	@ManyToMany(() => UserEntity, {

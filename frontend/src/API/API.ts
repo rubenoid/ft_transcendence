@@ -35,3 +35,19 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 			console.log(error);
 		});
 };
+
+export const register = async (Username: string, Firstname: string, Lastname: string, twoFAenabled: boolean) => {
+	const endpoint = '/auth/register';
+	const data = {
+		userName: Username,
+		firstName: Firstname,
+		lastName: Lastname,
+	}
+	await instance.post(endpoint,   data, headers)
+	.then(response => {
+		return response.data;
+	})
+	.catch((error) => {
+	  console.log(error);
+	})
+  }

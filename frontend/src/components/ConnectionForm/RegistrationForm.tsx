@@ -99,7 +99,7 @@ const handletwoFA = (e: any) => {
                       }
                   </Item>
                   {registered ? <Text>Registered now please signin</Text> : ''}
-                  {/* if no 2FA link below otherwise link to display 2FA QR CODE */}
+                  
                   <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button>
           </Form>
       </FormContainer>
