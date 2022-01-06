@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormContainer, Form, Label, Button  } from './ConnectionFormElements';
-import { RoundButton, List, LongList, Item } from '../Utils/Utils';
+import { RoundButton, Item } from '../Utils/Utils';
 import { TextInput, Text } from '../Utils/Utils';
 
 const RegistrationForm = () => {

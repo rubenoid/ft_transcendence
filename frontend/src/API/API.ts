@@ -16,100 +16,19 @@ const instance: AxiosInstance = axios.create({
 	baseURL: "http://localhost:5000",
 });
 
-export const fetchData = async (url?: string): Promise<void> => {
-	await instance
-		.get("/user/all")
+const headers = {
+	headers: {
+		"Access-Control-Allow-Credentials": "true",
+		"Access-Control-Allow-Origin": "http://localhost:5000",
+		Authorization: Cookies.get("AuthToken"),
+	},
+};
+
+export const fetchData = async <T>(url: string): Promise<T> => {
+	return await instance
+		.get(url, headers)
 		.then((response) => {
-			console.log("FETCHDATA");
-			console.log(response);
-			console.log(response.data);
 			return response.data;
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-};
-
-export const fetchUsers = async (): Promise<User[]> => {
-	let users: User[];
-
-	await instance
-		.get<User[]>("/user/all", {
-			headers: {
-				"Access-Control-Allow-Credentials": "true",
-				"Access-Control-Allow-Origin": "http://localhost:5000",
-				Authorization: Cookies.get("AuthToken"),
-			},
-		})
-		.then((response) => {
-			users = response.data;
-		})
-		.catch((error) => {
-			console.log("ERROR->" + error);
-		});
-	return users;
-};
-
-export const fetchUserByUserName = async (userName: string): Promise<User> => {
-	let user: User;
-
-	const endpoint = `/user/getByUserName/${userName}`;
-	console.log("ENDPOINT->");
-	console.log(endpoint);
-
-	await instance
-		.get<User>(endpoint, {
-			headers: {
-				"Access-Control-Allow-Credentials": "true",
-				"Access-Control-Allow-Origin": "http://localhost:5000",
-				Authorization: Cookies.get("AuthToken"),
-			},
-		})
-		.then((response) => {
-			user = response.data;
-		})
-		.catch((error) => {
-			return Promise.reject(error);
-		});
-	console.log(user);
-	return user;
-};
-
-export const loginThroughIntra = async (): Promise<void> => {
-	const endpoint = "/auth/login";
-
-	await instance
-		.get(endpoint, {
-			headers: {
-				"Access-Control-Allow-Credentials": "true",
-				"Access-Control-Allow-Origin": "http://localhost:5000",
-				Authorization: Cookies.get("AuthToken"),
-			},
-		})
-		.then((response) => {
-			console.log("RESPONSE LOGIN: ");
-			console.log(response);
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-};
-
-export const isLogedIn = async (): Promise<void> => {
-	console.log("Cookies.get(AuthToken): " + Cookies.get("AuthToken"));
-	const endpoint = "/auth/guarded-jwt";
-
-	await instance
-		.get(endpoint, {
-			headers: {
-				"Access-Control-Allow-Credentials": "true",
-				"Access-Control-Allow-Origin": "http://localhost:5000",
-				Authorization: Cookies.get("AuthToken"),
-			},
-		})
-		.then((response) => {
-			console.log("RESPONSE LOGIN: ");
-			console.log(response);
 		})
 		.catch((error) => {
 			console.log(error);
