@@ -6,7 +6,7 @@ import { fetchMySelf, User } from '../../API/API';
 
 const Profile = () => {
 
-    const [user, setUser] = useState<User>();
+    const [user, setUser] = useState<User>(undefined);
 
     useEffect(() => {
         async function getUser(): Promise<User> {
@@ -33,4 +33,5 @@ const Profile = () => {
         </WidgetContainer>
     );
 }
+
 export default Profile;
