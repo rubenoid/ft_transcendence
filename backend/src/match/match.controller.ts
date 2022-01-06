@@ -13,11 +13,6 @@ export class MatchController {
 		return await this.matchService.newMatch(parseInt(id), parseInt(id2));
 	}
 
-	@Get("addPlayerToQueue/:id")
-	async addPlayerToQue(@Param("id") id: string): Promise<string> {
-		return await this.matchService.addPlayerToQue(parseInt(id));
-	}
-
 	@Get("increaseScore/:matchid/:playerid")
 	async increaseScore(
 		@Param("matchid") matchid: string,
@@ -42,9 +37,5 @@ export class MatchController {
 	@Get("getAllMatchs")
 	async getAllMatchs(): Promise<MatchEntity[]> {
 		return await this.matchService.getAllMatches();
-	}
-	@Get("getQueuedPlayer")
-	async getQueuedPlayer(): Promise<string> {
-		return await this.matchService.getQueuedPlayer();
 	}
 }
