@@ -40,6 +40,8 @@ export class AuthController {
 		if (!req.user.twoFAenabled) {
 			console.log("2FA not enabled so go straight to profile");
 			return response.redirect("http://localhost:8080/profile");
+		} else {
+			return response.redirect("http://localhost:5000/auth/getQr");
 		}
 		console.log("2FA enabled SO GO THROUGH THIS FLOW FIRST");
 		// this.authService.create2fadiv(req.user.id);
@@ -47,7 +49,7 @@ export class AuthController {
 	}
 
 	@Get("getQr")
-	async return2fa(@Req() req) {
+	async return2fa(@Req() req: GuardedRequest): Promise<string> {
 		return await this.authService.create2fadiv(req.user.id);
 	}
 
@@ -72,8 +74,7 @@ export class AuthController {
 		@Body("userName") userName: string,
 		@Body("twoFAenabled") twoFAenabled: boolean,
 		@Req() req: GuardedRequest,
-		@Res() response,
-	) {
+	): Promise<void> {
 		this.userService.update(
 			req.user.id,
 			userName,

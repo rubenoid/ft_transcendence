@@ -58,6 +58,7 @@ const handletwoFA = (e: any) => {
   const registerNewUser = (e: any, username: string, firstname: string, lastname:string, twoFA:boolean) => {
     e.preventDefault();
     if (username && firstName && lastName && !user) {
+      console.log("registering with TWOFA is", twoFA);
       register(username, firstName, lastName, twoFA);
       setRegistered(true);
     }

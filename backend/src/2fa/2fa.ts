@@ -15,7 +15,7 @@ export function getTwoFactorAuthenticationCode(): {
 	};
 }
 
-export function createQrCodeAsImg(url: string) {
+export function createQrCodeAsImg(url: string): void {
 	qrcode.toFile("img.png", url, function (err) {
 		console.log("error", err);
 	});
@@ -25,7 +25,7 @@ export async function createQrCodeAsURL(data: string): Promise<string> {
 	return await qrcode.toDataURL(data);
 }
 
-export function check2faInput(input: string, secret: string) {
+export function check2faInput(input: string, secret: string): boolean {
 	const check = speakeasy.totp.verify({
 		secret: secret,
 		encoding: "base32",

@@ -24,7 +24,7 @@ export class AuthService {
 		}
 		return null;
 	}
-	async create2fadiv(id: number) {
+	async create2fadiv(id: number): Promise<string> {
 		const user: UserEntity = await this.userService.getUser(id);
 
 		const codedata = twofa.getTwoFactorAuthenticationCode();
