@@ -7,7 +7,7 @@ export class SettingsController {
 	constructor(private readonly settingsService: SettingsService) {}
 
 	@Put("changeFirstName/:id")
-	async changeFirstName(@Param() param) {
+	async changeFirstName(@Param("id") param: string): Promise<string> {
 		return "";
 	}
 }

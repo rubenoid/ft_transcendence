@@ -14,7 +14,7 @@ export class MatchService {
 		private userService: UserService,
 	) {}
 
-	async newMatch(Playerid1: number, Playerid2: number) {
+	async newMatch(Playerid1: number, Playerid2: number): Promise<string> {
 		const User1 = await this.userService.getUserQueryOne({
 			where: { id: Playerid1 },
 			relations: ["matches"],
@@ -46,7 +46,7 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQue(Playerid: number) {
+	async addPlayerToQue(Playerid: number): Promise<string> {
 		const User = await this.userService.getUserQueryOne({
 			where: { id: Playerid },
 		});
@@ -62,7 +62,7 @@ export class MatchService {
 		return this.newMatch(Qid, User.id);
 	}
 
-	async increaseScore(Matchid: number, Playerid: number) {
+	async increaseScore(Matchid: number, Playerid: number): Promise<void> {
 		const Match = await this.MatchRepository.findOne({
 			where: { id: Matchid },
 		});
@@ -72,7 +72,7 @@ export class MatchService {
 		else throw "No player with id " + Playerid + " in match " + Matchid;
 		await this.MatchRepository.save(Match);
 	}
-	async getMatch(id: number) {
+	async getMatch(id: number): Promise<MatchEntity> {
 		const Match = await this.MatchRepository.findOne({
 			where: { id: id },
 			relations: ["players"],
@@ -81,7 +81,7 @@ export class MatchService {
 		return Match;
 	}
 
-	async getUserMatches(id: number) {
+	async getUserMatches(id: number): Promise<MatchEntity[]> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: id },
 			relations: ["matches"],
@@ -90,12 +90,12 @@ export class MatchService {
 		return user.matches;
 	}
 
-	async getAllMatches() {
+	async getAllMatches(): Promise<MatchEntity[]> {
 		const Match = await this.MatchRepository.find({ relations: ["players"] });
 		if (Match.length === 0) throw "user not found";
 		return Match;
 	}
-	async getQueuedPlayer() {
+	async getQueuedPlayer(): Promise<string> {
 		if (!quedplayer) return "No queued players";
 		return "Queued player with id" + quedplayer;
 	}

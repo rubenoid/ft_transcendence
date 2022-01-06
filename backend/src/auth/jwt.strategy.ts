@@ -10,14 +10,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 			ignoreExpiration: false,
 			secretOrKey: "secretKey",
 			jwtFromRequest: ExtractJwt.fromExtractors([
-				(request: Request | any) => {
-					let data = '';
+				/* eslint-disable */
+				(request: Request | any): null | string => {
+					let data = "";
 					try {
-						data = request.headers["authorization"] || request?.cookies["AuthToken"];
+						data =
+							request.headers["authorization"] || request?.cookies["AuthToken"];
 					} catch (er) {
 						data = request.handshake.headers.authorization;
 					}
-					if (data == '') {
+					if (data == "") {
 						return null;
 					}
 					return data;
@@ -26,7 +28,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		});
 	}
 
-	async validate(payload: any) {
+	async validate(payload: object): Promise<object> {
 		console.log("Payload", payload);
 		if (payload === null) {
 			throw new UnauthorizedException();
