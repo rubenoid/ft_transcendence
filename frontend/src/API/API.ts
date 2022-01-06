@@ -2,15 +2,15 @@ import axios, { AxiosInstance } from "axios";
 import Cookies from "js-cookie";
 
 export type User = {
-  id: number,
-  userName: string,
-  firstName: string,
-  lastName: string,
-  avatar: string,
-  wins: number,
-  losses: number,
-  rating: number,
-  isActive: boolean
+	id: number;
+	userName: string;
+	firstName: string;
+	lastName: string;
+	avatar: string;
+	wins: number;
+	losses: number;
+	rating: number;
+	isActive: boolean;
 };
 
 const instance: AxiosInstance = axios.create({
@@ -32,22 +32,24 @@ export const fetchData = async (url?: string): Promise<void> => {
 };
 
 export const fetchMySelf = async (): Promise<User> => {
+	let usr: User;
 
-  let usr: User;
-
-  await instance.get<User>('/user/me', {headers: {
-	"Access-Control-Allow-Credentials": "true",
-	"Access-Control-Allow-Origin": "http://localhost:5000",
-	'Authorization': Cookies.get("AuthToken"),
-  }})
-  .then( response => {
-      usr = response.data;
-    })
-  .catch(error => {
-    console.log('ERROR->' + error);
-  });
-  return usr;
-}
+	await instance
+		.get<User>("/user/me", {
+			headers: {
+				"Access-Control-Allow-Credentials": "true",
+				"Access-Control-Allow-Origin": "http://localhost:5000",
+				Authorization: Cookies.get("AuthToken"),
+			},
+		})
+		.then((response) => {
+			usr = response.data;
+		})
+		.catch((error) => {
+			console.log("ERROR->" + error);
+		});
+	return usr;
+};
 
 export const fetchUsers = async (): Promise<User[]> => {
 	let users: User[];
