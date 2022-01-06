@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
 import { RoundButton, List, LongList, Item, Link } from '../Utils/Utils';
-=======
-import React from 'react';
-import { FormContainer, Form, Label, Button  } from './ConnectionFormElements';
-import { RoundButton, Item } from '../Utils/Utils';
->>>>>>> main
 import { TextInput, Text } from '../Utils/Utils';
-// import { fetchData, fetchUserByUserName, User } from '../../API/API';
-import { register, fetchUserByUserName, User } from '../../API/API';
+import { register, User, fetchData } from '../../API/API';
 
 const RegistrationForm = () => {
 
@@ -24,7 +17,8 @@ const RegistrationForm = () => {
 
   useEffect(() => {
       async function getUsers(): Promise<User> {
-          const user: User = await fetchUserByUserName(userName);
+        const endpoint = `/user/getByUserName/${userName}`;
+          const user: User = await fetchData(endpoint);
           user ? setUser(user) : setUser(undefined);
           return user;
       }
@@ -105,7 +99,7 @@ const handletwoFA = (e: any) => {
                       }
                   </Item>
                   {registered ? <Text>Registered now please signin</Text> : ''}
-                  
+                  {/* if no 2FA link below otherwise */}
                   <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button>
           </Form>
       </FormContainer>

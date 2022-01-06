@@ -35,7 +35,6 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 			console.log(error);
 		});
 };
-<<<<<<< HEAD
 
 export const register = async (Username: string, Firstname: string, Lastname: string, twoFAenabled: boolean) => {
 	const endpoint = '/auth/register';
@@ -52,5 +51,3 @@ export const register = async (Username: string, Firstname: string, Lastname: st
 	  console.log(error);
 	})
   }
-=======
->>>>>>> main
