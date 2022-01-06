@@ -6,6 +6,7 @@ export type User = {
 	userName: string;
 	firstName: string;
 	lastName: string;
+	avatar: string;
 	wins: number;
 	losses: number;
 	rating: number;
