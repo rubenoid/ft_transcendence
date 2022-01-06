@@ -61,7 +61,7 @@ export class UserService {
 		username: string,
 		firstname: string,
 		lastname: string,
-		registered: boolean
+		registered: boolean,
 	) {
 		console.log("add w details");
 		const newUser: UserEntity = new UserEntity();
@@ -129,7 +129,7 @@ export class UserService {
 		user.userName = userName;
 		user.registered = true;
 		await this.UserRepository.save(user);
-		console.log("finished update with id:" , id, "userName", userName);
+		console.log("finished update with id:", id, "userName", userName);
 		return user.id;
 	}
 	async getUserByName(username: string): Promise<UserEntity> {

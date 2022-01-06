@@ -1,6 +1,8 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
+import { UserEntity } from "src/user/user.entity";
+import * as twofa from "../2fa/2fa";
 
 @Injectable()
 export class AuthService {
@@ -21,5 +23,22 @@ export class AuthService {
 			return user;
 		}
 		return null;
+	}
+	async create2fadiv(id: number) {
+		const user: UserEntity = await this.userService.getUser(id);
+
+		const codedata = twofa.getTwoFactorAuthenticationCode();
+		user.twoFactorSecret = codedata.base32;
+		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
+		console.log("twoFactorSecret=", user.twoFactorSecret);
+		await this.userService.saveUser(user);
+		return `
+				<img src="${qrcode}">
+				<p>We will only show this once! so be sure to save it or you're fucked</p>
+		`;
+	}
+
+	async give2fa(id: number) {
+		return await twofa.runexample();
 	}
 }

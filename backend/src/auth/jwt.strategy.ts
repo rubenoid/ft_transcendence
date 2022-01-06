@@ -11,13 +11,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 			secretOrKey: "secretKey",
 			jwtFromRequest: ExtractJwt.fromExtractors([
 				(request: Request | any) => {
-					let data = '';
+					let data = "";
 					try {
-						data = request.headers["authorization"] || request?.cookies["AuthToken"];
+						data =
+							request.headers["authorization"] || request?.cookies["AuthToken"];
 					} catch (er) {
 						data = request.handshake.headers.authorization;
 					}
-					if (data == '') {
+					if (data == "") {
 						return null;
 					}
 					return data;

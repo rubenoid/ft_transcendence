@@ -41,6 +41,9 @@ export class UserEntity {
 	@Column()
 	registered: boolean;
 
+	@Column({ nullable: true })
+	twoFactorSecret: string;
+
 	@ManyToMany(() => UserEntity, {
 		onDelete: "SET NULL",
 		cascade: true,

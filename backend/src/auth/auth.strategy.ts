@@ -8,8 +8,11 @@ import { UserService } from "src/user/user.service";
 
 @Injectable()
 export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
-	constructor(private jwtService: JwtService, private authService: AuthService,
-		private userService: UserService) {
+	constructor(
+		private jwtService: JwtService,
+		private authService: AuthService,
+		private userService: UserService,
+	) {
 		super({
 			authorizationURL:
 				"https://api.intra.42.fr/oauth/authorize?client_id=4812972391c0c40e90979ab5764cde5b45fdd3354983c113b1c39adf1b00676a&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fauth%2Flogin&response_type=code",
@@ -34,11 +37,10 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 				result.data.login,
 				result.data.first_name,
 				result.data.last_name,
-				false
+				false,
 			);
 			user = await this.authService.validateUser(result.data.id);
-			if (!user)
-			{
+			if (!user) {
 				throw new UnauthorizedException();
 			}
 		}
