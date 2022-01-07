@@ -41,11 +41,8 @@ export class UserEntity {
 	@Column()
 	registered: boolean;
 
-	@Column({ default: '' })
+	@Column({ default: "" })
 	twoFactorSecret: string;
-
-	@Column({ default: false })
-	twoFAenabled: boolean;
 
 	@ManyToMany(() => UserEntity, {
 		onDelete: "SET NULL",

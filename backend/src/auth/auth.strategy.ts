@@ -27,7 +27,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 		});
 	}
 
-	async validate(accessToken: string): Promise<UserEntity> {
+	async validate(accessToken: string): Promise<any> {
 		const result = await axios.get("https://api.intra.42.fr/v2/me", {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
@@ -39,13 +39,12 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 				result.data.first_name,
 				result.data.last_name,
 				false,
-				false,
 			);
 			user = await this.authService.validateUser(result.data.id);
 			if (!user) {
 				throw new UnauthorizedException();
 			}
 		}
-		return user;
+		return { id: user.id };
 	}
 }

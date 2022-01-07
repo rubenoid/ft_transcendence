@@ -65,14 +65,8 @@ export class UserController {
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
-		@Body("twoFAenabled") twoFAenabled: boolean,
 	): Promise<number> {
-		const userId = this.userService.insert(
-			firstName,
-			lastName,
-			userName,
-			twoFAenabled,
-		);
+		const userId = this.userService.insert(firstName, lastName, userName);
 		return userId;
 	}
 
@@ -82,15 +76,8 @@ export class UserController {
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
-		@Body("twoFAenabled") twoFAenabled: boolean,
 		//@Body('password') password: string,
 	): Promise<number> {
-		return this.userService.update(
-			parseInt(id),
-			firstName,
-			lastName,
-			userName,
-			twoFAenabled,
-		);
+		return this.userService.update(parseInt(id), firstName, lastName, userName);
 	}
 }

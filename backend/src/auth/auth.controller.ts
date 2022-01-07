@@ -17,6 +17,8 @@ import { Public } from "./jwt.decorator";
 import { UserService } from "src/user/user.service";
 import { GuardedRequest } from "src/overloaded";
 import { publicDecrypt } from "crypto";
+import { UserEntity } from "src/user/user.entity";
+import { get } from "http";
 
 @Controller("auth")
 export class AuthController {
@@ -33,48 +35,40 @@ export class AuthController {
 		@Res({ passthrough: true }) response: Response,
 	): Promise<void> {
 		console.log("Login user", req.user);
+		const user: UserEntity = await this.userService.getUserQueryOne({
+			where: { id: req.user.id },
+		});
 		const token: string = await this.authService.login(req.user);
 		await response.cookie("AuthToken", token, { httpOnly: false });
-		if (!req.user.registered) {
+		if (!user.registered) {
 			return response.redirect("http://localhost:8080/register");
 		}
 		console.log("2FA not enabled so go straight to profile");
-		if (!req.user.twoFAenabled) {
-			console.log("2FA not enabled so go straight to profile");
-			return response.redirect("http://localhost:8080/profile");
+		if (user.twoFactorSecret.length) {
+			return response.redirect("http://localhost:8080/checkTwoFA");
 		}
-		return response.redirect("http://localhost:5000/auth/getQr");
-		// console.log("2FA enabled SO GO THROUGH THIS FLOW FIRST");
-		// this.authService.create2fadiv(req.user.id);
-		// return response.redirect("http://localhost:8080/profile");
+		return response.redirect("http://localhost:8080/profile");
 	}
 
 	@Get("getQr")
 	async return2fa(@Req() req: GuardedRequest): Promise<string> {
+		console.log("GETTING QR");
 		return await this.authService.create2fadiv(req.user.id);
 	}
 
 	@Post("inputAccessCode")
 	async inputAccessCode(
 		@Body("usertoken") usertoken: string,
-		@Req() req: GuardedRequest): Promise<boolean> {
-		console.log("usertoken", usertoken);
-		console.log("req.user.twoFactorSecret", req.user.twoFactorSecret);
-		return await this.authService.check2faInput(usertoken, req.user.twoFactorSecret);
+		@Req() req: GuardedRequest,
+	): Promise<boolean> {
+		const user: UserEntity = await this.userService.getUserQueryOne({
+			where: { id: req.user.id },
+		});
+		return await this.authService.check2faInput(
+			usertoken,
+			user.twoFactorSecret,
+		);
 	}
-
-	// @Get("sendQr")
-	// async get2fa(@Req() req) {
-	// 	return await this.authService.give2fa(req.user.id);
-	// }
-
-	// @Post("sendQr")
-	// async get2fa(@Req() req) {
-	// 	check2faInput(poststuff, user.twoFactorSecret);
-	//if true
-	// 	return await this.authService.give2fa(req.user.id);
-	// }
-	// in strategy if authenticated
 
 	@UseGuards(JwtAuthGuard)
 	@Post("register")
@@ -82,19 +76,18 @@ export class AuthController {
 		@Body("userName") userName: string,
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
-		@Body("twoFAenabled") twoFAenabled: boolean,
 		@Req() req: GuardedRequest,
 	): Promise<void> {
 		console.log("AUTH CONTROLLED re.user", req.user);
-		this.userService.update(
-			req.user.id,
-			userName,
-			firstName,
-			lastName,
-			twoFAenabled,
-		);
+		this.userService.update(req.user.id, userName, firstName, lastName);
 		return;
 	}
+
+	// @Public()
+	// @Get("protect")
+	// async functions() : Promise<any>{
+	// 	return await this.authService.testProtector();
+	// }
 
 	@UseGuards(JwtAuthGuard)
 	@Get("guarded-jwt")

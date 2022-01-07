@@ -52,7 +52,7 @@ export class UserService {
 		newUser.losses = 1;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
-		newUser.twoFAenabled = false;
+		newUser.twoFactorSecret = "";
 		await this.UserRepository.save(newUser);
 	}
 
@@ -62,7 +62,6 @@ export class UserService {
 		firstname: string,
 		lastname: string,
 		registered: boolean,
-		twoFAenabled: boolean,
 	): Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = id;
@@ -76,8 +75,8 @@ export class UserService {
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.registered = registered;
-		newUser.twoFAenabled = twoFAenabled;
-		newUser.twoFactorSecret = '';
+		newUser.twoFactorSecret = "";
+		newUser.twoFactorSecret = "";
 		await this.UserRepository.save(newUser);
 		console.log("end add w details");
 	}
@@ -108,7 +107,6 @@ export class UserService {
 		firstName: string,
 		lastName: string,
 		userName: string,
-		twoFAenabled: boolean,
 	): Promise<number> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
@@ -120,7 +118,6 @@ export class UserService {
 		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
-		newUser.twoFAenabled = twoFAenabled;
 		await this.UserRepository.save(newUser);
 		return newUser.id;
 	}
@@ -130,14 +127,12 @@ export class UserService {
 		userName: string,
 		firstName: string,
 		lastName: string,
-		twoFAenabled: boolean,
 	): Promise<number> {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
 		user.userName = userName;
 		user.registered = true;
-		user.twoFAenabled = twoFAenabled;
 		await this.UserRepository.save(user);
 		console.log("finished update with id:", id, "userName", userName);
 		return user.id;
