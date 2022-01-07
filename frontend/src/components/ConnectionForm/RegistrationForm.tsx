@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
 import { RoundButton, List, LongList, Item, Link } from '../Utils/Utils';
 import { TextInput, Text } from '../Utils/Utils';
-import { register, User, fetchData } from '../../API/API';
+import { postData, User, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
 
 
@@ -17,6 +17,7 @@ const RegistrationForm = () => {
   const [lastName, setLastName] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [qrcode, setqrcode] = useState<string>(undefined);
+  const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
 
   useEffect(() => {
       async function getUsers(): Promise<User> {
@@ -53,7 +54,7 @@ useEffect(() => {
     return (qrcode);
   }
   getQR();
-}, [twoFA]);
+}, [inputtedTwoFA]);
 
 const handletwoFA = (e: any) => {
   e.preventDefault();
@@ -69,17 +70,35 @@ const handletwoFA = (e: any) => {
   }
 }
 
-  const registerNewUser = (e: any, username: string, firstname: string, lastname:string, twoFA:boolean) => {
+  const registerNewUser = (e: any, userName: string, firstName: string, lastName:string, twoFAenabled:boolean) => {
     e.preventDefault();
-    if (username && firstName && lastName && !user) {
-      console.log("registering with TWOFA is", twoFA);
-      register(username, firstName, lastName, twoFA);
+    if (userName && firstName && lastName && !user) {
+      console.log("registering with TWOFA is", twoFAenabled);
+      postData("/auth/register", {userName, firstName, lastName, twoFAenabled});
       setRegistered(true);
     }
     else {
-      console.log("Error->", username, firstName, lastName, twoFA);
+      console.log("Error->", userName, firstName, lastName, twoFA);
     }
   }
+
+
+  useEffect(() => {
+    async function inputAccessCode(): Promise<boolean> {
+      console.log("inputAccessCode!! ALREADY", inputtedTwoFA)
+      const endpoint = `/auth/inputAccessCode`;
+      const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
+      if (validated == true)
+      { 
+        settwoFA(undefined); 
+        console.log("GOOD QR code inpute 2FA");
+      }
+      else
+        console.log("BAD QR code input 2FA");
+      return (validated);
+    }
+    inputAccessCode();
+  }, [inputtedTwoFA]);
   
   return (
       <FormContainer>
@@ -109,21 +128,19 @@ const handletwoFA = (e: any) => {
                       </Button>
                     }
                   </Item>
-
                   <Item>
                       {registered ? '' : 
-                      <Button type='submit' onClick={(e) => {registerNewUser(e, userName, firstName, lastName, twoFA)}}>
+                      <Item><Button type='submit' onClick={(e) => {registerNewUser(e, userName, firstName, lastName, twoFA)}}>
                         <Text fontSize='20px'>Register</Text>
-                      </Button>
+                      </Button></Item>
                       }
-                  {/* </Item> */}
-                    {/* {registered && twoFA ? <text>QRCODE IS: {qrcode} </text> : ''} */}
-                  {/* <Item> */}
+                    </Item>
                   {registered && twoFA ? 
                     <Item>
                       <img src={qrcode} alt="" />
-                      <a href="http://localhost5000:auth/getQr" download="QRCode"></a>
-                      <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text'></TextInput></Item>  : ''} 
+                      <a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
+                      <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
+                    <Item>
                     {(!twoFA) && registered ?
                     <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button> : ''}
                   </Item>

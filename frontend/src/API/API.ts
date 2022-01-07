@@ -36,21 +36,9 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 		});
 };
 
-export const register = async (
-	Username: string,
-	Firstname: string,
-	Lastname: string,
-	twoFAenabled: boolean,
-): Promise<void> => {
-	const endpoint = "/auth/register";
-	const data = {
-		userName: Username,
-		firstName: Firstname,
-		lastName: Lastname,
-		twoFAenabled: twoFAenabled,
-	};
-	await instance
-		.post(endpoint, data, headers)
+export const postData = async <T>(url: string, data: object) : Promise<T> => {
+	return await instance
+		.post(url, data, headers)
 		.then((response) => {
 			return response.data;
 		})

@@ -77,6 +77,7 @@ export class UserService {
 		newUser.blockedUsers = [];
 		newUser.registered = registered;
 		newUser.twoFAenabled = twoFAenabled;
+		newUser.twoFactorSecret = '';
 		await this.UserRepository.save(newUser);
 		console.log("end add w details");
 	}

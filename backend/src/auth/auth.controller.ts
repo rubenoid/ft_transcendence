@@ -54,6 +54,15 @@ export class AuthController {
 		return await this.authService.create2fadiv(req.user.id);
 	}
 
+	@Post("inputAccessCode")
+	async inputAccessCode(
+		@Body("usertoken") usertoken: string,
+		@Req() req: GuardedRequest): Promise<boolean> {
+		console.log("usertoken", usertoken);
+		console.log("req.user.twoFactorSecret", req.user.twoFactorSecret);
+		return await this.authService.check2faInput(usertoken, req.user.twoFactorSecret);
+	}
+
 	// @Get("sendQr")
 	// async get2fa(@Req() req) {
 	// 	return await this.authService.give2fa(req.user.id);
@@ -70,12 +79,13 @@ export class AuthController {
 	@UseGuards(JwtAuthGuard)
 	@Post("register")
 	insert(
+		@Body("userName") userName: string,
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
-		@Body("userName") userName: string,
 		@Body("twoFAenabled") twoFAenabled: boolean,
 		@Req() req: GuardedRequest,
 	): Promise<void> {
+		console.log("AUTH CONTROLLED re.user", req.user);
 		this.userService.update(
 			req.user.id,
 			userName,
