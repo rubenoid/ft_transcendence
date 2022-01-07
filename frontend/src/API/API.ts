@@ -36,7 +36,7 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 		});
 };
 
-export const postData = async <T>(url: string, data: object) : Promise<T> => {
+export const postData = async <T>(url: string, data: object): Promise<T> => {
 	return await instance
 		.post(url, data, headers)
 		.then((response) => {
