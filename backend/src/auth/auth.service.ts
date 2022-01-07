@@ -33,8 +33,9 @@ export class AuthService {
 		console.log("twoFactorSecret=", user.twoFactorSecret);
 		await this.userService.saveUser(user);
 		return `
-				<img src="${qrcode}">
-				<p>We will only show this once! so be sure to save it or you're fucked</p>
-		`;
+		${qrcode}
+			`;
+		// <image src="${qrcode}">
+		// <p>We will only show this once! so be sure to save it or you're fucked</p>
 	}
 }

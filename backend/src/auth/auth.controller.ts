@@ -6,6 +6,7 @@ import {
 	UseGuards,
 	Post,
 	Body,
+	Param,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
@@ -15,6 +16,7 @@ import { JwtAuthGuard } from "./jwt.guard";
 import { Public } from "./jwt.decorator";
 import { UserService } from "src/user/user.service";
 import { GuardedRequest } from "src/overloaded";
+import { publicDecrypt } from "crypto";
 
 @Controller("auth")
 export class AuthController {
@@ -40,12 +42,11 @@ export class AuthController {
 		if (!req.user.twoFAenabled) {
 			console.log("2FA not enabled so go straight to profile");
 			return response.redirect("http://localhost:8080/profile");
-		} else {
-			return response.redirect("http://localhost:5000/auth/getQr");
 		}
-		console.log("2FA enabled SO GO THROUGH THIS FLOW FIRST");
+		return response.redirect("http://localhost:5000/auth/getQr");
+		// console.log("2FA enabled SO GO THROUGH THIS FLOW FIRST");
 		// this.authService.create2fadiv(req.user.id);
-		return response.redirect("http://localhost:8080/profile");
+		// return response.redirect("http://localhost:8080/profile");
 	}
 
 	@Get("getQr")

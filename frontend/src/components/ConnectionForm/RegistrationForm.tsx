@@ -4,6 +4,8 @@ import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
 import { RoundButton, List, LongList, Item, Link } from '../Utils/Utils';
 import { TextInput, Text } from '../Utils/Utils';
 import { register, User, fetchData } from '../../API/API';
+import QRCode from "qrcode.react";
+
 
 const RegistrationForm = () => {
 
@@ -14,6 +16,7 @@ const RegistrationForm = () => {
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
+  const [qrcode, setqrcode] = useState<string>(undefined);
 
   useEffect(() => {
       async function getUsers(): Promise<User> {
@@ -40,9 +43,20 @@ const RegistrationForm = () => {
       }
 }, [twoFA]);
 
+useEffect(() => {
+  async function getQR(): Promise<string> {
+    const endpoint = `auth/getQr`;
+    const qrcodegot: string = await fetchData(endpoint);
+    console.log("fetched: qrcode", qrcodegot);
+    setqrcode(qrcodegot);
+    console.log("QRCODE:", qrcode);
+    return (qrcode);
+  }
+  getQR();
+}, [twoFA]);
+
 const handletwoFA = (e: any) => {
   e.preventDefault();
-  console.log("INN");
   if (twoFA == true)
   {  
     settwoFA(false);
@@ -86,10 +100,14 @@ const handletwoFA = (e: any) => {
                   </Item>
 
                   <Item>
-                  <Text>Enable Two factor Authenication</Text>
+                  {registered ? '' : 
+                    <Text>Enable Two factor Authenication</Text>
+                  }
+                    {registered ? '' : 
                       <Button type='submit' onClick={(e) => {handletwoFA(e)}}>
                       {changefa ? <Text fontSize='20px'>Disable</Text> : <Text fontSize='20px'>Enable</Text>}
                       </Button>
+                    }
                   </Item>
 
                   <Item>
@@ -98,10 +116,18 @@ const handletwoFA = (e: any) => {
                         <Text fontSize='20px'>Register</Text>
                       </Button>
                       }
+                  {/* </Item> */}
+                    {/* {registered && twoFA ? <text>QRCODE IS: {qrcode} </text> : ''} */}
+                  {/* <Item> */}
+                  {registered && twoFA ? 
+                    <Item>
+                      <img src={qrcode} alt="" />
+                      <a href="http://localhost5000:auth/getQr" download="QRCode"></a>
+                      <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text'></TextInput></Item>  : ''} 
+                    {(!twoFA) && registered ?
+                    <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button> : ''}
                   </Item>
-                  {registered ? <Text>Registered now please signin</Text> : ''}
                   {/* if no 2FA link below otherwise */}
-                  <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button>
           </Form>
       </FormContainer>
   );
