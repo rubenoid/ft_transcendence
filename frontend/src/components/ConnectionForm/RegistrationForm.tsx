@@ -46,6 +46,8 @@ const RegistrationForm = () => {
 
 useEffect(() => {
   async function getQR(): Promise<string> {
+    if (!registered || !twoFA)
+      {return}
     const endpoint = `auth/getQr`;
     const qrcodegot: string = await fetchData(endpoint);
     console.log("fetched: qrcode", qrcodegot);
@@ -54,7 +56,18 @@ useEffect(() => {
     return (qrcode);
   }
   getQR();
-}, [inputtedTwoFA]);
+}, [registered]);
+
+// const getQRme= () => {
+//   async function getQR(): Promise<string> {
+//     const endpoint = `auth/getQr`;
+//     const qrcodegot: string = await fetchData(endpoint);
+//     console.log("fetched: qrcode", qrcodegot);
+//     setqrcode(qrcodegot);
+//     console.log("QRCODE:", qrcode);
+//     return (qrcode);
+//   }
+// }
 
 const handletwoFA = (e: any) => {
   e.preventDefault();
@@ -74,7 +87,7 @@ const handletwoFA = (e: any) => {
     e.preventDefault();
     if (userName && firstName && lastName && !user) {
       console.log("registering with TWOFA is", twoFAenabled);
-      postData("/auth/register", {userName, firstName, lastName, twoFAenabled});
+      postData("/auth/register", {userName, firstName, lastName});
       setRegistered(true);
     }
     else {
@@ -85,7 +98,8 @@ const handletwoFA = (e: any) => {
 
   useEffect(() => {
     async function inputAccessCode(): Promise<boolean> {
-      console.log("inputAccessCode!! ALREADY", inputtedTwoFA)
+      if (inputtedTwoFA.length != 6)
+        return;
       const endpoint = `/auth/inputAccessCode`;
       const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
       if (validated == true)
@@ -117,7 +131,6 @@ const handletwoFA = (e: any) => {
                     <Label> <Text fontSize='20px'>Lastname</Text></Label>
                     <TextInput type='text' onChange={(e) => {setLastName(e.target.value)}}/>
                   </Item>
-
                   <Item>
                   {registered ? '' : 
                     <Text>Enable Two factor Authenication</Text>
@@ -144,7 +157,6 @@ const handletwoFA = (e: any) => {
                     {(!twoFA) && registered ?
                     <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button> : ''}
                   </Item>
-                  {/* if no 2FA link below otherwise */}
           </Form>
       </FormContainer>
   );
