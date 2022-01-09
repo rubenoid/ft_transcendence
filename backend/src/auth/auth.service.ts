@@ -3,12 +3,12 @@ import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { UserEntity } from "src/user/user.entity";
 import * as twofa from "../2fa/2fa";
-// import { Protector } from "src/protector/protector";
-import { identity } from "rxjs";
+import { ProtectorService } from "src/protector/protector";
 
 @Injectable()
 export class AuthService {
 	constructor(
+		private readonly protectorService: ProtectorService,
 		private readonly userService: UserService,
 		private jwtService: JwtService, // private readonly protector: Protector,
 	) {}
@@ -43,13 +43,13 @@ export class AuthService {
 		return await twofa.check2faInput(input, secret);
 	}
 
-	// async testProtector() : Promise<void> {
-	// console.log("hahahha");
-	// const h = await this.protector.hash("i like react kidding");
+	async testProtector() : Promise<void> {
+		console.log("hahahha");
+		const h = await this.protectorService.hash("i like react kidding");
 
-	// console.log("hahahha1");
-	// p.compare("i love angular", h).then((res) => console.log(res));
-	// console.log("hahahha2");
-	// p.compare("i like react kidding", h).then((res) => console.log(res));
-	// }
+		console.log("hahahha1");
+		this.protectorService.compare("i love angular", h).then((res) => console.log(res));
+		console.log("hahahha2");
+		this.protectorService.compare("i like react kidding", h).then((res) => console.log(res));
+	}
 }

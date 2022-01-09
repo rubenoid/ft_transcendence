@@ -83,11 +83,11 @@ export class AuthController {
 		return;
 	}
 
-	// @Public()
-	// @Get("protect")
-	// async functions() : Promise<any>{
-	// 	return await this.authService.testProtector();
-	// }
+	@Public()
+	@Get("protect")
+	async functions() : Promise<void>{
+		return await this.authService.testProtector();
+	}
 
 	@UseGuards(JwtAuthGuard)
 	@Get("guarded-jwt")
