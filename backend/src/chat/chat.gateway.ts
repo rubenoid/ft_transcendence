@@ -32,9 +32,17 @@ export class ChatGateway
 		this.logger.log(`Chat::Client connected: ${client.id}`);
 	}
 
-	@SubscribeMessage("message")
-	handleMessage(client: GuardedSocket, payload: string): string {
-		this.server.emit("message", "hallo terug");
-		return "Hello world!";
+	@SubscribeMessage("chat:message")
+	ThisFunctionNameDoesntMatter(client: GuardedSocket, payload: string): string {
+		console.log(" Backend client.user:", client.user, "send message", payload);
+
+		console.log("client.id:");
+		console.log(client.id);
+		console.log("<<<");
+		
+		
+		client.emit("banaan:nieuw", "ook hallo");
+		client.emit("banaan:delete", "delete it appie!!");
+		return "hallo terug";
 	}
 }
