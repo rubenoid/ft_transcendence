@@ -59,6 +59,7 @@ export class MatchService {
 	}
 
 	async addPlayerToQueue(connection: Socket, server: Server): Promise<string> {
+		console.log("ADD TO QUEUE");
 		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
 		console.log("playerr " + connection.id + " qued");

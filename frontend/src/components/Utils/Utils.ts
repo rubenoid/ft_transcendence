@@ -33,7 +33,8 @@ export const TextContainer = styled.div`
 `;
 
 export const Text = styled.p`
-	color: #fff;
+	color: ${(props: TextProps) =>
+		props.color ? props.color : "1rem"};;
 	font-size: ${(props: TextProps) =>
 		props.fontSize ? props.fontSize : "1rem"};
 

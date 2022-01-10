@@ -1,6 +1,7 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Req } from "@nestjs/common";
 import { ChatEntity } from "./chat.entity";
 import { ChatService } from "./chat.service";
+import { GuardedRequest } from "src/overloaded";
 
 @Controller("chat")
 export class ChatController {
@@ -24,5 +25,11 @@ export class ChatController {
 	@Get("clear")
 	async clearAll(): Promise<void> {
 		return await this.chatService.clear();
+	}
+
+	@Get("getmyChats")
+	async getmyChats(@Req() req: GuardedRequest)
+	{
+		// return await this.getmyChats(req.user.id);
 	}
 }

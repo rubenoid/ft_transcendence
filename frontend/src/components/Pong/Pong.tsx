@@ -25,6 +25,7 @@ class Line {
 }
 
 function addToQueue() {
+	console.log("in function addToQueue");
 	socket.emit("addToQueue");
 }
 

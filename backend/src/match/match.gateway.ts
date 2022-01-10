@@ -33,6 +33,7 @@ export class MatchGateway {
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("addToQueue")
 	handleMessage(client: GuardedSocket, payload: string): void {
+		console.log("in gateway");
 		this.matchService.addPlayerToQueue(client, this.server);
 	}
 }

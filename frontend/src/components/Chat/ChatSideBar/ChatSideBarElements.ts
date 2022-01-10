@@ -7,3 +7,16 @@ export const SideBar = styled.div`
 	background-color: #393b4c;
 	padding: 10px;
 `;
+
+
+export const ChatBody = styled.div`
+	margin: 5px;
+`;
+
+export const ChatCard = styled.div`
+	background-color: white;
+	border-radius: 7px;
+	color: black;
+	margin-top: 10px;
+	padding: 10px;
+`
