@@ -20,14 +20,20 @@ class Line {
 	}
 }
 
-function ccw(A: Point, B: Point, C: Point) {
-	return (C.y - A.y) * (B.x - A.x) > (B.y - A.y) * (C.x - A.x);
-}
-
-function intersect(p1: Point, p2: Point, p3: Point, p4: Point) {
-	return (
-		ccw(p1, p3, p4) != ccw(p2, p3, p4) && ccw(p1, p2, p3) != ccw(p1, p2, p4)
-	);
+function intersect(ball: Point, line: Line) {
+	if (line.p1.y == line.p2.y) {
+		if (ball.x + 5 < line.p1.x) return false;
+		if (ball.x - 5 > line.p2.x) return false;
+		if (ball.y - 5 <= line.p1.y && ball.y + 5 >= line.p1.y) {
+			return true;
+		}
+		return false;
+	} else {
+		if (ball.y + 5 < line.p1.y) return false;
+		if (ball.y - 5 > line.p2.y) return false;
+		if (ball.x - 5 <= line.p1.x && ball.x + 5 >= line.p1.x) return true;
+		return false;
+	}
 }
 
 class RunningGame {
@@ -102,7 +108,7 @@ class RunningGame {
 		this.decor.push(new Line(this.playersPos[1], player2End));
 		for (let i = 0; i < this.decor.length; i++) {
 			const e = this.decor[i];
-			if (intersect(oldpos, toCheck, e.p1, e.p2)) {
+			if (intersect(toCheck, e)) {
 				if (this.moveSpeed < 200) this.moveSpeed *= 1.2;
 				if (e.p1.y < e.p2.y) this.ballDir.x = -this.ballDir.x + randomDev;
 				else this.ballDir.y = -this.ballDir.y + randomDev;
@@ -151,14 +157,31 @@ class RunningGame {
 	}
 }
 
+const maps: Line[][] = [
+	[
+		new Line(new Point(20, 20), new Point(20, 580)),
+		new Line(new Point(380, 20), new Point(380, 580)),
+	],
+	[
+		new Line(new Point(20, 20), new Point(20, 580)),
+		new Line(new Point(380, 20), new Point(380, 580)),
+		new Line(new Point(20, 300), new Point(100, 300)),
+		new Line(new Point(300, 300), new Point(380, 300)),
+	],
+	[
+		new Line(new Point(20, 20), new Point(20, 580)),
+		new Line(new Point(380, 20), new Point(380, 580)),
+		new Line(new Point(80, 150), new Point(120, 150)),
+		new Line(new Point(280, 150), new Point(320, 150)),
+		new Line(new Point(80, 450), new Point(120, 450)),
+		new Line(new Point(280, 450), new Point(320, 450)),
+	],
+];
+
 @Injectable()
 export class GameService {
 	games: RunningGame[] = [];
 
-	decor: Line[] = [
-		new Line(new Point(20, 20), new Point(20, 580)),
-		new Line(new Point(380, 20), new Point(380, 580)),
-	];
 	searchingtmp: Socket[] = [];
 
 	startMatch(client1: Socket, client2: Socket, server: Server): void {
@@ -170,7 +193,12 @@ export class GameService {
 		client2.join(roomid);
 
 		this.games.push(
-			new RunningGame([client1, client2], this.decor, roomid, server),
+			new RunningGame(
+				[client1, client2],
+				maps[Math.round(Math.random() * 3)],
+				roomid,
+				server,
+			),
 		);
 		server.to(roomid).emit("startMatch");
 	}
