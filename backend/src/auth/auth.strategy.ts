@@ -27,7 +27,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 		});
 	}
 
-	async validate(accessToken: string): Promise<any> {
+	async validate(accessToken: string): Promise<object> {
 		const result = await axios.get("https://api.intra.42.fr/v2/me", {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});

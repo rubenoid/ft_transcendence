@@ -52,6 +52,7 @@ export class UserService {
 		newUser.losses = 1;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
+		newUser.registered = false;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
 		await this.UserRepository.save(newUser);
