@@ -3,6 +3,7 @@ import {TopContainer, ChatBoxContainer, InputContainer, SendIconContainer} from 
 import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
 import { ChatContainer } from '../ChatElements';
 import { AiOutlineSend as SendIcon} from 'react-icons/ai';
+import SendButton from '../../Buttons/Send/SendButton';
 
 const ChatBox = () => {
     return (
@@ -15,9 +16,7 @@ const ChatBox = () => {
             </ChatContainer>
             <InputContainer>
                 <TextInput type="text" onChange={(e) => ({})}></TextInput>
-                <SendIconContainer>
-                    <SendIcon/>
-                </SendIconContainer>
+                <SendButton/>
             </InputContainer>
         </ChatBoxContainer>
     );
