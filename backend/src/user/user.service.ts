@@ -53,6 +53,7 @@ export class UserService {
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.twoFactorSecret = "";
+		newUser.twoFactorvalid = false;
 		await this.UserRepository.save(newUser);
 	}
 
@@ -76,7 +77,7 @@ export class UserService {
 		newUser.blockedUsers = [];
 		newUser.registered = registered;
 		newUser.twoFactorSecret = "";
-		newUser.twoFactorSecret = "";
+		newUser.twoFactorvalid = false;
 		await this.UserRepository.save(newUser);
 		console.log("end add w details");
 	}

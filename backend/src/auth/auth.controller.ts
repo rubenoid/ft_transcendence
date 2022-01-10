@@ -41,12 +41,14 @@ export class AuthController {
 		const token: string = await this.authService.login(req.user);
 		await response.cookie("AuthToken", token, { httpOnly: false });
 		if (!user.registered) {
+			console.log("out of registered");
 			return response.redirect("http://localhost:8080/register");
 		}
-		console.log("2FA not enabled so go straight to profile");
 		if (user.twoFactorSecret.length) {
+			console.log("out twofa registered");
 			return response.redirect("http://localhost:8080/checkTwoFA");
 		}
+		console.log("2FA not enabled so go straight to profile");
 		return response.redirect("http://localhost:8080/profile");
 	}
 
@@ -64,10 +66,18 @@ export class AuthController {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
-		return await this.authService.check2faInput(
+		const ret = await this.authService.check2faInput(
 			usertoken,
 			user.twoFactorSecret,
 		);
+		if (ret == true) {
+			user.twoFactorvalid == true;
+		}
+		return ret;
+		// return await this.authService.check2faInput(
+		// 	usertoken,
+		// 	user.twoFactorSecret,
+		// );
 	}
 
 	@UseGuards(JwtAuthGuard)
@@ -85,7 +95,7 @@ export class AuthController {
 
 	@Public()
 	@Get("protect")
-	async functions() : Promise<void>{
+	async functions(): Promise<void> {
 		return await this.authService.testProtector();
 	}
 

@@ -43,13 +43,17 @@ export class AuthService {
 		return await twofa.check2faInput(input, secret);
 	}
 
-	async testProtector() : Promise<void> {
+	async testProtector(): Promise<void> {
 		console.log("hahahha");
 		const h = await this.protectorService.hash("i like react kidding");
 
 		console.log("hahahha1");
-		this.protectorService.compare("i love angular", h).then((res) => console.log(res));
+		this.protectorService
+			.compare("i love angular", h)
+			.then((res) => console.log(res));
 		console.log("hahahha2");
-		this.protectorService.compare("i like react kidding", h).then((res) => console.log(res));
+		this.protectorService
+			.compare("i like react kidding", h)
+			.then((res) => console.log(res));
 	}
 }

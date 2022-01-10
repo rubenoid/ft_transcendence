@@ -154,8 +154,9 @@ const handletwoFA = (e: any) => {
                       <a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
                       <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
                     <Item>
-                    {(!twoFA) && registered ?
+                    {registered  && !twoFA ?
                     <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button> : ''}
+                    {/* // <Button><Text fontSize='15px'><Link href="http://localhost:8080/profile">sign in</Link></Text></Button> : ''} */}
                   </Item>
           </Form>
       </FormContainer>
