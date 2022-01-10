@@ -1,8 +1,6 @@
 import React from 'react';
 import { DashBoardContainer, Box } from './DashBoardElements';
 import Users from '../Users/Users';
-import Title from '../Title/Title';
-import ConnectionForm from '../ConnectionForm/ConnectionForm';
 import Pong from '../Pong/Pong';
 import AddFriend from '../AddFriend/AddFriend';
 import Chat from '../Chat/Chat';
