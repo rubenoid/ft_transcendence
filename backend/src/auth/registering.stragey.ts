@@ -6,10 +6,11 @@ import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
 
 @Injectable()
-export class RegisteringStrategy extends PassportStrategy(Strategy, "registering") {
-	constructor(
-		private readonly userService: UserService,
-	) {
+export class RegisteringStrategy extends PassportStrategy(
+	Strategy,
+	"registering",
+) {
+	constructor(private readonly userService: UserService) {
 		super({
 			ignoreExpiration: false,
 			secretOrKey: "secretKey",

@@ -46,7 +46,7 @@ export class AuthController {
 		if (!user.registered) {
 			return response.redirect("http://localhost:8080/register");
 		}
-		if (user.twoFactorSecret.length){
+		if (user.twoFactorSecret.length) {
 			return response.redirect("http://localhost:8080/checkTwoFA");
 		}
 		user.logedin = true;
@@ -66,9 +66,8 @@ export class AuthController {
 	@Get("twoFALogin")
 	async twoFALogin(
 		@Req() req: GuardedRequest,
-		@Res({ passthrough: true }) response: Response
-	): Promise<void>
-	{
+		@Res({ passthrough: true }) response: Response,
+	): Promise<void> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});

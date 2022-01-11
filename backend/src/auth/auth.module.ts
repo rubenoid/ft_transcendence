@@ -17,7 +17,13 @@ import { RegisteringStrategy } from "./registering.stragey";
 			signOptions: { expiresIn: "3h" },
 		}),
 	],
-	providers: [AuthService, FourtyTwoStrategy, JwtStrategy, ProtectorService, RegisteringStrategy],
+	providers: [
+		AuthService,
+		FourtyTwoStrategy,
+		JwtStrategy,
+		ProtectorService,
+		RegisteringStrategy,
+	],
 	controllers: [AuthController],
 })
 export class AuthModule {}

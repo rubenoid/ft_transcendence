@@ -7,7 +7,7 @@ import {
 	Injectable,
 	Param,
 	Req,
-	UseGuards
+	UseGuards,
 } from "@nestjs/common";
 import { GuardedRequest } from "src/overloaded";
 import { UserEntity } from "./user.entity";

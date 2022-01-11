@@ -13,7 +13,7 @@ export class RegisteringGuard extends AuthGuard("registering") {
 	canActivate(
 		context: ExecutionContext,
 	): boolean | Promise<boolean> | Observable<boolean> {
-        console.log("IN REGISTERING GUARD")
+		console.log("IN REGISTERING GUARD");
 		return super.canActivate(context);
 	}
 }

@@ -7,9 +7,7 @@ import { UserEntity } from "src/user/user.entity";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-	constructor(
-		private readonly userService: UserService,
-	) {
+	constructor(private readonly userService: UserService) {
 		super({
 			ignoreExpiration: false,
 			secretOrKey: "secretKey",
