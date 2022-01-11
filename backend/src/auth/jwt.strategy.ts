@@ -34,17 +34,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(payload: object): Promise<object> {
-		console.log("Payload validate jwt", payload);
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: payload["id"] },
 		});
-		console.log("user.registered", user.registered);
-		console.log("user.twoFactorSecret.length", user.twoFactorSecret.length);
+		console.log("in jwt validate user.logedin", user.logedin);
 		console.log("user.twoFactorvalid", user.twoFactorvalid);
+		console.log("user.twoFactorSecret", user.twoFactorSecret);
 		if (payload === null || user.logedin == false || (user.twoFactorSecret.length && user.twoFactorvalid == false)) {
 			throw new UnauthorizedException();
 		}
-		console.log("validate jwt payload end:", payload);
+		console.log("in jwt user is", user);
 		return payload;
 	}
 }

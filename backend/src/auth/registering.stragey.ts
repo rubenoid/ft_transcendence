@@ -34,17 +34,12 @@ export class RegisteringStrategy extends PassportStrategy(Strategy, "registering
 	}
 
 	async validate(payload: object): Promise<object> {
-		console.log("Registering Payload validate jwt", payload);
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: payload["id"] },
 		});
-		console.log("user.registered", user.registered);
-		console.log("user.twoFactorSecret.length", user.twoFactorSecret.length);
-		console.log("user.twoFactorvalid", user.twoFactorvalid);
 		if (payload === null)// || user.registered == false || (user.twoFactorSecret.length && user.twoFactorvalid == false)) {
 			throw new UnauthorizedException();
 		// }
-		console.log("IN REGISERTING STRAGTEY:", payload);
 		return payload;
 	}
 }
