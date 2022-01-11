@@ -41,6 +41,9 @@ export class UserEntity {
 	@Column()
 	registered: boolean;
 
+	@Column()
+	logedin: boolean;
+
 	@Column({ default: "" })
 	twoFactorSecret: string;
 

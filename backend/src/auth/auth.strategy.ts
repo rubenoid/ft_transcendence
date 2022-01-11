@@ -6,6 +6,7 @@ import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
+import { ExtractJwt } from "passport-jwt";
 
 @Injectable()
 export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
@@ -31,6 +32,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 		const result = await axios.get("https://api.intra.42.fr/v2/me", {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
+		// console.log("validate fourty2 strat Request:", Request);
 		let user = await this.authService.validateUser(result.data.id);
 		if (!user) {
 			await this.userService.addwithDetails(
@@ -45,6 +47,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 				throw new UnauthorizedException();
 			}
 		}
+		console.log("here user is registered?", user.registered);
 		return { id: user.id };
 	}
 }

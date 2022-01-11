@@ -6,7 +6,7 @@ import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class RegisteringStrategy extends PassportStrategy(Strategy, "registering") {
 	constructor(
 		private readonly userService: UserService,
 	) {
@@ -34,17 +34,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(payload: object): Promise<object> {
-		console.log("Payload validate jwt", payload);
+		console.log("Registering Payload validate jwt", payload);
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: payload["id"] },
 		});
 		console.log("user.registered", user.registered);
 		console.log("user.twoFactorSecret.length", user.twoFactorSecret.length);
 		console.log("user.twoFactorvalid", user.twoFactorvalid);
-		if (payload === null || user.logedin == false || (user.twoFactorSecret.length && user.twoFactorvalid == false)) {
+		if (payload === null)// || user.registered == false || (user.twoFactorSecret.length && user.twoFactorvalid == false)) {
 			throw new UnauthorizedException();
-		}
-		console.log("validate jwt payload end:", payload);
+		// }
+		console.log("IN REGISERTING STRAGTEY:", payload);
 		return payload;
 	}
 }

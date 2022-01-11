@@ -55,6 +55,7 @@ export class UserService {
 		newUser.registered = false;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
+		newUser.logedin = false;
 		await this.UserRepository.save(newUser);
 	}
 
@@ -79,6 +80,7 @@ export class UserService {
 		newUser.registered = registered;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
+		newUser.logedin = false;
 		await this.UserRepository.save(newUser);
 		console.log("end add w details");
 	}

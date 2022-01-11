@@ -16,8 +16,10 @@ export class localAuthGaurd implements CanActivate {
 		try {
 			const jwt: string =
 				request.headers["authorization"] || request.cookies["AuthToken"];
+			console.log("jwt", jwt);
 			return this.jwtService.verify(jwt) != null;
 		} catch (e) {
+			
 			console.log("Error logging in");
 			throw new UnauthorizedException("unauthorized");
 		}
