@@ -35,13 +35,15 @@ export class FriendsService {
 		await this.userService.saveUser(user);
 		await this.userService.saveUser(friend);
 	}
+
 	async getFriends(id: number): Promise<UserEntity[]> {
-		const user = await this.userService.getUserQuery({
+		const user = await this.userService.getUserQueryOne({
 			where: { id: id },
 			relations: ["friends"],
 		});
-		return user;
+		return user.friends;
 	}
+
 	async remove(id: number, id2: number): Promise<void> {
 		if (id == id2) throw "Cannot add yourself";
 		const user = await this.userService.getUserQueryOne({

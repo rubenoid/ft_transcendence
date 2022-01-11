@@ -11,9 +11,8 @@ const AddFriend = () => {
 
     useEffect(() => {
         async function getUsers(): Promise<User> {
-            const endpoint = `/user/getByUserName/${userName}`;
-            const user: User = await fetchData(endpoint);            console.log('USER');
-            console.log(user);
+	        const endpoint: string = `/user/getByUserName/${userName}`;
+            const user: User = await fetchData(endpoint);
             if (user)
                 setUser(user);
             return user;
@@ -23,14 +22,20 @@ const AddFriend = () => {
     console.log(user);
     console.log('UserName->' + userName);
 
+    const addFriend = async (id: number) => {
+        const endpoint: string = `/friends/add/${id}`;
+        await fetchData(endpoint);
+    };
+
     const SearchResult = () => {
         return (
             <SearchResultContainer>
                 <Text>{user.userName}</Text>
-                <Button>Add</Button>
+                <Button onClick={(e) => {addFriend(user.id);}}>Add</Button>
             </SearchResultContainer>
         );
     }
+
 
     return (
         <WidgetContainer>

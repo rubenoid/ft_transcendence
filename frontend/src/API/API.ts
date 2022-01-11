@@ -11,6 +11,7 @@ export type User = {
 	losses: number;
 	rating: number;
 	isActive: boolean;
+	friends: User[];
 };
 
 const instance: AxiosInstance = axios.create({
