@@ -62,7 +62,7 @@ export const PlayerContainerTop = styled.div`
 	padding: 7px 0px 0 20px;
 	display: flex;
 	justify-content: space-between;
-`
+`;
 
 export const PlayerContainerBot = styled.div`
 	width: 400px;
@@ -72,17 +72,17 @@ export const PlayerContainerBot = styled.div`
 	padding: 7px 0px 0 20px;
 	display: flex;
 	justify-content: space-between;
-`
+`;
 
 export const ScoreContainer = styled.div`
 	background-color: white;
 	border-radius: 7px;
 	margin-right: 20px;
-    width: 30px;
-    height: 35px;
-`
+	width: 30px;
+	height: 35px;
+`;
 
 export const ScoreText = styled.p`
 	color: black;
 	padding 5px 10px;
-`
+`;

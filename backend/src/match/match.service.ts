@@ -59,14 +59,16 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQueue(connection: GuardedSocket, server: Server): Promise<string> {
+	async addPlayerToQueue(
+		connection: GuardedSocket,
+		server: Server,
+	): Promise<string> {
 		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
 		console.log("playerr " + connection.id + " qued");
 
 		const p1 = queuedSock.pop();
 		this.gameService.startMatch(p1, p1, server);
-
 
 		if (queuedSock.length >= 2) {
 			const p1 = queuedSock.pop();

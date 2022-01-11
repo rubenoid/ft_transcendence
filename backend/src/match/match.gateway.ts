@@ -38,7 +38,7 @@ export class MatchGateway {
 
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("removeFromQueue")
-	removeFromQueue(client: GuardedSocket) {
+	removeFromQueue(client: GuardedSocket): void {
 		this.matchService.removeFromQueue(client);
 	}
 }

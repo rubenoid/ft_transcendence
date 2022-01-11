@@ -30,5 +30,5 @@ export class GameGateway {
 	@SubscribeMessage("positionUpdate")
 	handleMessage(client: GuardedSocket, payload: boolean[]): void {
 		this.gameService.handlePositionUpdate(client, payload);
-	}	
+	}
 }

@@ -67,9 +67,10 @@ class RunningGame {
 		this.ballDir = new Point(-1, -1);
 		this.playersPos = [new Point(200, 20), new Point(200, 580)];
 
-		this.server.to(this.roomId).emit("gameInit", { decor: this.decor,
-			players: [this.players[0].user.id, this.players[1].user.id]
-		}); 
+		this.server.to(this.roomId).emit("gameInit", {
+			decor: this.decor,
+			players: [this.players[0].user.id, this.players[1].user.id],
+		});
 		this.run();
 	}
 
@@ -80,12 +81,9 @@ class RunningGame {
 		this.ball.y += this.ballDir.y * this.moveSpeed * this.deltaTime;
 
 		if (this.ball.y < 0 || this.ball.y > 600) {
-			if (this.ball.y < 0)
-			{
+			if (this.ball.y < 0) {
 				this.score[1]++;
-			}
-			else
-			{
+			} else {
 				this.score[0]++;
 			}
 			this.server.to(this.roomId).emit("scoreUpdate", this.score);
@@ -141,7 +139,7 @@ class RunningGame {
 	}
 
 	run() {
-		let counter = 0;
+		const counter = 0;
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
@@ -195,7 +193,11 @@ const maps: Line[][] = [
 export class GameService {
 	games: RunningGame[] = [];
 
-	startMatch(client1: GuardedSocket, client2: GuardedSocket, server: Server): void {
+	startMatch(
+		client1: GuardedSocket,
+		client2: GuardedSocket,
+		server: Server,
+	): void {
 		console.log("in start match");
 		console.log("adding" + client1.id + " and " + client2.id);
 		const roomid = "runningGame" + this.games.length;
