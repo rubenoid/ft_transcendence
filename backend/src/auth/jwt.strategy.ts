@@ -29,7 +29,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 	}
 
 	async validate(payload: object): Promise<object> {
-		console.log("Payload", payload);
+		// console.log("Payload", payload);
 		if (payload === null) {
 			throw new UnauthorizedException();
 		}

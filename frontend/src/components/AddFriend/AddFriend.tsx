@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { TextInput ,Text, Button, WidgetContainer, TextContainer } from '../Utils/Utils';
+import { Item, TextInput ,Text, Button, WidgetContainer, TextContainer, RoundButton } from '../Utils/Utils';
 import { fetchData, User } from '../../API/API';
 import { SearchResultContainer } from './AddFriendElements';
+import { MdPersonAdd as AddIcon } from 'react-icons/md';
 
 const AddFriend = () => {
     
-    const [user, setUser] = useState<User>(undefined);
+    const [user, setUser] = useState<User>();
     const [userName, setUserName] = useState<string>('');
 
     useEffect(() => {
@@ -18,6 +19,8 @@ const AddFriend = () => {
         }
         getUsers();
     }, [userName]);
+    console.log(user);
+    console.log('UserName->' + userName);
 
     const addFriend = async (id: number) => {
         const endpoint: string = `/friends/add/${id}`;
@@ -31,7 +34,7 @@ const AddFriend = () => {
                 <Button onClick={(e) => {addFriend(user.id);}}>Add</Button>
             </SearchResultContainer>
         );
-    };
+    }
 
 
     return (

@@ -36,3 +36,14 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 			console.log(error);
 		});
 };
+
+export const postData = async <T>(url: string, data: object): Promise<T> => {
+	return await instance
+		.post(url, data, headers)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+};

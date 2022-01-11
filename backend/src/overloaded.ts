@@ -3,9 +3,9 @@ import { Request } from "@nestjs/common";
 import { Socket } from "socket.io";
 
 export interface GuardedRequest extends Request {
-	user: UserEntity;
+	user: { id: number };
 }
 
 export interface GuardedSocket extends Socket {
-	user: UserEntity;
+	user: { id: number };
 }
