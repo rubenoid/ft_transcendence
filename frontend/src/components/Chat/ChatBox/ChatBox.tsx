@@ -1,5 +1,5 @@
 import React from 'react';
-import {TopContainer, ChatBoxContainer, InputContainer, SendIconContainer} from './ChatBoxElements';
+import {TopContainer, ChatBoxContainer, InputContainer} from './ChatBoxElements';
 import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
 import { ChatContainer } from '../ChatElements';
 import { AiOutlineSend as SendIcon} from 'react-icons/ai';
