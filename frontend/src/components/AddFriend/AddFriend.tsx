@@ -10,7 +10,7 @@ const AddFriend = () => {
 
     useEffect(() => {
         async function getUsers(): Promise<User> {
-	        const endpoint = `/user/getByUserName/${userName}`;
+	        const endpoint: string = `/user/getByUserName/${userName}`;
             const user: User = await fetchData(endpoint);
             if (user)
                 setUser(user);
@@ -19,14 +19,20 @@ const AddFriend = () => {
         getUsers();
     }, [userName]);
 
+    const addFriend = async (id: number) => {
+        const endpoint: string = `/friends/add/${id}`;
+        await fetchData(endpoint);
+    };
+
     const SearchResult = () => {
         return (
             <SearchResultContainer>
                 <Text>{user.userName}</Text>
-                <Button>Add</Button>
+                <Button onClick={(e) => {addFriend(user.id);}}>Add</Button>
             </SearchResultContainer>
         );
     };
+
 
     return (
         <WidgetContainer>
