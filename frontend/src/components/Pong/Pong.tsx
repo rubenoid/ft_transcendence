@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas } from './PongElements'
+import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas, PlayerContainerTop, PlayerContainerBot, ScoreContainer, ScoreText } from './PongElements'
 
 import  PongImgUrl  from '../../../public/pong.png';
-
+import { User, fetchData } from '../../API/API';
 import { Text } from '../Utils/Utils'
 import socket from '../socket';
 
@@ -58,7 +58,6 @@ class PongRenderer {
 			this.ctx.lineTo(e.p2.x, e.p2.y);
 			this.ctx.stroke();
 		}
-		console.log("Drawing decor haha");
 	}
 
 	drawPlayers()
@@ -68,7 +67,6 @@ class PongRenderer {
 		this.ctx.fillRect(this.players[0].x, this.players[0].y, 50, 6);
 		this.ctx.fillStyle = "red";
 		this.ctx.fillRect(this.players[1].x, this.players[1].y, 50, 6);
-		console.log("Drawing players haha");
 	}
 
 	drawBall()
@@ -76,7 +74,6 @@ class PongRenderer {
 		this.ctx.beginPath()
 		this.ctx.arc(this.ball.x, this.ball.y, 5, 0, 2 * Math.PI);
 		this.ctx.stroke();
-		console.log("Drawing balls haha");
 	}
 
 	draw()
@@ -92,16 +89,6 @@ const Pong = () => {
 
 	const canvasRef = useRef(null);
 	let renderer: PongRenderer | undefined;
-    // const context =canvasRef.getContext('2d');
-	// console.log(canvasRef);
-	// const [ctx, setCtx] = useState(null);
-	// console.log(ctx);
-
-	// useEffect(() => {
-	// 	setCtx(canvasRef.current.getContext('2d'));
-	// }, [setCtx]);
-
-    const [isQueueing, setQueue] = useState<boolean>(false);
 
 	const lines = [
 		new Line(new Point(20, 20), new Point(20, 580) ),
@@ -115,14 +102,12 @@ const Pong = () => {
 		const context = canvas.getContext('2d')
 
 		document.addEventListener('keydown', function(event) {
-			console.log(event.key);
 			if (event.key.toLocaleLowerCase() == 'a'
             || event.key.toLocaleLowerCase() == 'arrowleft')
 				keys[0] = true;
 			if (event.key.toLocaleLowerCase() == 'd' 
             || event.key.toLocaleLowerCase() == 'arrowright')
 				keys[1] = true;
-			console.log(keys);
 		});
 		
 		
@@ -139,35 +124,48 @@ const Pong = () => {
 		renderer = new PongRenderer(context, lines);
 
 		socket.on("gameUpdate", (Data: {positions: Point[], ballpos: Point}) => {
-			console.log(Data);
 			renderer.players = Data.positions;
 			renderer.ball = Data.ballpos;
-			console.log("drawing again ", Data);
 			renderer.draw();
 			if (keys[0] || keys[1])
 				socket.emit("positionUpdate", keys);
 		});
 
-		socket.on("mapUpdate", (data: Line[]) => {
-			renderer.decor = data;
+		socket.on("gameInit", (data: {decor: Line[], players: number[]}) => {
+			renderer.decor = data.decor;
+			fetchData(`/user/get/${data.players[0]}`).then((player1: User) => {
+				console.log("got player 1", player1);
+				fetchData(`/user/get/${data.players[1]}`).then((player2: User) => {
+					console.log("got player 2");
+					setPlayers([player1, player2]);
+				});
+			}).catch((err) => {
+				console.log("ERRROROROOR");
+			})
+		});
+
+		socket.on("startMatch", () => {
+			console.log("STARTING MATCH");
+			setDisplay(false);
+		});
+	
+		socket.on("gameFinished", () => {
+			console.log("game finished!");
+			setDisplay(true);
+			setQueue(false);
+		});
+
+		socket.on("scoreUpdate", (scores: number[]) => {
+			setScores(scores);
 		});
   
 	}, [])
 	
-	// const canvas: HTMLCanvasElement = document.querySelector("#canvas");
-	// const ctx = canvas.getContext("2d");
-	
+	const [isQueueing, setQueue] = useState<boolean>(false);
 	const [displayButton, setDisplay] = useState(true);
-
-	function changeDisplay() {
-		setDisplay(false);
-	}
-
-	socket.on("startMatch", () => {
-		console.log("STARTING MATCH");
-		changeDisplay();
-	})
-
+	const [scores, setScores] = useState([0, 0]);
+	const [players, setPlayers] = useState([undefined, undefined]);
+	
 	function addToQueue() {
 
 		if (isQueueing)
@@ -180,21 +178,19 @@ const Pong = () => {
 		}
 		setQueue(!isQueueing);
 	}
-	
-
-    // let displayStyle = true;
-    
-    // socket.on("startMatch", () => {
-
-    // console.log("STARTING MATCH");
-	// displayStyle = false;
-	// }) 
-// style={{display: this.state.showStore ? 'block' : 'none' }}
 
     return (
         <>
             <PongContainer>
+				<PlayerContainerTop>
+					<ScoreText>{players[0] ? players[0].userName : 'loading'}</ScoreText>
+					<ScoreContainer><ScoreText>{scores[0]}</ScoreText></ScoreContainer>
+				</PlayerContainerTop>
 				<PongCanvas ref={canvasRef} id="canvas" width="400" height="600"></PongCanvas>
+				<PlayerContainerBot>
+					<ScoreText>{players[1] ? players[1].userName : 'loading'}</ScoreText>
+					<ScoreContainer><ScoreText>{scores[1]}</ScoreText></ScoreContainer>
+				</PlayerContainerBot>
 				<ButtonContainer display={displayButton}>
 					<Button><Text fontSize='20px' onClick={addToQueue}>{isQueueing ? 'In Queue' : 'Play Online'}</Text></Button>
 				</ButtonContainer>
