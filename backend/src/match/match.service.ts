@@ -5,8 +5,9 @@ import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
 import { Server, Socket } from "socket.io";
 import { GameService } from "src/game/game.service";
+import { GuardedSocket } from "src/overloaded";
 
-const queuedSock: Socket[] = [];
+const queuedSock: GuardedSocket[] = [];
 
 @Injectable()
 export class MatchService {
@@ -58,10 +59,14 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQueue(connection: Socket, server: Server): Promise<string> {
+	async addPlayerToQueue(connection: GuardedSocket, server: Server): Promise<string> {
 		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
 		console.log("playerr " + connection.id + " qued");
+
+		const p1 = queuedSock.pop();
+		this.gameService.startMatch(p1, p1, server);
+
 
 		if (queuedSock.length >= 2) {
 			const p1 = queuedSock.pop();

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { UserEntity } from "src/user/user.entity";
+import { GuardedSocket } from "src/overloaded";
 
 class Point {
 	x;
@@ -38,7 +39,7 @@ function intersect(ball: Point, line: Line) {
 
 class RunningGame {
 	interval: NodeJS.Timer;
-	players: Socket[] = [];
+	players: GuardedSocket[] = [];
 	score = [0, 0];
 
 	decor: Line[] = [];
@@ -53,7 +54,7 @@ class RunningGame {
 	server: Server;
 
 	constructor(
-		players: Socket[],
+		players: GuardedSocket[],
 		decor: Line[],
 		roomid: string,
 		server: Server,
@@ -66,7 +67,9 @@ class RunningGame {
 		this.ballDir = new Point(-1, -1);
 		this.playersPos = [new Point(200, 20), new Point(200, 580)];
 
-		this.server.to(this.roomId).emit("mapUpdate", this.decor);
+		this.server.to(this.roomId).emit("gameInit", { decor: this.decor,
+			players: [this.players[0].user.id, this.players[1].user.id]
+		}); 
 		this.run();
 	}
 
@@ -77,6 +80,15 @@ class RunningGame {
 		this.ball.y += this.ballDir.y * this.moveSpeed * this.deltaTime;
 
 		if (this.ball.y < 0 || this.ball.y > 600) {
+			if (this.ball.y < 0)
+			{
+				this.score[1]++;
+			}
+			else
+			{
+				this.score[0]++;
+			}
+			this.server.to(this.roomId).emit("scoreUpdate", this.score);
 			this.ball = new Point(200, 300);
 			this.moveSpeed = 100;
 			let newRandAng = Math.random() * 45 + 45;
@@ -133,13 +145,13 @@ class RunningGame {
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
-			if (this.score[0] > 5 || this.score[1] > 5 || counter > 1000) {
+			if (this.score[0] > 5 || this.score[1] > 5) {
 				clearInterval(this.interval);
+				this.server.to(this.roomId).emit("gameFinished");
 			}
 			this.deltaTime = (Date.now() - this.lastTime) / 1000;
 			this.calculate();
 			this.emit();
-			counter++;
 			this.lastTime = Date.now();
 		}, 1000 / 60);
 	}
@@ -183,9 +195,7 @@ const maps: Line[][] = [
 export class GameService {
 	games: RunningGame[] = [];
 
-	searchingtmp: Socket[] = [];
-
-	startMatch(client1: Socket, client2: Socket, server: Server): void {
+	startMatch(client1: GuardedSocket, client2: GuardedSocket, server: Server): void {
 		console.log("in start match");
 		console.log("adding" + client1.id + " and " + client2.id);
 		const roomid = "runningGame" + this.games.length;
