@@ -5,7 +5,6 @@ export const PongCanvas = styled.canvas`
 `;
 
 export const PongContainer = styled.div`
-	height: 100%;
 	display: flex;
 	position: relative;
 	justify-content: center;

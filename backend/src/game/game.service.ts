@@ -66,6 +66,7 @@ class RunningGame {
 		this.ballDir = new Point(-1, -1);
 		this.playersPos = [new Point(200, 20), new Point(200, 580)];
 
+		this.server.to(this.roomId).emit("mapUpdate", this.decor);
 		this.run();
 	}
 

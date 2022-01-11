@@ -24,11 +24,72 @@ class Line {
 	}
 }
 
-function addToQueue() {
-	socket.emit("addToQueue");
+class PongRenderer {
+	ctx;
+	decor: Line[] = [];
+	ball: Point;
+	ballDir: Point;
+	players: Point[] = [];
+
+
+	constructor(ctx: CanvasRenderingContext2D, decor: Line[]) {
+		this.ctx = ctx;
+		this.decor = decor;
+		this.ball = new Point(180, 180);
+		this.players = [new Point(200, 20), new Point(180, 580)];
+
+		this.draw();
+	}
+
+	clear()
+	{
+		this.ctx.fillStyle = "black";
+		this.ctx.fillRect(0,0,400,600);
+	}
+
+	drawDecor()
+	{
+		for (let i = 0; i < this.decor.length; i++) {
+			const e = this.decor[i];
+			this.ctx.strokeStyle = "white";
+			this.ctx.lineWidth = 2;
+			this.ctx.beginPath();
+			this.ctx.moveTo(e.p1.x, e.p1.y);
+			this.ctx.lineTo(e.p2.x, e.p2.y);
+			this.ctx.stroke();
+		}
+		console.log("Drawing decor haha");
+	}
+
+	drawPlayers()
+	{
+		this.ctx.fillStyle = "blue";
+
+		this.ctx.fillRect(this.players[0].x, this.players[0].y, 50, 6);
+		this.ctx.fillStyle = "red";
+		this.ctx.fillRect(this.players[1].x, this.players[1].y, 50, 6);
+		console.log("Drawing players haha");
+	}
+
+	drawBall()
+	{
+		this.ctx.beginPath()
+		this.ctx.arc(this.ball.x, this.ball.y, 5, 0, 2 * Math.PI);
+		this.ctx.stroke();
+		console.log("Drawing balls haha");
+	}
+
+	draw()
+	{ 
+		this.clear();
+		this.drawDecor();
+		this.drawBall();
+		this.drawPlayers();
+	}
 }
 
 const Pong = () => {
+
 	const canvasRef = useRef(null);
 	let renderer: PongRenderer | undefined;
     // const context =canvasRef.getContext('2d');
@@ -40,11 +101,11 @@ const Pong = () => {
 	// 	setCtx(canvasRef.current.getContext('2d'));
 	// }, [setCtx]);
 
+    const [isQueueing, setQueue] = useState<boolean>(false);
 
 	const lines = [
 		new Line(new Point(20, 20), new Point(20, 580) ),
 		new Line(new Point(380, 20), new Point(380, 580) ),
-		new Line(new Point(300, 300), new Point(380, 300) ),
 	
 	];
 	let keys = [false, false];
@@ -86,76 +147,17 @@ const Pong = () => {
 			if (keys[0] || keys[1])
 				socket.emit("positionUpdate", keys);
 		});
+
+		socket.on("mapUpdate", (data: Line[]) => {
+			renderer.decor = data;
+		});
   
 	}, [])
 	
 	// const canvas: HTMLCanvasElement = document.querySelector("#canvas");
 	// const ctx = canvas.getContext("2d");
 	
-	class PongRenderer {
-		ctx;
-		decor: Line[] = [];
-		ball: Point;
-		ballDir: Point;
-		players: Point[] = [];
-
-
-		constructor(ctx: CanvasRenderingContext2D, decor: Line[]) {
-			this.ctx = ctx;
-			this.decor = decor;
-			this.ball = new Point(180, 180);
-			this.players = [new Point(200, 20), new Point(180, 580)];
-
-			this.draw();
-		}
-
-		clear()
-		{
-			this.ctx.fillStyle = "black";
-			this.ctx.fillRect(0,0,400,600);
-		}
-	
-		drawDecor()
-		{
-			for (let i = 0; i < this.decor.length; i++) {
-				const e = this.decor[i];
-				this.ctx.strokeStyle = "white";
-				this.ctx.lineWidth = 2;
-				this.ctx.beginPath();
-				this.ctx.moveTo(e.p1.x, e.p1.y);
-				this.ctx.lineTo(e.p2.x, e.p2.y);
-				this.ctx.stroke();
-			}
-			console.log("Drawing decor haha");
-		}
-
-		drawPlayers()
-		{
-			this.ctx.fillStyle = "blue";
-	
-			this.ctx.fillRect(this.players[0].x, this.players[0].y, 50, 6);
-			this.ctx.fillStyle = "red";
-			this.ctx.fillRect(this.players[1].x, this.players[1].y, 50, 6);
-			console.log("Drawing players haha");
-		}
-
-		drawBall()
-		{
-			this.ctx.beginPath()
-			this.ctx.arc(this.ball.x, this.ball.y, 5, 0, 2 * Math.PI);
-			this.ctx.stroke();
-			console.log("Drawing balls haha");
-		}
-
-		draw()
-		{ 
-			this.clear();
-			this.drawDecor();
-			this.drawBall();
-			this.drawPlayers();
-		}
-    }
-	const [displayButton, setDisplay] = 	useState(true);
+	const [displayButton, setDisplay] = useState(true);
 
 	function changeDisplay() {
 		setDisplay(false);
@@ -165,6 +167,20 @@ const Pong = () => {
 		console.log("STARTING MATCH");
 		changeDisplay();
 	})
+
+	function addToQueue() {
+
+		if (isQueueing)
+		{
+			socket.emit("removeFromQueue");
+		}
+		else
+		{
+			socket.emit("addToQueue");
+		}
+		setQueue(!isQueueing);
+	}
+	
 
     // let displayStyle = true;
     
@@ -180,7 +196,7 @@ const Pong = () => {
             <PongContainer>
 				<PongCanvas ref={canvasRef} id="canvas" width="400" height="600"></PongCanvas>
 				<ButtonContainer display={displayButton}>
-					<Button><Text fontSize='20px' onClick={addToQueue}>Play Online</Text></Button>
+					<Button><Text fontSize='20px' onClick={addToQueue}>{isQueueing ? 'In Queue' : 'Play Online'}</Text></Button>
 				</ButtonContainer>
             </PongContainer>
         </>
