@@ -41,7 +41,7 @@ export class UserEntity {
 	@Column()
 	registered: boolean;
 
-	@Column()
+	@Column({ default: false})
 	logedin: boolean;
 
 	@Column({ default: "" })

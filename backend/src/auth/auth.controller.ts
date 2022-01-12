@@ -41,6 +41,9 @@ export class AuthController {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
+		console.log("login controller user.registered", user.registered);
+		console.log("user.twoFactorSecret.length", user.twoFactorSecret.length);
+		console.log("user.logedin", user.logedin);
 		const token: string = await this.authService.login(req.user);
 		await response.cookie("AuthToken", token, { httpOnly: false });
 		if (!user.registered) {
@@ -108,11 +111,6 @@ export class AuthController {
 		@Body("lastName") lastName: string,
 	): Promise<void> {
 		this.userService.update(req.user.id, userName, firstName, lastName);
-		const user: UserEntity = await this.userService.getUserQueryOne({
-			where: { id: req.user.id },
-		});
-		user.registered = true;
-		this.userService.saveUser(user);
 		return;
 	}
 

@@ -122,6 +122,7 @@ export class UserService {
 		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
+		newUser.logedin = false; //?
 		await this.UserRepository.save(newUser);
 		return newUser.id;
 	}

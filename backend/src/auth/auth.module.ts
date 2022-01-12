@@ -7,7 +7,7 @@ import { JwtStrategy } from "./jwt.strategy";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { ProtectorService } from "src/protector/protector";
-import { RegisteringStrategy } from "./registering.stragey";
+import { RegisteringStrategy } from "./registering.strategy";
 @Module({
 	imports: [
 		UserModule,
