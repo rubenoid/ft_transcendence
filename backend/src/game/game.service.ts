@@ -225,10 +225,11 @@ export class GameService {
 		client1.join(roomid);
 		client2.join(roomid);
 
+		const mapid = Math.round(Math.random() * 2);
 		this.games.push(
 			new RunningGame(
 				[client1, client2],
-				maps[Math.round(Math.random() * 3)],
+				maps[mapid],
 				roomid,
 				server,
 				this,
