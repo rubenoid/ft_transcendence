@@ -1,13 +1,10 @@
 import * as bcrypt from "bcrypt";
 
-const saltOrRounds = 10;
-
 export class ProtectorService {
 	rounds = 10;
-	// constructor() {}
 
 	async hash(data: string): Promise<string> {
-		const hash = await bcrypt.hash(data, saltOrRounds);
+		const hash = await bcrypt.hash(data, this.rounds);
 		return hash;
 	}
 
