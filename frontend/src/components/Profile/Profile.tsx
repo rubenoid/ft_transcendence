@@ -46,7 +46,7 @@ const Profile = () => {
         return (
             <>
                 <TopContainer>
-                    <Text>{user.firstName}</Text>
+                    <Text>{user.userName}</Text>
                     <RoundButton onClick={logout}><Text fontSize='25px'>🛫</Text></RoundButton>
                 </TopContainer>
                 <ImgContainer>
