@@ -126,12 +126,14 @@ export class AuthController {
 		@Req() req: GuardedRequest,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<void> {
+		console.log("in the log out shiz");
 		response.clearCookie("AuthToken");
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
 		user.logedin == false;
 		this.userService.saveUser(user);
+		console.log("user.logedin", user.logedin);
 		return response.redirect("http://localhost:8080/");
 	}
 	// @UseGuards(JwtAuthGuard)
