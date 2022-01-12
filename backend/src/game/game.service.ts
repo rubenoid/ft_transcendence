@@ -227,13 +227,7 @@ export class GameService {
 
 		const mapid = Math.round(Math.random() * 2);
 		this.games.push(
-			new RunningGame(
-				[client1, client2],
-				maps[mapid],
-				roomid,
-				server,
-				this,
-			),
+			new RunningGame([client1, client2], maps[mapid], roomid, server, this),
 		);
 		server.to(roomid).emit("startMatch");
 	}

@@ -84,29 +84,25 @@ export class MatchService {
 		toAdd.scorePlayer1 = game.score[0];
 		toAdd.scorePlayer2 = game.score[1];
 
-
 		const players = [
 			await this.userService.getUserQueryOne({
 				where: { id: game.players[0].user.id },
 			}),
 			await this.userService.getUserQueryOne({
 				where: { id: game.players[1].user.id },
-			}),	
+			}),
 		];
-		if (game.score[0] > game.score[1])
-		{
+		if (game.score[0] > game.score[1]) {
 			players[0].wins++;
 			players[1].losses++;
-		}
-		else
-		{
+		} else {
 			players[1].wins++;
 			players[0].losses++;
 		}
 
 		toAdd.players = [
 			players[0],
-			// players[1], 
+			// players[1],
 		];
 		console.log("saved game!");
 		this.MatchRepository.save(toAdd);
