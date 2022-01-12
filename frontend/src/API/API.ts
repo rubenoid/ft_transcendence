@@ -37,9 +37,15 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 		});
 };
 
-export const postData = async <T>(url: string, data: object): Promise<T> => {
+export const postData = async <T>(url: string, data: object, extraHeaders? : object): Promise<T> => {
+
+	const headersToSend = { 
+		headers: Object.assign(headers.headers, extraHeaders),
+	}
+
+	console.log(headersToSend);
 	return await instance
-		.post(url, data, headers)
+		.post(url, data, headersToSend)
 		.then((response) => {
 			return response.data;
 		})
@@ -48,22 +54,23 @@ export const postData = async <T>(url: string, data: object): Promise<T> => {
 		});
 };
 
-const imgHeaders = {
-	headers: {
-		"contentType": "false",
-		"processData": "false",
-		"Access-Control-Allow-Credentials": "true",
-		"Access-Control-Allow-Origin": "http://localhost:5000",
-		Authorization: Cookies.get("AuthToken"),
-	},
-};
-export const postImg = async <T>(url: string, data: object): Promise<T> => {
-	return await instance
-		.post(url, data, imgHeaders)
-		.then((response) => {
-			return response.data;
-		})
-		.catch((error) => {
-			console.log(error);
-		});
-};
+// const imgHeaders = {
+// 	headers: {
+// 		"contentType": "false",
+// 		"processData": "false",
+// 		"Access-Control-Allow-Credentials": "true",
+// 		"Access-Control-Allow-Origin": "http://localhost:5000",
+// 		'Content-Type': 'multipart/form-data',
+// 		Authorization: Cookies.get("AuthToken"),
+// 	},
+// };
+// export const postImg = async <T>(url: string, data: object): Promise<T> => {
+// 	return await instance
+// 		.post(url, data, imgHeaders)
+// 		.then((response) => {
+// 			return response.data;
+// 		})
+// 		.catch((error) => {
+// 			console.log(error);
+// 		});
+// };

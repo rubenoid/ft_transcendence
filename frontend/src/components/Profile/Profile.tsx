@@ -5,7 +5,7 @@ import { Text } from '../Utils/Utils';
 import { fetchData, User } from '../../API/API';
 import { Button, Item } from '../Utils/Utils';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
-import { postImg } from '../../API/API';
+import { postData } from '../../API/API';
 
 const Profile = () => {
 
@@ -40,9 +40,13 @@ const Profile = () => {
             return;
         var formData = new FormData();
         console.log("mid handleupload", image.raw);
-        formData.append("file", file, "filpoo.png");
-        console.log("formData handleupload", formData);
-        await postImg("/avatar/upload", {data: formData});
+        formData.append("file", file);
+        // console.log("formData handleupload", formData);
+        formData.forEach((value, key) => {
+            console.log(value, key);
+        });
+
+        await postData("/avatar/upload", formData, {'Content-Type': 'multipart/form-data'});
         console.log("upload gone through");
       };
 
