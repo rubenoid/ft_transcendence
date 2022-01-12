@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { UserEntity } from "src/user/user.entity";
 import { GuardedSocket } from "src/overloaded";
+import { MatchService } from "../match/match.service";
 
 class Point {
 	x;
@@ -37,7 +38,7 @@ function intersect(ball: Point, line: Line) {
 	}
 }
 
-class RunningGame {
+export class RunningGame {
 	interval: NodeJS.Timer;
 	players: GuardedSocket[] = [];
 	score = [0, 0];
@@ -52,12 +53,14 @@ class RunningGame {
 	roomId: string;
 	playersPos: Point[] = [];
 	server: Server;
+	service: GameService;
 
 	constructor(
 		players: GuardedSocket[],
 		decor: Line[],
 		roomid: string,
 		server: Server,
+		serviceRef: GameService,
 	) {
 		this.server = server;
 		this.roomId = roomid;
@@ -66,6 +69,7 @@ class RunningGame {
 		this.ball = new Point(180, 180);
 		this.ballDir = new Point(-1, -1);
 		this.playersPos = [new Point(200, 20), new Point(200, 580)];
+		this.service = serviceRef;
 
 		this.server.to(this.roomId).emit("gameInit", {
 			decor: this.decor,
@@ -75,7 +79,7 @@ class RunningGame {
 	}
 
 	moveSpeed = 100;
-	calculate() {
+	calculate(): void {
 		const oldpos = new Point(this.ball.x, this.ball.y);
 		this.ball.x += this.ballDir.x * this.moveSpeed * this.deltaTime;
 		this.ball.y += this.ballDir.y * this.moveSpeed * this.deltaTime;
@@ -131,21 +135,23 @@ class RunningGame {
 		this.decor.pop();
 	}
 
-	emit() {
+	emit(): void {
 		this.server.to(this.roomId).emit("gameUpdate", {
 			positions: this.playersPos,
 			ballpos: this.ball,
 		});
 	}
 
-	run() {
+	run(): void {
 		const counter = 0;
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
-			if (this.score[0] > 5 || this.score[1] > 5) {
+			if (this.score[0] > 1 || this.score[1] > 1) {
 				clearInterval(this.interval);
 				this.server.to(this.roomId).emit("gameFinished");
+				this.service.handleFinishedGame(this);
+				return;
 			}
 			this.deltaTime = (Date.now() - this.lastTime) / 1000;
 			this.calculate();
@@ -154,7 +160,7 @@ class RunningGame {
 		}, 1000 / 60);
 	}
 
-	async updatePos(keys: boolean[], player: number) {
+	async updatePos(keys: boolean[], player: number): Promise<void> {
 		const playerref = player == 1 ? this.playersPos[0] : this.playersPos[1];
 
 		if (keys[0]) {
@@ -193,6 +199,20 @@ const maps: Line[][] = [
 export class GameService {
 	games: RunningGame[] = [];
 
+	constructor(
+		@Inject(forwardRef(() => MatchService))
+		private matchService: MatchService,
+	) {}
+
+	handleFinishedGame(finished: RunningGame): void {
+		const idx = this.games.findIndex(
+			(x) => "runningGame" + x.roomId === finished.roomId,
+		);
+
+		this.matchService.saveMatch(finished);
+		this.games.splice(idx, 1);
+	}
+
 	startMatch(
 		client1: GuardedSocket,
 		client2: GuardedSocket,
@@ -211,6 +231,7 @@ export class GameService {
 				maps[Math.round(Math.random() * 3)],
 				roomid,
 				server,
+				this,
 			),
 		);
 		server.to(roomid).emit("startMatch");

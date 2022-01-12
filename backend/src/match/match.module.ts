@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { UserModule } from "src/user/user.module";
 import { MatchController } from "./match.controller";
 import { MatchService } from "./match.service";
@@ -8,7 +8,7 @@ import { MatchGateway } from "./match.gateway";
 import { GameModule } from "src/game/game.module";
 
 @Module({
-	imports: [DatabaseModule, UserModule, GameModule],
+	imports: [DatabaseModule, UserModule, forwardRef(() => GameModule)],
 	controllers: [MatchController],
 	providers: [MatchService, ...MatchProvider, MatchGateway],
 	exports: [MatchService, ...MatchProvider],

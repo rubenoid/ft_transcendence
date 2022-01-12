@@ -1,10 +1,10 @@
-import { Injectable, Inject, Post } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { MatchEntity } from "./match.entity";
 import { Repository } from "typeorm";
 import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
 import { Server, Socket } from "socket.io";
-import { GameService } from "src/game/game.service";
+import { GameService, RunningGame } from "src/game/game.service";
 import { GuardedSocket } from "src/overloaded";
 
 const queuedSock: GuardedSocket[] = [];
@@ -15,6 +15,7 @@ export class MatchService {
 		@Inject("MATCH_REPOSITORY")
 		private MatchRepository: Repository<MatchEntity>,
 		private userService: UserService,
+		@Inject(forwardRef(() => GameService))
 		private gameService: GameService,
 	) {}
 
@@ -77,6 +78,22 @@ export class MatchService {
 		}
 	}
 
+	async saveMatch(game: RunningGame): Promise<void> {
+		const toAdd = new MatchEntity();
+
+		toAdd.scorePlayer1 = game.score[0];
+		toAdd.scorePlayer2 = game.score[1];
+
+		toAdd.players = [
+			await this.userService.getUserQueryOne({
+				where: { id: game.players[0].user.id },
+			}),
+			// await this.userService.getUserQueryOne({where: {id: game.players[1].user.id}}),
+		];
+		console.log("saved game!");
+		this.MatchRepository.save(toAdd);
+	}
+
 	async increaseScore(Matchid: number, Playerid: number): Promise<void> {
 		const Match = await this.MatchRepository.findOne({
 			where: { id: Matchid },
@@ -107,7 +124,6 @@ export class MatchService {
 
 	async getAllMatches(): Promise<MatchEntity[]> {
 		const Match = await this.MatchRepository.find({ relations: ["players"] });
-		if (Match.length === 0) throw "user not found";
 		return Match;
 	}
 }
