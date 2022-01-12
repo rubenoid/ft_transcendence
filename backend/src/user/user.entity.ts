@@ -35,9 +35,6 @@ export class UserEntity {
 	@Column()
 	rating: number;
 
-	@Column({ default: true })
-	isActive: boolean;
-
 	@Column()
 	registered: boolean;
 
