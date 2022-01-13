@@ -46,11 +46,17 @@ export class ChatService {
 		return chats;
 	}
 
+	async getChats(userid: number): Promise<ChatEntity[]> {
+		const foundChats = await this.userService.getUserQueryOne({where: {id: userid}, relations: ["channels"]});
+
+		return foundChats.channels;
+	}
+
 	async createChat(): Promise<void> {
 		const toadd = new ChatEntity();
 
-		toadd.name = "Oscar, Ruben";
-		toadd.password = "aa";
+		toadd.name = "Private conversation between Ruben and Oscar";
+		toadd.password = "";
 
 		const users = await this.userService.getUsers();
 

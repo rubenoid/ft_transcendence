@@ -6,6 +6,9 @@ import { AiOutlineSend as SendIcon} from 'react-icons/ai';
 import { fetchData, User } from '../../../API/API';
 import { ImgContainer, Img } from '../../Profile/ProfileElements';
 import { socket } from '../../socket';
+import exportId from '../ChatBox/ChatBox';
+import { useBetween } from 'use-between';
+import { chatState } from '../ChatState';
 
 interface Message {
     from: number,
@@ -13,52 +16,46 @@ interface Message {
     data: string,
 }
 
+// let msgObj = {from: number, room: number, data: string}
+
+
 const ChatBox = () => {
-    const [otherUser, setUser] = useState<User>(undefined);
+    const {otherUser, setUser} = useBetween(chatState);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [messageCount, setMessageCount] = useState(0);
 
     /* for now a hacky way to get the other person on the server */
     useEffect(() => {
-        async function getOtherUser() {
+        async function openChat() {
             socket.emit("chat:login");
-
-            socket.on("newMessage", (message: Message) => {
-                // put it in an array of messages
-                console.log("message", message);
-            });
-
-            const users: User[] = await fetchData('/user/all');
-            if (users.length < 2) {
-                throw new Error('not enough users in database for ChatBox');
-            }
-            const me: User = await fetchData('/user/me');
-            if (me.id === users[0].id) {
-                setUser(users[1]);
-            } else {
-                setUser(users[0]);
-            }
-          }
-        getOtherUser();
+        }
+        socket.on("newMessage", (message: string) => {
+            // put it in an array of messages
+            const currentMsg : Message = {"from": 0, "room": 1, "data": message};
+            let MsgArr: Message[] = messages;
+            MsgArr.push(currentMsg);
+            setMessages(MsgArr);
+            setMessageCount(messageCount+1);
+            createMessages();
+            console.log('socket.on');
+            console.log(MsgArr);
+            console.log('<<<<');
+            
+        });
+        openChat();
     }, []);
-
-    useEffect(() => {
-        // This gets called after every render, by default
-        // (the first one, and every one after that)
-        console.log('render!');
     
-        // If you want to implement componentWillUnmount,
-        // return a function from here, and React will call
-        // it prior to unmounting.
-        return () => console.log('unmounting...');
-      })
-
-
-    const userInfo = () => {
-        return (
-            <> 
-                <Text>{otherUser.firstName}</Text>
-            </>
-        )
+    
+    const createMessages = () => {
+        for (let i = 0; i < messages.length; i++) {
+            return (
+                <Text color='black' fontSize='10' >{messages[i]["data"]}</Text>
+            )
+        }
+        // return ( <Text color='black' fontSize='10' >{steststring}</Text>);
     }
+   
+
     /* end hackieness */
 
     const handlesSubmitNewMessages = (message: any): void => {
@@ -68,25 +65,18 @@ const ChatBox = () => {
         socket.emit("chat:message", message, (returnedValue: any) => {console.log('returnedValue', returnedValue)});
         console.log("handlesubmitmessage");
     };
-    
-    // for chat history
-    const handleNewMessage = (message: string): void => {
-        // new node appendchild
-        console.log(buildNewMessage);
-        //messages.appendChild(buildNewMessage)
-    };
-    
-    const buildNewMessage = (message: string) => {
-        const li = document.createElement("li");
-        li.appendChild(document.createTextNode(message));
-        return li;
-    };
-    
 
     function handleSubmit(e: any, msg: string) {
         e.preventDefault();
-        console.log(e);
-        console.log(msg);
+        const currentMsg : Message = {"from": 1, "room": 1, "data": msg};
+        let MsgArr: Message[] = messages;
+        MsgArr.push(currentMsg);
+        setMessages(MsgArr);
+
+        console.log("handleSubmit");
+        console.log(MsgArr);
+        console.log('<<<<');
+        
         let data = {from: -1, room: otherUser.id, data: msg};
         handlesSubmitNewMessages(JSON.stringify(data));
     }
@@ -99,7 +89,7 @@ const ChatBox = () => {
     return (
         <ChatBoxContainer>
             <TopContainer>
-                <Text>{otherUser ? userInfo() : 'loading'}</Text>
+                <Text>{otherUser ? otherUser.firstName : 'loading'}</Text>
             </TopContainer>
             <ChatContainer>
 

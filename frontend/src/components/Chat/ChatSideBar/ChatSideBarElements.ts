@@ -20,3 +20,7 @@ export const ChatCard = styled.div`
 	margin-top: 10px;
 	padding: 10px;
 `
+
+export const CreateChatContainer = styled.div`
+	padding: 10px;
+`
