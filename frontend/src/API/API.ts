@@ -11,6 +11,7 @@ export type User = {
 	losses: number;
 	rating: number;
 	isActive: boolean;
+	friends: User[];
 };
 
 const instance: AxiosInstance = axios.create({
@@ -28,6 +29,17 @@ const headers = {
 export const fetchData = async <T>(url: string): Promise<T> => {
 	return await instance
 		.get(url, headers)
+		.then((response) => {
+			return response.data;
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+};
+
+export const postData = async <T>(url: string, data: object): Promise<T> => {
+	return await instance
+		.post(url, data, headers)
 		.then((response) => {
 			return response.data;
 		})
