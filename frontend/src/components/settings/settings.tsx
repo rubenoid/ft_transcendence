@@ -77,7 +77,7 @@ const SettingsForm = () => {
 
       useEffect(() => {
         async function inputAccessCode(): Promise<boolean> {
-          if (inputtedTwoFA.length != 6)
+          if (inputtedTwoFA && inputtedTwoFA.length != 6)
             return;
           const endpoint = `/auth/inputAccessCode`;
           const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
@@ -208,8 +208,8 @@ const SettingsForm = () => {
                     { user.friends.length ?
                     <TableHeader><TableRow>
                         <TableHeaderCell>Username</TableHeaderCell>
-                        <TableHeaderCell>First Name</TableHeaderCell>
-                        <TableHeaderCell>Last Name</TableHeaderCell>
+                        <TableHeaderCell>FirstName</TableHeaderCell>
+                        <TableHeaderCell>LastName</TableHeaderCell>
                         <TableHeaderCell>Edit</TableHeaderCell>
                     </TableRow></TableHeader> : ''}
                         { user.friends.length ? listfriends : <Item>No friends</Item>}	

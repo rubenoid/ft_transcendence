@@ -98,7 +98,7 @@ const handletwoFA = (e: any) => {
 
   useEffect(() => {
     async function inputAccessCode(): Promise<boolean> {
-      if (inputtedTwoFA.length != 6)
+      if (inputtedTwoFA && inputtedTwoFA.length != 6)
         return;
       const endpoint = `/auth/inputAccessCode`;
       const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
