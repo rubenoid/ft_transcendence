@@ -23,6 +23,7 @@ const ChatBox = () => {
     const {otherUser, setUser} = useBetween(chatState);
     const [messages, setMessages] = useState<Message[]>([]);
     const [messageCount, setMessageCount] = useState(0);
+    let [msg, setMsg] = useState<string>('');
 
     /* for now a hacky way to get the other person on the server */
     useEffect(() => {
@@ -52,7 +53,6 @@ const ChatBox = () => {
                 <Text color='black' fontSize='10' >{messages[i]["data"]}</Text>
             )
         }
-        // return ( <Text color='black' fontSize='10' >{steststring}</Text>);
     }
    
 
@@ -84,7 +84,6 @@ const ChatBox = () => {
     
 
 
-    let [msg, setMsg] = useState<string>('');
     
     return (
         <ChatBoxContainer>
