@@ -37,11 +37,14 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 		});
 };
 
-export const postData = async <T>(url: string, data: object, extraHeaders? : object): Promise<T> => {
-
-	const headersToSend = { 
+export const postData = async <T>(
+	url: string,
+	data: object,
+	extraHeaders?: object,
+): Promise<T> => {
+	const headersToSend = {
 		headers: Object.assign(headers.headers, extraHeaders),
-	}
+	};
 
 	console.log(headersToSend);
 	return await instance

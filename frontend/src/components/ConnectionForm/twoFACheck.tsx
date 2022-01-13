@@ -41,7 +41,7 @@ const TwoFACheck = () => {
                     </Item>
                     {twoFA ?
                     <Item>
-                      <Button><Text fontSize='15px'><Link href="http://localhost:8080/profile">sign in</Link></Text></Button>
+                      <Button><Text fontSize='15px'><Link href="http://localhost:8080/">sign in</Link></Text></Button>
                   </Item>
                   : ''}
           </Form>

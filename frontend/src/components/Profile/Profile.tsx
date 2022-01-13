@@ -46,14 +46,16 @@ const Profile = () => {
             console.log(value, key);
         });
 
-        await postData("/avatar/upload", formData, {'Content-Type': 'multipart/form-data'});
+        await postData("/user/uploadAvatar", formData, {'Content-Type': 'multipart/form-data'});
         console.log("upload gone through");
       };
 
     const userInfo = () => {
         return (
             <>
+                <Text>{user.userName}</Text>
                 <Text>{user.firstName}</Text>
+                <Text>{user.lastName}</Text>
                 <ImgContainer>
                     <Img src={'http://localhost:5000/' + user.avatar} alt='profileImg'/>
                 </ImgContainer>
