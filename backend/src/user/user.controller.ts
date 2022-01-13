@@ -119,4 +119,12 @@ export class UserController {
 	): Promise<void> {
 		this.userService.saveAvatar(req.user.id, file);
 	}
+
+	@Get("removeTwoFA")
+	async removeTwoFA(@Req() req: GuardedRequest): Promise<void> {
+		const user = await this.userService.getUser(req.user.id as number);
+		user.twoFactorSecret = "";
+		user.twoFactorvalid = false;
+		await this.userService.saveUser(user);
+	}
 }

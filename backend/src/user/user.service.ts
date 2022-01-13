@@ -158,6 +158,6 @@ export class UserService {
 			where: { id: id },
 		});
 		user.avatar = "img/" + id + ".png";
-		this.saveUser(user);
+		await this.saveUser(user);
 	}
 }

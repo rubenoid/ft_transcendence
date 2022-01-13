@@ -48,8 +48,8 @@ export class MatchService {
 		User1.matches.push(newMatch);
 		User2.matches.push(newMatch);
 
-		this.userService.saveUser(User1);
-		this.userService.saveUser(User2);
+		await this.userService.saveUser(User1);
+		await this.userService.saveUser(User2);
 		return (
 			"Match created between" +
 			newMatch.players[0].id +

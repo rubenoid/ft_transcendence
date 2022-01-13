@@ -12,48 +12,86 @@ interface detailedUser extends User {
     blockedUsers: number[],
 }
 
-interface friends {
-	id: string;
-    userName: string,
-    firstName: string,
-    lastName: string,
-    avatar: string,
-    wins: string,
-    losses: string,
-    rating: string,
-    registered: boolean,
-    twoFactorSecret: string,
-    twoFactorvalid: boolean,
-    blockedUsers: number[],
-    blockedBy: number[],
-}
-
 const SettingsForm = () => {
     const [user, setUser] = useState<detailedUser>(undefined)
     const [image, setImage] = useState({ preview: "", raw: "" });
     const [file, setfile] = useState(undefined);
     const [blockedUsers, setblockedUsers] = useState<detailedUser[]>([]);
+    const [isChecked, setIsChecked] = useState(undefined);
+    const [qrcode, setqrcode] = useState<string>(undefined);
+    const [initial2FAEnabled, setinitial2FAEnabled] = useState<boolean>(undefined);
+    const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
+    const [twoFAvalid, settwoFAvalid] = useState<boolean>(undefined);
+
+    useEffect(() => {
+        async function getQR(): Promise<string> {
+        if (isChecked && !initial2FAEnabled)
+            {           
+            const endpoint = `auth/getQr`;
+            const qrcodegot: string = await fetchData(endpoint);
+            console.log("fetched: qrcode", qrcodegot);
+            setqrcode(qrcodegot);
+            console.log("QRCODE:", qrcode);
+            return (qrcode);
+            }
+          if (!isChecked && initial2FAEnabled)
+          {
+            const endpoint = `user/removeTwoFA`;
+            const qrcodegot: string = await fetchData(endpoint);
+            return "done";
+          }
+        }
+        getQR();
+    }, [isChecked]);
 
     useEffect(() => {
         async function getUser(): Promise<User> {
             const user: detailedUser = await fetchData('/user/meAndFriends');
             setUser(user);
+            if (user.twoFactorSecret.length == 0){
+                setIsChecked(false);
+                setinitial2FAEnabled(false);
+            }
+            else {
+                setinitial2FAEnabled(true);
+                setIsChecked(true);
+            }
             let blockedarr: detailedUser[] = [];
             for (let blockeduser of user.blockedUsers)
             {
                 const endpoint: string = `/user/get/${blockeduser}`;
-                console.log("endpoint", endpoint);
                 const blocked: detailedUser = await fetchData(endpoint);
-                console.log("blocked", blocked);
                 blockedarr.push(blocked);
-                console.log("blockedarr", blockedarr);
             }
             setblockedUsers(blockedarr);
-            console.log("blockedUsers IS1:", blockedUsers);
             return user;
         }
         getUser();
     }, []);
+
+    const twoFAChange = () => {
+        setIsChecked(!isChecked);
+        if (!isChecked)
+            setinputtedTwoFA(undefined);
+      };
+
+      useEffect(() => {
+        async function inputAccessCode(): Promise<boolean> {
+          if (inputtedTwoFA.length != 6)
+            return;
+          const endpoint = `/auth/inputAccessCode`;
+          const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
+          if (validated == true)
+          { 
+            settwoFAvalid(true); 
+            console.log("GOOD QR code inpute 2FA");
+          }
+          else
+            console.log("BAD QR code input 2FA");
+          return (validated);
+        }
+        inputAccessCode();
+      }, [inputtedTwoFA]);
 
     const handleChange = (e: any) => {
         if (e.target.files.length) {
@@ -61,8 +99,6 @@ const SettingsForm = () => {
             preview: URL.createObjectURL(e.target.files[0]),
             raw: e.target.files[0],
           });
-          console.log("image.preview", image.preview);
-          console.log("user.avatar", user.avatar);
           setfile(e.target.files[0]);
         }
       };
@@ -70,27 +106,35 @@ const SettingsForm = () => {
 
 	const uploadDataForm= async (e: any) => {
         var formData = new FormData();
-
-
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
-
         await postData("/user/updateForm", formData, {'Content-Type': 'multipart/form-data'});
 	};
 
 	const settingsData = () => {
         const friendz = user.friends;
         const blocked = user.blockedUsers;
+
+        const removefriend = async (id: number) => {
+            const endpoint: string = `/friends/remove/${id}`;
+            await fetchData(endpoint);
+        };
+        
         const listfriends = friendz.map((friendz, key: number) => {
             return( 
                 <TableRow key = {key}>
                         <TableCell><Text fontSize='10'>{friendz.userName}</Text></TableCell>
                         <TableCell><Text fontSize='10'>{friendz.firstName}</Text></TableCell> 
                         <TableCell><Text fontSize='10'>{friendz.lastName}</Text></TableCell> 
-                        <TableCell><Button><Text>Remove</Text></Button></TableCell> 
+                        <TableCell><Button onClick={(e) => {removefriend(friendz.id);}}><Text>Remove</Text></Button></TableCell> 
                 </TableRow>
             );
         });
+
+        const removeblocked = async (id: number) => {
+            const endpoint: string = `/blocked/remove/${id}`;
+            await fetchData(endpoint);
+        };
         
         const listblockedusers = blockedUsers.map((blockedUsers, key: number) => {
             return( 
@@ -98,7 +142,7 @@ const SettingsForm = () => {
                         <TableCell><Text fontSize='10'>{blockedUsers.userName}</Text></TableCell>
                         <TableCell><Text fontSize='10'>{blockedUsers.firstName}</Text></TableCell> 
                         <TableCell><Text fontSize='10'>{blockedUsers.lastName}</Text></TableCell> 
-                        <TableCell><Button><Text>Remove</Text></Button></TableCell> 
+                        <TableCell><Button onClick={(e) => {removeblocked(blockedUsers.id);}}><Text>Remove</Text></Button></TableCell> 
                 </TableRow>
             );
         });
@@ -128,11 +172,9 @@ const SettingsForm = () => {
 							<Text>Select your photo for upload</Text>
 						</div>
 							) 
-                        :	(
-                            <ImgContainer>
+                        :	(<ImgContainer>
 								<Img src={image.preview} alt="dummy" width="300" height="300" />
-                            </ImgContainer>
-							)
+                            </ImgContainer>)
 					}
                     </Label>
                     <input type="file" id="upload-button" style={{ display: "none" }} 
@@ -153,7 +195,12 @@ const SettingsForm = () => {
                     </Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
-                    {user.twoFactorSecret.length ? <input type="checkbox" checked/> : <input type="checkbox"/>}
+                    <input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
+                    {isChecked && !initial2FAEnabled ?
+                        <Item>
+                      <img src={qrcode} alt="" />
+                      <a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
+                      <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
 				</Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Friends</Text></Label>
@@ -168,8 +215,8 @@ const SettingsForm = () => {
                         { user.friends.length ? listfriends : <Item>No friends</Item>}	
 					</Table>
 				</Item>
-
-				<Button onClick={uploadDataForm}><Text fontSize='15px'><Link>Save changes</Link></Text></Button>
+                {isChecked && !twoFAvalid && !initial2FAEnabled ? '' :
+				<Button onClick={uploadDataForm}><Text fontSize='15px'><Link href="http://localhost:8080/">Save changes</Link></Text></Button>}
 			</>
 		)};
     return (
