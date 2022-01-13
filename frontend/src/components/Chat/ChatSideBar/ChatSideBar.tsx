@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { SideBar } from './ChatSideBarElements';
-import { List, Text, Item } from '../../Utils/Utils';
+import { List, Button, Item } from '../../Utils/Utils';
 import { User, fetchData } from '../../../API/API';
 
-const ChatSideBar = () => {
+type ChatSideBarProps = {
+    setSelectedUser: React.Dispatch<React.SetStateAction<User>>
+}
 
+const ChatSideBar = (props: ChatSideBarProps) => {
     const [friends, setFriends] = useState<User[]>([]);
 
     useEffect(() => {
@@ -16,10 +19,10 @@ const ChatSideBar = () => {
         }
         getFriends();
     }, [fetchData]);
-    
+
     const listFriends = friends.map((user: User, key: number) => {
         return( 
-            <Item><Text>{user.userName}</Text></Item>
+            <Item key={user.id}><Button onClick={()=>{props.setSelectedUser(user)}}>{user.userName}</Button></Item>
         );
     });
 

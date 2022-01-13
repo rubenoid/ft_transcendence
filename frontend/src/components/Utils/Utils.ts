@@ -32,8 +32,8 @@ export const TextContainer = styled.div`
 	margin-bottom: 15px;
 `;
 
-export const Text = styled.p`
-	color: #fff;
+export const Text = styled.p<TextProps>`
+	color: ${(props: TextProps) => props.color ? props.color : "#fff"};
 	font-size: ${(props: TextProps) =>
 		props.fontSize ? props.fontSize : "1rem"};
 
