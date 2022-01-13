@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions } from "typeorm";
-import { writeFile } from 'fs';
+import { writeFile } from "fs";
 
 let currentId = 0;
 @Injectable()
@@ -149,8 +149,8 @@ export class UserService {
 		return User;
 	}
 
-	async saveAvatar(id:number, file: Express.Multer.File) {
-		const path: string = `./static/img/${id}.png`;
+	async saveAvatar(id: number, file: Express.Multer.File): Promise<void> {
+		const path = `./static/img/${id}.png`;
 		await writeFile(path, file.buffer, (data) => {
 			console.log("saved succesfuli", data);
 		});
@@ -158,6 +158,6 @@ export class UserService {
 			where: { id: id },
 		});
 		user.avatar = "img/" + id + ".png";
-		this.saveUser(user);		
+		this.saveUser(user);
 	}
 }

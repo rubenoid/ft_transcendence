@@ -34,7 +34,10 @@ export class UserController {
 
 	@Get("meAndFriends")
 	async meAndFriends(@Req() req: GuardedRequest): Promise<UserEntity> {
-		return await this.userService.getUserQueryOne({where: { id: req.user.id}, relations: ["friends"]});
+		return await this.userService.getUserQueryOne({
+			where: { id: req.user.id },
+			relations: ["friends"],
+		});
 	}
 
 	@Get("getByUserName/:username")
@@ -96,12 +99,15 @@ export class UserController {
 		@UploadedFile() file: Express.Multer.File,
 		@Body("user") userString: string,
 	): Promise<number> {
-
 		const user = JSON.parse(userString);
 		console.log("USER FROM FORM", user);
-		this.userService.update(req.user.id, user.userName, user.firstName, user.lastName);
-		if (file)
-			this.userService.saveAvatar(req.user.id, file);
+		this.userService.update(
+			req.user.id,
+			user.userName,
+			user.firstName,
+			user.lastName,
+		);
+		if (file) this.userService.saveAvatar(req.user.id, file);
 		return 0;
 	}
 
