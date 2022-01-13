@@ -32,6 +32,11 @@ export class UserController {
 		return await this.userService.getUser(req.user.id as number);
 	}
 
+	@Get("meAndFriends")
+	async meAndFriends(@Req() req: GuardedRequest): Promise<UserEntity> {
+		return await this.userService.getUserQueryOne({where: { id: req.user.id}, relations: ["friends"]});
+	}
+
 	@Get("getByUserName/:username")
 	async getUserByUsername(
 		@Param("username") username: string,

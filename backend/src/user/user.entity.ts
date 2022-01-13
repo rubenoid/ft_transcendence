@@ -35,13 +35,13 @@ export class UserEntity {
 	@Column()
 	rating: number;
 
-	@Column()
+	@Column({ default: false })
 	registered: boolean;
 
 	@Column({ default: "" })
 	twoFactorSecret: string;
 
-	@Column()
+	@Column({ default: false })
 	twoFactorvalid: boolean;
 
 	@ManyToMany(() => UserEntity, {
