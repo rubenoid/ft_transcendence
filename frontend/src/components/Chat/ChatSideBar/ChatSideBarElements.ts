@@ -8,7 +8,6 @@ export const SideBar = styled.div`
 	padding: 10px;
 `;
 
-
 export const ChatBody = styled.div`
 	margin: 5px;
 `;
@@ -19,8 +18,8 @@ export const ChatCard = styled.div`
 	color: black;
 	margin-top: 10px;
 	padding: 10px;
-`
+`;
 
 export const CreateChatContainer = styled.div`
 	padding: 10px;
-`
+`;

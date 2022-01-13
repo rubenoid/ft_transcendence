@@ -7,4 +7,4 @@ export const chatState = () => {
 		otherUser,
 		setUser,
 	};
-  };
+};
