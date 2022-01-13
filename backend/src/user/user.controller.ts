@@ -7,7 +7,11 @@ import {
 	Injectable,
 	Param,
 	Req,
+	UseInterceptors,
+	UploadedFile,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { writeFile } from "fs";
 import { GuardedRequest } from "src/overloaded";
 import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
@@ -70,14 +74,38 @@ export class UserController {
 		return userId;
 	}
 
-	@Put("update/:id")
+	@Put("update")
 	async update(
-		@Param("id") id: string,
+		@Req() req: GuardedRequest,
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
 		@Body("userName") userName: string,
-		//@Body('password') password: string,
 	): Promise<number> {
-		return this.userService.update(parseInt(id), firstName, lastName, userName);
+		return this.userService.update(req.user.id, userName, firstName, lastName);
+	}
+
+	@Post("updateForm")
+	@UseInterceptors(FileInterceptor("file"))
+	async updateForm(
+		@Req() req: GuardedRequest,
+		@UploadedFile() file: Express.Multer.File,
+		@Body("user") userString: string,
+	): Promise<number> {
+
+		const user = JSON.parse(userString);
+		console.log("USER FROM FORM", user);
+		this.userService.update(req.user.id, user.userName, user.firstName, user.lastName);
+		if (file)
+			this.userService.saveAvatar(req.user.id, file);
+		return 0;
+	}
+
+	@Post("uploadAvatar")
+	@UseInterceptors(FileInterceptor("file"))
+	async uploadFile(
+		@Req() req: GuardedRequest,
+		@UploadedFile() file: Express.Multer.File,
+	): Promise<void> {
+		this.userService.saveAvatar(req.user.id, file);
 	}
 }

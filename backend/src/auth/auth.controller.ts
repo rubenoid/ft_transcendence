@@ -49,7 +49,7 @@ export class AuthController {
 			return response.redirect("http://localhost:8080/checkTwoFA");
 		}
 		console.log("2FA not enabled so go straight to profile");
-		return response.redirect("http://localhost:8080/profile");
+		return response.redirect("http://localhost:8080/");
 	}
 
 	@Get("getQr")
@@ -105,6 +105,7 @@ export class AuthController {
 		console.log(req.user);
 		return "wow jwt thinks work!";
 	}
+
 	@UseGuards(localAuthGaurd)
 	@Get("logout")
 	async logout(

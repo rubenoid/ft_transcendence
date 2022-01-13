@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions } from "typeorm";
+import { writeFile } from 'fs';
 
 let currentId = 0;
 @Injectable()
@@ -146,5 +147,17 @@ export class UserService {
 		// if (User === undefined)
 		// 	throw "User not found findOne";
 		return User;
+	}
+
+	async saveAvatar(id:number, file: Express.Multer.File) {
+		const path: string = `./static/img/${id}.png`;
+		await writeFile(path, file.buffer, (data) => {
+			console.log("saved succesfuli", data);
+		});
+		const user = await this.getUserQueryOne({
+			where: { id: id },
+		});
+		user.avatar = "img/" + id + ".png";
+		this.saveUser(user);		
 	}
 }
