@@ -38,6 +38,15 @@ export class UserEntity {
 	@Column({ default: true })
 	isActive: boolean;
 
+	@Column()
+	registered: boolean;
+
+	@Column({ default: "" })
+	twoFactorSecret: string;
+
+	@Column()
+	twoFactorvalid: boolean;
+
 	@ManyToMany(() => UserEntity, {
 		onDelete: "SET NULL",
 		cascade: true,

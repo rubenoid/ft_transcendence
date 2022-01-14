@@ -24,16 +24,16 @@ export class ChatGateway
 		this.logger.log("Init");
 	}
 
-	handleDisconnect(client: GuardedSocket): void {
+	handleDisconnect(client: Socket): void {
 		this.logger.log(`Chat::Client disconnected: ${client.id}`);
 	}
 
-	handleConnection(client: GuardedSocket, ...args: string[]): void {
+	handleConnection(client: Socket, ...args: string[]): void {
 		this.logger.log(`Chat::Client connected: ${client.id}`);
 	}
 
 	@SubscribeMessage("message")
-	handleMessage(client: GuardedSocket, payload: string): string {
+	handleMessage(client: Socket, payload: string): string {
 		this.server.emit("message", "hallo terug");
 		return "Hello world!";
 	}
