@@ -44,7 +44,7 @@ export class UserService {
 	async addUser(): Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
-		newUser.firstName = "i dont know";
+		newUser.firstName = "iDonKnow";
 		newUser.lastName = "hallo";
 		newUser.userName = "woohoo";
 		newUser.avatar = "img/test.jpeg";

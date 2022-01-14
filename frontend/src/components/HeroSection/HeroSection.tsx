@@ -9,7 +9,6 @@ import { fetchData }  from '../../API/API';
 import { useNavigate, Navigate } from "react-router-dom";
 import SettingsForm from '../settings/settings';
 
-
 type UserProps = {
     isConnected: boolean
 }
@@ -34,7 +33,6 @@ const HeroSection = () => {
             }
             else {
                 setisConnected(false);
-
             }
             console.log("isConnected", isConnected);
         }
@@ -48,11 +46,11 @@ const HeroSection = () => {
 
         <BrowserRouter>
             <Routes>
-                <Route path='/' element={ isConnected ? <DashBoard/> : <Navigate to="/login" />} />
+                <Route path='/' element={isConnected ? <DashBoard/> : <Navigate to="/login"/>}/>
                 <Route path='/settings' element={<SettingsForm/>} />
-                <Route path='/login' element={ !isConnected ? <ConnectionForm/> : <Navigate to="/" />} />
-                <Route path='/register' element={ !isConnected ? <RegistrationForm /> : <Navigate to="/login" /> } />
-                <Route path='/checkTwoFA' element={<TwoFACheck/>} /> 
+                <Route path='/login' element={!isConnected?<ConnectionForm/>:<Navigate to="/"/>}/>
+                <Route path='/register' element={!isConnected?<RegistrationForm/>:<Navigate to="/login"/>}/>
+                <Route path='/checkTwoFA' element={<TwoFACheck/>}/> 
             </Routes>
         </BrowserRouter>
         );
@@ -62,16 +60,6 @@ const HeroSection = () => {
         <HeroContainer>
             {isConnected == undefined ? 'loading' : router()}
         </HeroContainer>
-
     );
 }
-
-{/* <Route
-    Loggedin ? (
-      <DashBoard  />
-    ) : (
-      <ConnectionForm />
-  )}
-/> */}
-
 export default HeroSection;

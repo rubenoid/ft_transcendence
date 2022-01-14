@@ -190,8 +190,10 @@ const SettingsForm = () => {
                         <TableHeaderCell>Last Name</TableHeaderCell>
                         <TableHeaderCell>Edit</TableHeaderCell>
                     </TableRow></TableHeader> : ''}
+                    <tbody>
                     { listblockedusers.length ? listblockedusers : <Item>No blocked users</Item>}
-                     </Table> 	
+                    </tbody>
+                    </Table>
                     </Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
@@ -208,12 +210,14 @@ const SettingsForm = () => {
                     { user.friends.length ?
                     <TableHeader><TableRow>
                         <TableHeaderCell>Username</TableHeaderCell>
-                        <TableHeaderCell>FirstName</TableHeaderCell>
-                        <TableHeaderCell>LastName</TableHeaderCell>
+                        <TableHeaderCell>First Name</TableHeaderCell>
+                        <TableHeaderCell>Last Name</TableHeaderCell>
                         <TableHeaderCell>Edit</TableHeaderCell>
                     </TableRow></TableHeader> : ''}
+                    <tbody>
                         { user.friends.length ? listfriends : <Item>No friends</Item>}	
-					</Table>
+					</tbody>
+                    </Table>
 				</Item>
                 {isChecked && !twoFAvalid && !initial2FAEnabled ? '' :
 				<Button onClick={uploadDataForm}><Text fontSize='15px'><Link href="http://localhost:8080/">Save changes</Link></Text></Button>}
