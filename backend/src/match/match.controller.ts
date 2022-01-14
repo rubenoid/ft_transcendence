@@ -34,8 +34,8 @@ export class MatchController {
 		return await this.matchService.getUserMatches(parseInt(id));
 	}
 
-	@Get("getAllMatchs")
-	async getAllMatchs(): Promise<MatchEntity[]> {
+	@Get("getAllMatches")
+	async getAllMatches(): Promise<MatchEntity[]> {
 		return await this.matchService.getAllMatches();
 	}
 }

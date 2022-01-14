@@ -35,4 +35,10 @@ export class MatchGateway {
 	handleMessage(client: GuardedSocket, payload: string): void {
 		this.matchService.addPlayerToQueue(client, this.server);
 	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("removeFromQueue")
+	removeFromQueue(client: GuardedSocket): void {
+		this.matchService.removeFromQueue(client);
+	}
 }
