@@ -4,7 +4,8 @@ import { Repository } from "typeorm";
 import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
 import { Server, Socket } from "socket.io";
-import { GameService, RunningGame } from "src/game/game.service";
+import { GameService } from "src/game/game.service";
+import { RunningGame } from "src/game/runningGame.service";
 import { GuardedSocket } from "src/overloaded";
 
 const queuedSock: GuardedSocket[] = [];
