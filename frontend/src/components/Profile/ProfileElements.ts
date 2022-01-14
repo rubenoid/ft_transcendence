@@ -17,4 +17,4 @@ export const Img = styled.img`
 export const TopContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
-`
+`;

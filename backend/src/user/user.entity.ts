@@ -38,7 +38,7 @@ export class UserEntity {
 	@Column({ default: false })
 	registered: boolean;
 
-	@Column({ default: false})
+	@Column({ default: false })
 	logedin: boolean;
 
 	@Column({ default: "" })
@@ -51,7 +51,7 @@ export class UserEntity {
 		onDelete: "SET NULL",
 		cascade: true,
 		nullable: true,
-	}) // ADDED nullable: true ??
+	})
 	@JoinTable()
 	friends: UserEntity[];
 

@@ -132,7 +132,7 @@ export class UserController {
 	}
 
 	@Public()
-	@UseGuards(RegisteringGuard) 
+	@UseGuards(RegisteringGuard)
 	@Get("removeTwoFA")
 	async removeTwoFA(@Req() req: GuardedRequest): Promise<void> {
 		console.log("removetwofa");
