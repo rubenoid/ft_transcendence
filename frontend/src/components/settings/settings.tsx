@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Utils';
+import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table, TextContainer } from '../Utils/Utils';
 import { RoundButton, Link, Item } from '../Utils/Utils';
 import { fetchData, postData, User } from '../../API/API';
 import { SettingsContainer, UsersContainer } from './SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer } from '../Profile/ProfileElements';
+import { SearchResultContainer } from '../AddFriend/AddFriendElements';
 
 
 interface detailedUser extends User {
@@ -22,6 +23,10 @@ const SettingsForm = () => {
     const [initial2FAEnabled, setinitial2FAEnabled] = useState<boolean>(undefined);
     const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
     const [twoFAvalid, settwoFAvalid] = useState<boolean>(undefined);
+    const [userName, setUserName] = useState<string>('');
+    const [user4friendSetting, setuser4friendSetting] = useState<User>();
+    const [blockedUserName, setblockedUserName] = useState<string>('');
+    const [user4blockedSetting, setuser4blockedSetting] = useState<User>();
 
     useEffect(() => {
         async function getQR(): Promise<string> {
@@ -94,6 +99,35 @@ const SettingsForm = () => {
         inputAccessCode();
       }, [inputtedTwoFA]);
 
+    useEffect(() => {
+            async function getUserz(): Promise<User> {
+                const endpoint: string = `/user/getByUserName/${userName}`;
+                const user: User = await fetchData(endpoint);
+                if (user)
+                    setuser4friendSetting(user);
+                return user;
+            }
+            getUserz();
+        }, [userName]);
+        console.log(user);
+        console.log('UserName->' + userName);
+
+        useEffect(() => {
+            async function getUserblocked(): Promise<User> {
+                console.log("getUserblocked", getUserblocked);
+                const endpoint: string = `/user/getByUserName/${blockedUserName}`;
+                const user: User = await fetchData(endpoint);
+                if (user)
+                {    setuser4blockedSetting(user);
+                    console.log("user found");
+                }
+                return user;
+            }
+            getUserblocked();
+        }, [blockedUserName]);
+        console.log(user);
+        console.log('blockedUserName->' + blockedUserName);
+
     const handleChange = (e: any) => {
         if (e.target.files.length) {
           setImage({
@@ -131,6 +165,34 @@ const SettingsForm = () => {
                 </TableRow>
             );
         });
+    
+        const addFriend = async (id: number) => {
+            const endpoint: string = `/friends/add/${id}`;
+            await fetchData(endpoint);
+        };
+    
+        const SearchResult = () => {
+            return (
+                <SearchResultContainer>
+                    <Text>{user4friendSetting.userName}</Text>
+                    <Button onClick={(e) => {addFriend(user4friendSetting.id);}}>Add</Button>
+                </SearchResultContainer>
+            );
+        }
+
+        const addblocked = async (id: number) => {
+            const endpoint: string = `/blocked/add/${id}`;
+            await fetchData(endpoint);
+        };
+    
+        const SearchResultBlocked = () => {
+            return (
+                <SearchResultContainer>
+                    <Text>{user4blockedSetting.userName}</Text>
+                    <Button onClick={(e) => {addblocked(user4blockedSetting.id);}}>Add</Button>
+                </SearchResultContainer>
+            );
+        }
 
         const removeblocked = async (id: number) => {
             const endpoint: string = `/blocked/remove/${id}`;
@@ -196,6 +258,11 @@ const SettingsForm = () => {
                     </tbody>
                     </Table>
                     </Item>
+                    <TextContainer>
+                        <Text>Search for users to block</Text>
+                    </TextContainer>
+                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => setblockedUserName(e.target.value)}></TextInput>
+                        {user4blockedSetting && user4blockedSetting.userName == blockedUserName ? SearchResultBlocked() : ''}
 				<Item>
 					<Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
                     <input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
@@ -219,6 +286,11 @@ const SettingsForm = () => {
                         { user.friends.length ? listfriends : <Item>No friends</Item>}	
 					</tbody>
                     </Table>
+                    <TextContainer>
+                        <Text>Search for friends to add</Text>
+                    </TextContainer>
+                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => setUserName(e.target.value)}></TextInput>
+                        {user4friendSetting && user4friendSetting.userName == userName ? SearchResult() : ''}
 				</Item>
                 {isChecked && !twoFAvalid && !initial2FAEnabled ? '' :
 				<Button onClick={uploadDataForm}><Text fontSize='15px'><Link href="http://localhost:8080/">Save changes</Link></Text></Button>}
