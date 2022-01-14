@@ -43,7 +43,6 @@ const Profile = () => {
         getUser();
     }, []);
 
-<<<<<<< HEAD
     const handleChange = (e: any) => {
         if (e.target.files.length) {
           setImage({
@@ -71,28 +70,23 @@ const Profile = () => {
         await postData("/user/uploadAvatar", formData, {'Content-Type': 'multipart/form-data'});
         console.log("upload gone through");
       };
-=======
     async function logout() {
         const endpoint = '/auth/logout'
         await fetchData(endpoint);
         delete_cookie("AuthToken", undefined, undefined);
         navigate("/", {replace: true});
     }
->>>>>>> 2FA_auth_amb
 
     const userInfo = () => {
         return (
             <>
-<<<<<<< HEAD
                 <Text>{user.userName}</Text>
                 <Text>{user.firstName}</Text>
                 <Text>{user.lastName}</Text>
-=======
                 <TopContainer>
                     <Text>{user.userName}</Text>
                     <RoundButton onClick={logout}><Text fontSize='25px'>🛫</Text></RoundButton>
                 </TopContainer>
->>>>>>> 2FA_auth_amb
                 <ImgContainer>
                     <Img src={'http://localhost:5000/' + user.avatar} alt='profileImg'/>
                 </ImgContainer>
