@@ -131,8 +131,11 @@ export class UserController {
 		this.userService.saveAvatar(req.user.id, file);
 	}
 
+	@Public()
+	@UseGuards(RegisteringGuard) 
 	@Get("removeTwoFA")
 	async removeTwoFA(@Req() req: GuardedRequest): Promise<void> {
+		console.log("removetwofa");
 		const user = await this.userService.getUser(req.user.id as number);
 		user.twoFactorSecret = "";
 		user.twoFactorvalid = false;

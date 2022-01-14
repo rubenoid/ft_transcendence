@@ -34,8 +34,9 @@ const SettingsForm = () => {
             console.log("QRCODE:", qrcode);
             return (qrcode);
             }
-          if (!isChecked && initial2FAEnabled)
+          if (!isChecked)
           {
+            console.log("takeoff twofa")
             const endpoint = `user/removeTwoFA`;
             const qrcodegot: string = await fetchData(endpoint);
             return "done";

@@ -96,6 +96,7 @@ const Profile = () => {
                     onChange={handleChange}/>
                     <Button onClick={handleUpload}>Upload</Button>
                 </Item>
+                <Button><Text fontSize='15px'><a href="http://localhost:8080/settings">settings</a></Text></Button>
             </>
         )
     }
