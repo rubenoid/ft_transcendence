@@ -13,18 +13,18 @@ export class GameGateway {
 	@WebSocketServer() server: Server;
 	constructor(private gameService: GameService) {}
 
-	private logger: Logger = new Logger("MatchGateway");
+	private logger: Logger = new Logger("gameGateway");
 
 	afterInit(server: Server): void {
 		this.logger.log("Init");
 	}
 
 	handleDisconnect(client: Socket): void {
-		this.logger.log(`Match::Client disconnected: ${client.id}`);
+		this.logger.log(`game::Client disconnected: ${client.id}`);
 	}
 
 	handleConnection(client: Socket, ...args: string[]): void {
-		this.logger.log(`Match::Client connected: ${client.id}`);
+		this.logger.log(`game::Client connected: ${client.id}`);
 	}
 
 	@SubscribeMessage("positionUpdate")

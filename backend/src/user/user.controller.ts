@@ -9,16 +9,23 @@ import {
 	Req,
 	UseInterceptors,
 	UploadedFile,
+	UseGuards,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { writeFile } from "fs";
 import { GuardedRequest } from "src/overloaded";
 import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
+import { Public } from "src/auth/jwt.decorator";
+import { AuthGuard } from "@nestjs/passport";
+import { RegisteringGuard } from "src/auth/registering.guard";
 
 @Controller("user")
 export class UserController {
 	constructor(private readonly userService: UserService) {}
+
+	@Public()
+	@UseGuards(RegisteringGuard)
 	@Get("getAll")
 	async getAll(): Promise<UserEntity[]> {
 		return await this.userService.getAll();
@@ -40,6 +47,8 @@ export class UserController {
 		});
 	}
 
+	@Public()
+	@UseGuards(RegisteringGuard) // so it can be used in the register part of form
 	@Get("getByUserName/:username")
 	async getUserByUsername(
 		@Param("username") username: string,
@@ -67,6 +76,8 @@ export class UserController {
 		return await this.userService.deleteUser(parseInt(id));
 	}
 
+	@Public()
+	@UseGuards(RegisteringGuard) // take this out for testing
 	@Get("deleteAll")
 	async deleteAll(): Promise<void> {
 		return await this.userService.deleteAll();

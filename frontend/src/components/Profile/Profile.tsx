@@ -1,14 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { TextContainer, WidgetContainer } from '../Utils/Utils';
-import { ImgContainer, Img } from './ProfileElements';
+import React, { useState, useEffect,  } from 'react';
+import { RoundButton, TextContainer, WidgetContainer } from '../Utils/Utils';
+import { ImgContainer, Img, TopContainer } from './ProfileElements';
 import { Text } from '../Utils/Utils';
 import { fetchData, User } from '../../API/API';
+<<<<<<< HEAD
 import { Button, Item } from '../Utils/Utils';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { postData } from '../../API/API';
+=======
+import { useNavigate } from 'react-router-dom';
+
+function delete_cookie( name: string, path: string | undefined, domain: string | undefined ) {
+    if( get_cookie( name ) ) {
+        document.cookie = name + "=" +
+        ((path) ? ";path="+path:"")+
+        ((domain)?";domain="+domain:"") +
+        ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+    }
+}
+    
+function get_cookie(name: string){
+    return document.cookie.split(';').some(c => {
+        return c.trim().startsWith(name + '=');
+    });
+}
+>>>>>>> 2FA_auth_amb
 
 const Profile = () => {
 
+    const navigate = useNavigate();
     const [user, setUser] = useState<User>(undefined);
     const [image, setImage] = useState({ preview: "", raw: "" });
     const [file, setfile] = useState(undefined);
@@ -18,10 +38,12 @@ const Profile = () => {
             const user: User = await fetchData('/user/me');
             setUser(user);
             return user;
+            
         }
         getUser();
     }, []);
 
+<<<<<<< HEAD
     const handleChange = (e: any) => {
         if (e.target.files.length) {
           setImage({
@@ -49,13 +71,28 @@ const Profile = () => {
         await postData("/user/uploadAvatar", formData, {'Content-Type': 'multipart/form-data'});
         console.log("upload gone through");
       };
+=======
+    async function logout() {
+        const endpoint = '/auth/logout'
+        await fetchData(endpoint);
+        delete_cookie("AuthToken", undefined, undefined);
+        navigate("/", {replace: true});
+    }
+>>>>>>> 2FA_auth_amb
 
     const userInfo = () => {
         return (
             <>
+<<<<<<< HEAD
                 <Text>{user.userName}</Text>
                 <Text>{user.firstName}</Text>
                 <Text>{user.lastName}</Text>
+=======
+                <TopContainer>
+                    <Text>{user.userName}</Text>
+                    <RoundButton onClick={logout}><Text fontSize='25px'>🛫</Text></RoundButton>
+                </TopContainer>
+>>>>>>> 2FA_auth_amb
                 <ImgContainer>
                     <Img src={'http://localhost:5000/' + user.avatar} alt='profileImg'/>
                 </ImgContainer>

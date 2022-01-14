@@ -10,7 +10,7 @@ import { GameModule } from "src/game/game.module";
 @Module({
 	imports: [DatabaseModule, UserModule, GameModule],
 	controllers: [MatchController],
-	providers: [MatchService, ...MatchProvider],
+	providers: [MatchService, ...MatchProvider, MatchGateway],
 	exports: [MatchService, ...MatchProvider],
 })
 export class MatchModule {}

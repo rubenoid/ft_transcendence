@@ -7,7 +7,7 @@ import { JwtStrategy } from "./jwt.strategy";
 import { PassportModule } from "@nestjs/passport";
 import { JwtModule } from "@nestjs/jwt";
 import { ProtectorService } from "src/protector/protector";
-
+import { RegisteringStrategy } from "./registering.strategy";
 @Module({
 	imports: [
 		UserModule,
@@ -17,7 +17,13 @@ import { ProtectorService } from "src/protector/protector";
 			signOptions: { expiresIn: "3h" },
 		}),
 	],
-	providers: [AuthService, FourtyTwoStrategy, JwtStrategy, ProtectorService],
+	providers: [
+		AuthService,
+		FourtyTwoStrategy,
+		JwtStrategy,
+		ProtectorService,
+		RegisteringStrategy,
+	],
 	controllers: [AuthController],
 })
 export class AuthModule {}

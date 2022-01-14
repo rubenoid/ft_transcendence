@@ -13,3 +13,8 @@ export const Img = styled.img`
 	height: 100%;
 	border-radius: 50%;
 `;
+
+export const TopContainer = styled.div`
+	display: flex;
+	justify-content: space-between;
+`
