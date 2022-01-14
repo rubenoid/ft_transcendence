@@ -27,6 +27,8 @@ const SettingsForm = () => {
     const [user4friendSetting, setuser4friendSetting] = useState<User>();
     const [blockedUserName, setblockedUserName] = useState<string>('');
     const [user4blockedSetting, setuser4blockedSetting] = useState<User>();
+    const [userNameFriend, setUserNameFriend] = useState<string>('');
+    const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
 
     useEffect(() => {
         async function getQR(): Promise<string> {
@@ -99,18 +101,35 @@ const SettingsForm = () => {
         inputAccessCode();
       }, [inputtedTwoFA]);
 
+      useEffect(() => {
+        async function getUsersforUsername(): Promise<void> {
+          const endpoint = `/user/getByUserName/${userName}`;
+            const UserFromUserName: User = await fetchData(endpoint);
+            if (!UserFromUserName) {
+                setUserNameValid(true);
+            }
+            else {
+                setUserNameValid(false);
+            }
+            if (UserNameValid) {
+            setUser({...user, userName: userName})
+            }
+        }
+        getUsersforUsername();
+    }, [userName]);
+
     useEffect(() => {
             async function getUserz(): Promise<User> {
-                const endpoint: string = `/user/getByUserName/${userName}`;
+                const endpoint: string = `/user/getByUserName/${userNameFriend}`;
                 const user: User = await fetchData(endpoint);
                 if (user)
                     setuser4friendSetting(user);
                 return user;
             }
             getUserz();
-        }, [userName]);
+        }, [userNameFriend]);
         console.log(user);
-        console.log('UserName->' + userName);
+        console.log('userNameFriend->' + userNameFriend);
 
         useEffect(() => {
             async function getUserblocked(): Promise<User> {
@@ -127,6 +146,7 @@ const SettingsForm = () => {
         }, [blockedUserName]);
         console.log(user);
         console.log('blockedUserName->' + blockedUserName);
+        
 
     const handleChange = (e: any) => {
         if (e.target.files.length) {
@@ -209,14 +229,17 @@ const SettingsForm = () => {
                 </TableRow>
             );
         });
+
 		return (
 			<>
 				<h1>Settings</h1>
 
 				<Item>
 				<Label> <Text fontSize='20px'>Username</Text></Label>
-					<TextInput type='text'placeholder={user.userName} onChange={(e) => {setUser({...user, userName: e.target.value})}}/>
-				</Item>
+                    <TextInput type='text'placeholder={user.userName} onChange={(e) => {setUserName(e.target.value)}}/>
+                    {UserNameValid ? <Text>username available and unique</Text> : <Text>username already in use</Text>}
+                    {/* {UserNameValid ? setUser({...user, userName: userName}) : ''} */}
+                </Item>
 				<Item>
 				<Label> <Text fontSize='20px'>FirstName</Text></Label>
 					<TextInput type='text' placeholder={user.firstName} onChange={(e) => {setUser({...user, firstName: e.target.value})}}/>
@@ -289,8 +312,8 @@ const SettingsForm = () => {
                     <TextContainer>
                         <Text>Search for friends to add</Text>
                     </TextContainer>
-                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => setUserName(e.target.value)}></TextInput>
-                        {user4friendSetting && user4friendSetting.userName == userName ? SearchResult() : ''}
+                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => setUserNameFriend(e.target.value)}></TextInput>
+                        {user4friendSetting && user4friendSetting.userName == userNameFriend ? SearchResult() : ''}
 				</Item>
                 {isChecked && !twoFAvalid && !initial2FAEnabled ? '' :
 				<Button onClick={uploadDataForm}><Text fontSize='15px'><Link href="http://localhost:8080/">Save changes</Link></Text></Button>}
