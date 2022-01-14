@@ -141,4 +141,9 @@ export class UserController {
 		user.twoFactorvalid = false;
 		await this.userService.saveUser(user);
 	}
+
+	@Get("userStatus/:id")
+	async userStatusById(@Param("id") id: string) : Promise<string> {
+		return await this.userService.userStatusById(parseInt(id));
+	}
 }

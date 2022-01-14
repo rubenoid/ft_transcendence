@@ -163,4 +163,11 @@ export class UserService {
 		user.avatar = "img/" + id + ".png";
 		await this.saveUser(user);
 	}
+
+	async userStatusById(toFind: number) : Promise<string> {
+		const User = await this.UserRepository.findOne({ where: { id: toFind } });
+		if (User === undefined) throw "User not found";
+		if (User.logedin == false) return "offline";
+		return "online"; // add in in game
+	}
 }
