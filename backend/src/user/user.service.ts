@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions } from "typeorm";
 import { writeFile } from "fs";
+import { MatchEntity } from "src/match/match.entity";
 
 let currentId = 0;
 @Injectable()
@@ -170,4 +171,11 @@ export class UserService {
 		if (User.logedin == false) return "offline";
 		return "online"; // add in in game
 	}
+
+	async MatchHistory(toFind: number) : Promise<MatchEntity[]> {
+		const User = await this.UserRepository.findOne({ where: { id: toFind } });
+		if (User === undefined) throw "User not found";
+		return User.matches;
+	}
+
 }

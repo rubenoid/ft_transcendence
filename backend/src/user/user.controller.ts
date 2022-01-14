@@ -19,6 +19,7 @@ import { UserService } from "./user.service";
 import { Public } from "src/auth/jwt.decorator";
 import { AuthGuard } from "@nestjs/passport";
 import { RegisteringGuard } from "src/auth/registering.guard";
+import { MatchEntity } from "src/match/match.entity";
 
 @Controller("user")
 export class UserController {
@@ -145,5 +146,15 @@ export class UserController {
 	@Get("userStatus/:id")
 	async userStatusById(@Param("id") id: string) : Promise<string> {
 		return await this.userService.userStatusById(parseInt(id));
+	}
+
+	@Get("MatchHistory/me")
+	async MyMatchHistory(@Req() req: GuardedRequest) : Promise<MatchEntity[]> {
+		return await this.userService.MatchHistory(req.user.id as number);
+	}
+
+	@Get("MatchHistory/:id")
+	async MatchHistoryById(@Param("id") id: string) : Promise<MatchEntity[]> {
+		return await this.userService.MatchHistory(parseInt(id));
 	}
 }
