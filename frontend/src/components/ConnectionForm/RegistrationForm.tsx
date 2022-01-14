@@ -155,12 +155,7 @@ const handletwoFA = (e: any) => {
                       <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
                     <Item>
                     {registered  && !twoFA ?
-<<<<<<< HEAD
-                    <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button> : ''}
-                    {/* // <Button><Text fontSize='15px'><Link href="http://localhost:8080/">sign in</Link></Text></Button> : ''} */}
-=======
                     <Button><Text fontSize='15px'><a href="http://localhost:5000/auth/login">sign in</a></Text></Button> : ''}
->>>>>>> 2FA_auth_amb
                   </Item>
           </Form>
       </FormContainer>

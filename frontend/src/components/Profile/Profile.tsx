@@ -3,11 +3,9 @@ import { RoundButton, TextContainer, WidgetContainer } from '../Utils/Utils';
 import { ImgContainer, Img, TopContainer } from './ProfileElements';
 import { Text } from '../Utils/Utils';
 import { fetchData, User } from '../../API/API';
-<<<<<<< HEAD
 import { Button, Item } from '../Utils/Utils';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { postData } from '../../API/API';
-=======
 import { useNavigate } from 'react-router-dom';
 
 function delete_cookie( name: string, path: string | undefined, domain: string | undefined ) {
@@ -24,7 +22,6 @@ function get_cookie(name: string){
         return c.trim().startsWith(name + '=');
     });
 }
->>>>>>> 2FA_auth_amb
 
 const Profile = () => {
 
