@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
-import { RoundButton, List, LongList, Item, Link } from '../Utils/Utils';
+import { RoundButton, List, LongList, Item } from '../Utils/Utils';
 import { TextInput, Text } from '../Utils/Utils';
 import { postData, User, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const TwoFACheck = () => {
 
@@ -44,7 +44,7 @@ const TwoFACheck = () => {
                     </Item>
                     {twoFA ?
                     <Item>
-                      <Button><Text fontSize='15px'><Link href="http://localhost:8080/">sign in</Link></Text></Button>
+                      <Button><Text fontSize='15px'><Link to="/">sign in</Link></Text></Button>
                   </Item>
                   : ''}
           </Form>
