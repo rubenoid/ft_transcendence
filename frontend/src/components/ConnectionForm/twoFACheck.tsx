@@ -24,7 +24,7 @@ const TwoFACheck = () => {
         settwoFA(true); 
         console.log("GOOD QR code inpute 2FA");
         await fetchData("auth/twoFALogin");
-        navigate("/profile", {replace: true});
+        navigate("/", {replace: true});
       }
       else
       { 
