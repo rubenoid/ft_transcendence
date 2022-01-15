@@ -165,17 +165,16 @@ export class UserService {
 		await this.saveUser(user);
 	}
 
-	async userStatusById(toFind: number) : Promise<string> {
+	async userStatusById(toFind: number): Promise<string> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
 		if (User === undefined) throw "User not found";
 		if (User.logedin == false) return "offline";
 		return "online"; // add in in game
 	}
 
-	async MatchHistory(toFind: number) : Promise<MatchEntity[]> {
+	async MatchHistory(toFind: number): Promise<MatchEntity[]> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
 		if (User === undefined) throw "User not found";
 		return User.matches;
 	}
-
 }
