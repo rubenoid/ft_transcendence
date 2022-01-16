@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextContainer, WidgetContainer } from '../Utils/Utils';
+import { WidgetContainer } from '../Utils/Utils';
 import { ImgContainer, Img } from './ProfileElements';
-import { Text } from '../Utils/Utils';
 import { fetchData, User } from '../../API/API';
+import { Text } from '../Utils/Text/Text';
 
 const Profile = () => {
 

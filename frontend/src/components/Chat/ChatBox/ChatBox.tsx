@@ -1,9 +1,9 @@
 import React from 'react';
 import {TopContainer, ChatBoxContainer, InputContainer} from './ChatBoxElements';
-import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
 import { ChatContainer } from '../ChatElements';
-import { AiOutlineSend as SendIcon} from 'react-icons/ai';
-import SendButton from '../../Buttons/Send/SendButton';
+import SendButton from '../../Utils/Buttons/Send/SendButton';
+import { TextInput } from '../../Utils/TextInput/TextInput';
+import { Text } from '../../Utils/Text/Text';
 
 const ChatBox = () => {
     return (
@@ -15,7 +15,7 @@ const ChatBox = () => {
 
             </ChatContainer>
             <InputContainer>
-                <TextInput type="text" onChange={(e) => ({})}></TextInput>
+                <TextInput type="text" onChange={() => ({})}></TextInput>
                 <SendButton/>
             </InputContainer>
         </ChatBoxContainer>

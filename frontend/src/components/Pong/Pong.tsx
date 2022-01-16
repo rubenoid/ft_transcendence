@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas } from './PongElements'
-
-import  PongImgUrl  from '../../../public/pong.png';
-
-import { Text } from '../Utils/Utils'
+import { PongContainer, Button, ButtonContainer, PongCanvas } from './PongElements'
+import { Text } from '../Utils/Text/Text';
 import socket from '../socket';
 
 class Point {

@@ -1,7 +1,9 @@
 import React from 'react';
-import { Form, Label, Button, FormContainer } from './ConnectionFormElements';
-import { TextInput, Text } from '../Utils/Utils';
-import { RoundButton, Link, Item } from '../Utils/Utils';
+import { Form, FormContainer } from './ConnectionFormElements';
+import { RoundButton } from '../Utils/Buttons/Round/RoundButton';
+import { Text } from '../Utils/Text/Text';
+import { Link } from '../Utils/Link/Link';
+import { Item } from '../Utils/List/List';
 
 const ConnectionForm = () => {
     return (

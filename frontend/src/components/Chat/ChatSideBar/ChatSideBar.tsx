@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { SideBar } from './ChatSideBarElements';
-import { List, Text, Item } from '../../Utils/Utils';
+import { List, Item } from '../../Utils/List/List';
 import { User, fetchData } from '../../../API/API';
+import { Text } from '../../Utils/Text/Text';
 
 const ChatSideBar = () => {
 
