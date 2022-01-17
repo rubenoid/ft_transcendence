@@ -13,7 +13,7 @@ export class MatchEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@ManyToMany(() => UserEntity, (user) => user.matches)
+	@ManyToMany(() => UserEntity, (user) => user.matches, { cascade: true })
 	@JoinTable()
 	players: UserEntity[];
 

@@ -1,12 +1,14 @@
-import { Injectable, Inject, Post } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { MatchEntity } from "./match.entity";
 import { Repository } from "typeorm";
 import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
 import { Server, Socket } from "socket.io";
 import { GameService } from "src/game/game.service";
+import { RunningGame } from "src/game/runningGame.service";
+import { GuardedSocket } from "src/overloaded";
 
-const queuedSock: Socket[] = [];
+const queuedSock: GuardedSocket[] = [];
 
 @Injectable()
 export class MatchService {
@@ -14,6 +16,7 @@ export class MatchService {
 		@Inject("MATCH_REPOSITORY")
 		private MatchRepository: Repository<MatchEntity>,
 		private userService: UserService,
+		@Inject(forwardRef(() => GameService))
 		private gameService: GameService,
 	) {}
 
@@ -58,16 +61,54 @@ export class MatchService {
 		);
 	}
 
-	async addPlayerToQueue(connection: Socket, server: Server): Promise<string> {
+	async addPlayerToQueue(
+		connection: GuardedSocket,
+		server: Server,
+	): Promise<string> {
 		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
 		console.log("playerr " + connection.id + " qued");
+
+		const p1 = queuedSock.pop();
+		this.gameService.startMatch(p1, p1, server);
 
 		if (queuedSock.length >= 2) {
 			const p1 = queuedSock.pop();
 			const p2 = queuedSock.pop();
 			this.gameService.startMatch(p1, p2, server);
 		}
+	}
+
+	async saveMatch(game: RunningGame): Promise<void> {
+		const toAdd = new MatchEntity();
+
+		toAdd.scorePlayer1 = game.score[0];
+		toAdd.scorePlayer2 = game.score[1];
+
+		const players = [
+			await this.userService.getUserQueryOne({
+				where: { id: game.players[0].user.id },
+			}),
+			await this.userService.getUserQueryOne({
+				where: { id: game.players[1].user.id },
+			}),
+		];
+		if (game.score[0] > game.score[1]) {
+			players[0].wins++;
+			players[1].losses++;
+		} else {
+			players[1].wins++;
+			players[0].losses++;
+		}
+
+		toAdd.players = [
+			players[0],
+			// players[1],
+		];
+		console.log("saved game!");
+		this.MatchRepository.save(toAdd);
+		this.userService.saveUser(players[0]);
+		this.userService.saveUser(players[1]);
 	}
 
 	async increaseScore(Matchid: number, Playerid: number): Promise<void> {
@@ -100,7 +141,6 @@ export class MatchService {
 
 	async getAllMatches(): Promise<MatchEntity[]> {
 		const Match = await this.MatchRepository.find({ relations: ["players"] });
-		if (Match.length === 0) throw "user not found";
 		return Match;
 	}
 }

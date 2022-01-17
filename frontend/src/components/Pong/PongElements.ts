@@ -2,11 +2,14 @@ import styled from "styled-components";
 
 export const PongCanvas = styled.canvas`
 	background-color: black;
+	width: 400px;
+	height: 600px;
+	display: flex;
 `;
 
 export const PongContainer = styled.div`
-	height: 100%;
-	display: flex;
+	width: 400px;
+	display: block;
 	position: relative;
 	justify-content: center;
 	background-color: transparent;
@@ -49,4 +52,37 @@ export const Button = styled.button`
 	&:hover {
 		background-color: #abc;
 	}
+`;
+
+export const PlayerContainerTop = styled.div`
+	width: 400px;
+	height: 50px;
+	background-color: #3f3fff;
+	border-radius: 7px 7px 0 0;
+	padding: 7px 0px 0 20px;
+	display: flex;
+	justify-content: space-between;
+`;
+
+export const PlayerContainerBot = styled.div`
+	width: 400px;
+	height: 50px;
+	background-color: #ff3939;
+	border-radius: 0 0 7px 7px;
+	padding: 7px 0px 0 20px;
+	display: flex;
+	justify-content: space-between;
+`;
+
+export const ScoreContainer = styled.div`
+	background-color: white;
+	border-radius: 7px;
+	margin-right: 20px;
+	width: 30px;
+	height: 35px;
+`;
+
+export const ScoreText = styled.p`
+	color: black;
+	padding 5px 10px;
 `;
