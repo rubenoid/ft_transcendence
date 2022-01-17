@@ -17,7 +17,7 @@ interface detailedUser extends User {
 }
 
 const SettingsForm = () => {
-	const navigator = useNavigate();
+	const navigate = useNavigate();
 	const [user, setUser] = useState<detailedUser>(undefined)
 
     const [image, setImage] = useState({ preview: "", raw: "" });
@@ -60,7 +60,7 @@ const SettingsForm = () => {
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
     	await postData("/user/updateForm", formData, {'Content-Type': 'multipart/form-data'});
-		navigator("/", { replace: true });
+		navigate("/", { replace: false });
 	};
 
     /* username valid */

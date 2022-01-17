@@ -35,7 +35,6 @@ export class MatchController {
 		return await this.matchService.getUserMatches(parseInt(id));
 	}
 
-
 	@Get("getMyUserHistory")
 	async getMyUserHistory(@Req() req: GuardedRequest): Promise<MatchEntity[]> {
 		return await this.matchService.getUserMatches(req.user.id as number);

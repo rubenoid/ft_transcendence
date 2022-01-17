@@ -27,8 +27,8 @@ const Profile = () => {
 
     const navigate = useNavigate();
     const [user, setUser] = useState<User>(undefined);
-    const [image, setImage] = useState({ preview: "", raw: "" });
-    const [file, setfile] = useState(undefined);
+    // const [image, setImage] = useState({ preview: "", raw: "" });
+    // const [file, setfile] = useState(undefined);
 
     useEffect(() => {
         async function getUser(): Promise<User> {
@@ -40,33 +40,33 @@ const Profile = () => {
         getUser();
     }, []);
 
-    const handleChange = (e: any) => {
-        if (e.target.files.length) {
-          setImage({
-            preview: URL.createObjectURL(e.target.files[0]),
-            raw: e.target.files[0],
-          });
-          setfile(e.target.files[0]);
-        }
-      };
+    // const handleChange = (e: any) => {
+    //     if (e.target.files.length) {
+    //       setImage({
+    //         preview: URL.createObjectURL(e.target.files[0]),
+    //         raw: e.target.files[0],
+    //       });
+    //       setfile(e.target.files[0]);
+    //     }
+    //   };
     
-      const handleUpload = async (e: any) => {
-        e.preventDefault();
-        console.log("in handle upload");
-        var imageType = /image.*/;
-        if (!file.type.match(imageType))
-            return;
-        var formData = new FormData();
-        console.log("mid handleupload", image.raw);
-        formData.append("file", file);
-        // console.log("formData handleupload", formData);
-        formData.forEach((value, key) => {
-            console.log(value, key);
-        });
+    //   const handleUpload = async (e: any) => {
+    //     e.preventDefault();
+    //     console.log("in handle upload");
+    //     var imageType = /image.*/;
+    //     if (!file.type.match(imageType))
+    //         return;
+    //     var formData = new FormData();
+    //     console.log("mid handleupload", image.raw);
+    //     formData.append("file", file);
+    //     // console.log("formData handleupload", formData);
+    //     formData.forEach((value, key) => {
+    //         console.log(value, key);
+    //     });
 
-        await postData("/user/uploadAvatar", formData, {'Content-Type': 'multipart/form-data'});
-        console.log("upload gone through");
-      };
+    //     await postData("/user/uploadAvatar", formData, {'Content-Type': 'multipart/form-data'});
+    //     console.log("upload gone through");
+    //   };
     async function logout() {
         const endpoint = '/auth/logout'
         await fetchData(endpoint);
@@ -78,22 +78,39 @@ const Profile = () => {
         return (
             <>
                 <TopContainer>
-                    <Text>{user.userName}</Text>
-                    <RoundButton onClick={logout}><Text fontSize='25px'>🛫</Text></RoundButton>
-                </TopContainer>
                 <ImgContainer>
                     <Img src={'http://localhost:5000/' + user.avatar} alt='profileImg'/>
                 </ImgContainer>
-                <Item>
-                    <Label htmlFor="upload-button">
+
+                    <RoundButton onClick={logout}><Text fontSize='25px'>🛫</Text></RoundButton>
+                </TopContainer>
+                <TopContainer>
+                <Text>userName</Text>
+                    <Text>{user.userName}</Text>
+                </TopContainer>
+                <TopContainer>
+                <Text>First name</Text>
+                    <Text>{user.firstName}</Text>
+                </TopContainer>
+                <TopContainer>
+                <Text>Last name</Text>
+                    <Text>{user.lastName}</Text>
+                </TopContainer>
+                {/* <Item> */}
+                    {/* <Label htmlFor="upload-button">
                         {image.preview ? '' //(  <img src={image.preview} alt="dummy" width="300" height="300" />) 
-                            : (<Text>Select your photo for upload</Text>)}
-                    </Label>
-                    <input type="file" id="upload-button" style={{ display: "none" }} 
+                            : (<Text>Select your photo for upload</Text>)} */}
+                    {/* </Label> */}
+                    {/* <input type="file" id="upload-button" style={{ display: "none" }} 
                     onChange={handleChange}/>
-                    <Button onClick={handleUpload}>Upload</Button>
-                </Item>
-                <Button><Text fontSize='15px'><Link to="/settings">settings</Link></Text></Button>
+                    <Button onClick={handleUpload}>Upload</Button> */}
+                {/* </Item> */}
+                <TopContainer>
+                <Button><Text><Link to="/">Profile</Link></Text></Button>
+                <Button><Text><Link to="/settings">settings</Link></Text></Button>
+                <Button><Text><Link to="/game">Game</Link></Text></Button>
+                </TopContainer>
+
             </>
         )
     }

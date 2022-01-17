@@ -182,15 +182,14 @@ export class UserService {
 		client: GuardedSocket,
 		type: string,
 	): Promise<void> {
-		if (client.user)
-		{
-		const data = userStatus.get(client.user.id);
+		if (client.user) {
+			const data = userStatus.get(client.user.id);
 
-		console.log("Data of client" + client.user.id + " " + data);
+			console.log("Data of client" + client.user.id + " " + data);
 
-		userStatus.set(client.user.id, { status: type, client: client });
+			userStatus.set(client.user.id, { status: type, client: client });
 
-		server.emit("userUpdate", { id: client.user.id, status: type });
+			server.emit("userUpdate", { id: client.user.id, status: type });
 		}
 	}
 

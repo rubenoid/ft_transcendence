@@ -135,7 +135,7 @@ export class MatchService {
 			where: { id: id },
 			relations: ["matches"],
 		});
-		var matches: MatchEntity[] = [];
+		const matches: MatchEntity[] = [];
 		for (let i = 0; i < user.matches.length; i++) {
 			const e = user.matches[i];
 			const matchFind: MatchEntity = await this.MatchRepository.findOne({
