@@ -4,11 +4,11 @@ import { Repository, FindOneOptions } from "typeorm";
 import { writeFile } from "fs";
 import { MatchEntity } from "src/match/match.entity";
 import { GuardedSocket } from "src/overloaded";
-import { Server } from "socket.io"
+import { Server } from "socket.io";
 
 let currentId = 0;
 
-const userStatus = new Map<GuardedSocket, string>();
+const userStatus = new Map<number, { status: string; client: GuardedSocket }>();
 
 @Injectable()
 export class UserService {
@@ -52,7 +52,7 @@ export class UserService {
 		newUser.id = currentId++;
 		newUser.firstName = "iDonKnow";
 		newUser.lastName = "hallo";
-		newUser.userName = 'abcdefghijklmnopqrstuvwxyz'.charAt(currentId);
+		newUser.userName = "abcdefghijklmnopqrstuvwxyz".charAt(currentId);
 		newUser.avatar = "img/test.jpeg";
 		newUser.rating = 10000;
 		newUser.wins = 99;
@@ -183,14 +183,28 @@ export class UserService {
 		return User.matches;
 	}
 
-	async updateUserStatus(server: Server, client: GuardedSocket, type: string) : Promise<void>
-	{
-		const data = userStatus.get(client);
+	async updateUserStatus(
+		server: Server,
+		client: GuardedSocket,
+		type: string,
+	): Promise<void> {
+		const data = userStatus.get(client.user.id);
 
 		console.log("Data of client" + client.user.id + " " + data);
 
-		userStatus.set(client, type);
+		userStatus.set(client.user.id, { status: type, client: client });
 
-		server.emit("userUpdate", {id: client.user.id, status: type});
+		server.emit("userUpdate", { id: client.user.id, status: type });
+	}
+
+	async getAllStatus(): Promise<object[]> {
+		const tosend = [];
+
+		userStatus.forEach(
+			(val: { status: string; client: GuardedSocket }, key: number) => {
+				tosend.push({ id: key, status: val.status });
+			},
+		);
+		return tosend;
 	}
 }

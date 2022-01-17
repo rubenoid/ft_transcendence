@@ -13,10 +13,9 @@ socket.on("connect", () => {
 	socket.emit("userConnect");
 });
 
-socket.on("userUpdate", (data: string) => {
-	console.log(data);
-})
-
+// socket.on("userUpdate", (data: string) => {
+// 	console.log(data);
+// })
 
 const messages = <HTMLInputElement>document.getElementById("messages");
 

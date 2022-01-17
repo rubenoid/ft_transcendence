@@ -157,4 +157,9 @@ export class UserController {
 	async MatchHistoryById(@Param("id") id: string): Promise<MatchEntity[]> {
 		return await this.userService.MatchHistory(parseInt(id));
 	}
+
+	@Get("getAllStatus")
+	async getAllStatus(): Promise<object[]> {
+		return await this.userService.getAllStatus();
+	}
 }

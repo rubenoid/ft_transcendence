@@ -1,6 +1,7 @@
 import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { UserEntity } from "src/user/user.entity";
+import { UserService } from "src/user/user.service";
 import { GuardedSocket } from "src/overloaded";
 import { MatchService } from "../match/match.service";
 import { Line, Point, RunningGame } from "./runningGame.service";
@@ -29,13 +30,26 @@ const maps: Line[][] = [
 @Injectable()
 export class GameService {
 	games: RunningGame[] = [];
+	gameId = 0;
 
 	constructor(
 		@Inject(forwardRef(() => MatchService))
 		private matchService: MatchService,
+		private userService: UserService,
 	) {}
 
 	handleFinishedGame(finished: RunningGame): void {
+		this.userService.updateUserStatus(
+			finished.server,
+			finished.players[0],
+			"Online",
+		);
+		this.userService.updateUserStatus(
+			finished.server,
+			finished.players[1],
+			"Online",
+		);
+
 		const idx = this.games.findIndex(
 			(x) => "runningGame" + x.roomId === finished.roomId,
 		);
@@ -51,10 +65,13 @@ export class GameService {
 	): void {
 		console.log("in start match");
 		console.log("adding" + client1.id + " and " + client2.id);
-		const roomid = "runningGame" + this.games.length;
+		const roomid = "runningGame" + this.gameId++;
 
 		client1.join(roomid);
 		client2.join(roomid);
+
+		this.userService.updateUserStatus(server, client1, "In game");
+		this.userService.updateUserStatus(server, client2, "In game");
 
 		const mapid = Math.round(Math.random() * 2);
 		this.games.push(
