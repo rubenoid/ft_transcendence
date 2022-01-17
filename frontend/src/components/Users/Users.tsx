@@ -23,21 +23,15 @@ const Users = () => {
     useEffect(() => {
         async function getUsers(): Promise<void> {
             const foundUsers: detailedUser[] = await fetchData('/user/all'); 
-            console.log('USERUSER USERS->', foundUsers);
             const allStatus: userStatus[] = await fetchData('/user/getAllStatus');
-            console.log("allstatus", allStatus);
             for (let i = 0; i < allStatus.length; i++) {
                 const e = allStatus[i];
                 const found = foundUsers.find(x => x.id == e.id);
-                console.log("found", found);
-                if (found)
-                {
+                if (found) {
                     found.status = e.status;
-                    console.log("found", found);
                 }
             }
             users = foundUsers;
-            console.log("b4setusers users:", users);
             setListUsers();
         } 
         getUsers(); 
@@ -46,9 +40,7 @@ const Users = () => {
     useEffect(() => {
         socket.on("userUpdate", (data: userStatus) => {
             const found = users.find(x => x.id == data.id);
-            console.log("userUpdate found", found, data, users);
-            if (found)
-            {
+            if (found)  {
                 found.status = data.status;
                 setListUsers();
             }
@@ -57,8 +49,6 @@ const Users = () => {
 
     function setListUsers()
     {
-        console.log("RENDERINGGGGG");
-        console.log("users", users);
         const data = [];
         for (let i = 0; i < users.length; i++) {
             const e = users[i];
@@ -92,7 +82,6 @@ const Users = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {/* { listUsers ? listUsers : <Item>Loading</Item>} */}
                     { userlist ? userlist : <Item>Loading</Item> }
                 </TableBody>
             </Table>

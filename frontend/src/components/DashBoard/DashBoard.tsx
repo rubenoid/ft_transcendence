@@ -7,6 +7,7 @@ import Chat from '../Chat/Chat';
 import Profile from '../Profile/Profile';
 import { Route, Routes } from 'react-router-dom';
 import SettingsForm from '../settings/settings';
+import ProfileExtended from '../ProfileExtended/ProfileExtended'
 
 export const DashBoard = () => {
     return (
@@ -16,7 +17,7 @@ export const DashBoard = () => {
             <Box gridArea='info2'><AddFriend/></Box>
             <Box  gridArea='game'>
             <Routes>
-                <Route path="/" element={<p>main</p>}/>
+                <Route path="/" element={<ProfileExtended/>}/>
                 <Route path="test" element={<p>jeff</p>}/>
                 <Route path="settings" element={<SettingsForm/>}/>
                 <Route path="game" element={<Pong/>}/>

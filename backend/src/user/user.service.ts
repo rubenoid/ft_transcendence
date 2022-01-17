@@ -177,17 +177,13 @@ export class UserService {
 		return "online"; // add in in game
 	}
 
-	async MatchHistory(toFind: number): Promise<MatchEntity[]> {
-		const User = await this.UserRepository.findOne({ where: { id: toFind } });
-		if (User === undefined) throw "User not found";
-		return User.matches;
-	}
-
 	async updateUserStatus(
 		server: Server,
 		client: GuardedSocket,
 		type: string,
 	): Promise<void> {
+		if (client.user)
+		{
 		const data = userStatus.get(client.user.id);
 
 		console.log("Data of client" + client.user.id + " " + data);
@@ -195,6 +191,7 @@ export class UserService {
 		userStatus.set(client.user.id, { status: type, client: client });
 
 		server.emit("userUpdate", { id: client.user.id, status: type });
+		}
 	}
 
 	async getAllStatus(): Promise<object[]> {

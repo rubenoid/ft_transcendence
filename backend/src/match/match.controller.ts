@@ -1,4 +1,5 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Req } from "@nestjs/common";
+import { GuardedRequest } from "src/overloaded";
 import { MatchEntity } from "./match.entity";
 import { MatchService } from "./match.service";
 
@@ -32,6 +33,12 @@ export class MatchController {
 	@Get("getUserHistory/:id")
 	async getUserHistory(@Param("id") id: string): Promise<MatchEntity[]> {
 		return await this.matchService.getUserMatches(parseInt(id));
+	}
+
+
+	@Get("getMyUserHistory")
+	async getMyUserHistory(@Req() req: GuardedRequest): Promise<MatchEntity[]> {
+		return await this.matchService.getUserMatches(req.user.id as number);
 	}
 
 	@Get("getAllMatches")

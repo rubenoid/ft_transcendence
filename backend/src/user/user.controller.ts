@@ -143,19 +143,11 @@ export class UserController {
 		await this.userService.saveUser(user);
 	}
 
+	@Public()
+	@UseGuards(RegisteringGuard)
 	@Get("userStatus/:id")
 	async userStatusById(@Param("id") id: string): Promise<string> {
 		return await this.userService.userStatusById(parseInt(id));
-	}
-
-	@Get("MatchHistory/me")
-	async MyMatchHistory(@Req() req: GuardedRequest): Promise<MatchEntity[]> {
-		return await this.userService.MatchHistory(req.user.id as number);
-	}
-
-	@Get("MatchHistory/:id")
-	async MatchHistoryById(@Param("id") id: string): Promise<MatchEntity[]> {
-		return await this.userService.MatchHistory(parseInt(id));
 	}
 
 	@Get("getAllStatus")

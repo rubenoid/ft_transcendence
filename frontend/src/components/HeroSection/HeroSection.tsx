@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import TwoFACheck from '../ConnectionForm/twoFACheck';
 import { fetchData }  from '../../API/API';
 import { useNavigate, Navigate } from "react-router-dom";
-import SettingsForm from '../settings/settings';
 
 type UserProps = {
 	isConnected: boolean

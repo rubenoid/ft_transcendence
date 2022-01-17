@@ -14,6 +14,13 @@ export type User = {
 	friends: User[];
 };
 
+export type Match = {
+	id: number;
+	players: User[];
+	scorePlayer1: number;
+	scorePlayer2: number;
+};
+
 const instance: AxiosInstance = axios.create({
 	baseURL: "http://localhost:5000",
 });
