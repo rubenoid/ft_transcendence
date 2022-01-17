@@ -45,4 +45,5 @@ export const Box = styled.div<BoxProps>`
 	grid-area: ${(props: BoxProps) => props.gridArea};
 	place-self: ${(props: BoxProps) => props.alignSelf};
 	overflow: 'scroll';
+	d
 `;
