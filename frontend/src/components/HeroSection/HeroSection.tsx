@@ -47,7 +47,6 @@ const HeroSection = () => {
 		<BrowserRouter>
 			<Routes>
 				<Route path='/*'         element={isConnected ? <DashBoard/> : <Navigate to="/login"/>}/>
-				<Route path='/settings' element={isConnected ? <SettingsForm/> : <Navigate to="/login"/> } />
 				<Route path='/login'    element={!isConnected ? <ConnectionForm/> : <Navigate to="/"/>}/>
 				<Route path='/register' element={!isConnected ? <RegistrationForm/> : <Navigate to="/login"/>}/>
 				<Route path='/checkTwoFA' element={<TwoFACheck/>}/> 

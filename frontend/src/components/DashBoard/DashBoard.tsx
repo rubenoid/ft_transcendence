@@ -18,7 +18,7 @@ export const DashBoard = () => {
             <Routes>
                 <Route path="/" element={<p>main</p>}/>
                 <Route path="test" element={<p>jeff</p>}/>
-                <Route path="sett" element={<SettingsForm/>}/>
+                <Route path="settings" element={<SettingsForm/>}/>
                 <Route path="game" element={<Pong/>}/>
             </Routes>
             </Box>
