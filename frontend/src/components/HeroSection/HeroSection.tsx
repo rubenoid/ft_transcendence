@@ -10,7 +10,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 import SettingsForm from '../settings/settings';
 
 type UserProps = {
-    isConnected: boolean
+	isConnected: boolean
 }
 
 // const Content = (usr: UserProps) => {
@@ -23,43 +23,43 @@ type UserProps = {
 
 const HeroSection = () => {
 
-    const [isConnected, setisConnected] = useState<boolean>(undefined);
+	const [isConnected, setisConnected] = useState<boolean>(undefined);
 
-    useEffect(() => {
-        async function getUser(): Promise<void> {
-            const user: any = await fetchData('/user/me');
-            if (user) {
-                setisConnected(true);
-            }
-            else {
-                setisConnected(false);
-            }
-            console.log("isConnected", isConnected);
-        }
-        getUser();
-    },[]
-    );
+	useEffect(() => {
+		async function getUser(): Promise<void> {
+			const user: any = await fetchData('/user/me');
+			if (user) {
+				setisConnected(true);
+			}
+			else {
+				setisConnected(false);
+			}
+			console.log("isConnected", isConnected);
+		}
+		getUser();
+	},[]
+	);
 
 
-    const router = () => {
-        return (
+	const router = () => {
+		return (
 
-        <BrowserRouter>
-            <Routes>
-                <Route path='/' element={isConnected ? <DashBoard/> : <Navigate to="/login"/>}/>
-                <Route path='/settings' element={<SettingsForm/>} />
-                <Route path='/login' element={!isConnected?<ConnectionForm/>:<Navigate to="/"/>}/>
-                <Route path='/register' element={!isConnected?<RegistrationForm/>:<Navigate to="/login"/>}/>
-                <Route path='/checkTwoFA' element={<TwoFACheck/>}/> 
-            </Routes>
-        </BrowserRouter>
-        );
-        
-    }
-    return (
-        <HeroContainer>
-            {isConnected == undefined ? 'loading' : router()}
-        </HeroContainer>
-    );
+		<BrowserRouter>
+			<Routes>
+				<Route path='/'         element={isConnected ? <DashBoard/> : <Navigate to="/login"/>}/>
+				<Route path='/settings' element={isConnected ? <SettingsForm/> : <Navigate to="/login"/> } />
+				<Route path='/login'    element={!isConnected ? <ConnectionForm/> : <Navigate to="/"/>}/>
+				<Route path='/register' element={!isConnected ? <RegistrationForm/> : <Navigate to="/login"/>}/>
+				<Route path='/checkTwoFA' element={<TwoFACheck/>}/> 
+			</Routes>
+		</BrowserRouter>
+		);
+		
+	}
+	return (
+		<HeroContainer>
+			{isConnected == undefined ? 'loading' : router()}
+		</HeroContainer>
+	);
 }
 export default HeroSection;

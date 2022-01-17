@@ -3,8 +3,13 @@ import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions } from "typeorm";
 import { writeFile } from "fs";
 import { MatchEntity } from "src/match/match.entity";
+import { GuardedSocket } from "src/overloaded";
+import { Server } from "socket.io"
 
 let currentId = 0;
+
+const userStatus = new Map<GuardedSocket, string>();
+
 @Injectable()
 export class UserService {
 	constructor(
@@ -47,7 +52,7 @@ export class UserService {
 		newUser.id = currentId++;
 		newUser.firstName = "iDonKnow";
 		newUser.lastName = "hallo";
-		newUser.userName = "woohoo";
+		newUser.userName = 'abcdefghijklmnopqrstuvwxyz'.charAt(currentId);
 		newUser.avatar = "img/test.jpeg";
 		newUser.rating = 10000;
 		newUser.wins = 99;
@@ -165,17 +170,27 @@ export class UserService {
 		await this.saveUser(user);
 	}
 
-	async userStatusById(toFind: number) : Promise<string> {
+	async userStatusById(toFind: number): Promise<string> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
 		if (User === undefined) throw "User not found";
 		if (User.logedin == false) return "offline";
 		return "online"; // add in in game
 	}
 
-	async MatchHistory(toFind: number) : Promise<MatchEntity[]> {
+	async MatchHistory(toFind: number): Promise<MatchEntity[]> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
 		if (User === undefined) throw "User not found";
 		return User.matches;
 	}
 
+	async updateUserStatus(server: Server, client: GuardedSocket, type: string) : Promise<void>
+	{
+		const data = userStatus.get(client);
+
+		console.log("Data of client" + client.user.id + " " + data);
+
+		userStatus.set(client, type);
+
+		server.emit("userUpdate", {id: client.user.id, status: type});
+	}
 }

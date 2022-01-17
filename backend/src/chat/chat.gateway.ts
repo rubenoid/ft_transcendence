@@ -30,6 +30,7 @@ export class ChatGateway
 
 	handleConnection(client: Socket, ...args: string[]): void {
 		this.logger.log(`Chat::Client connected: ${client.id}`);
+		
 	}
 
 	@SubscribeMessage("message")

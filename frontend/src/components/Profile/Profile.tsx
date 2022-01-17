@@ -6,7 +6,7 @@ import { fetchData, User } from '../../API/API';
 import { Button, Item } from '../Utils/Utils';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { postData } from '../../API/API';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function delete_cookie( name: string, path: string | undefined, domain: string | undefined ) {
     if( get_cookie( name ) ) {
@@ -71,15 +71,12 @@ const Profile = () => {
         const endpoint = '/auth/logout'
         await fetchData(endpoint);
         delete_cookie("AuthToken", undefined, undefined);
-        navigate("/", {replace: true});
+        navigate("/login", {replace: true});
     }
 
     const userInfo = () => {
         return (
             <>
-                <Text>{user.userName}</Text>
-                <Text>{user.firstName}</Text>
-                <Text>{user.lastName}</Text>
                 <TopContainer>
                     <Text>{user.userName}</Text>
                     <RoundButton onClick={logout}><Text fontSize='25px'>🛫</Text></RoundButton>
@@ -96,7 +93,7 @@ const Profile = () => {
                     onChange={handleChange}/>
                     <Button onClick={handleUpload}>Upload</Button>
                 </Item>
-                <Button><Text fontSize='15px'><a href="http://localhost:8080/settings">settings</a></Text></Button>
+                <Button><Text fontSize='15px'><Link to="/settings">settings</Link></Text></Button>
             </>
         )
     }

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table, TextContainer } from '../Utils/Utils';
-import { RoundButton, Link, Item } from '../Utils/Utils';
+import { RoundButton, Item } from '../Utils/Utils';
 import { fetchData, postData, User } from '../../API/API';
 import { SettingsContainer, UsersContainer } from './SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer } from '../Profile/ProfileElements';
 import { SearchResultContainer } from '../AddFriend/AddFriendElements';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 interface detailedUser extends User {
@@ -15,7 +16,8 @@ interface detailedUser extends User {
 }
 
 const SettingsForm = () => {
-    const [user, setUser] = useState<detailedUser>(undefined)
+	const navigator = useNavigate();
+	const [user, setUser] = useState<detailedUser>(undefined)
 
     const [image, setImage] = useState({ preview: "", raw: "" });
     const [file, setfile] = useState(undefined);
@@ -55,10 +57,11 @@ const SettingsForm = () => {
     }, []);
 
 	const uploadDataForm= async (e: any) => {
-        var formData = new FormData();
+    	var formData = new FormData();
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
-        await postData("/user/updateForm", formData, {'Content-Type': 'multipart/form-data'});
+    	await postData("/user/updateForm", formData, {'Content-Type': 'multipart/form-data'});
+		navigator("/", { replace: true });
 	};
 
     //username valid
@@ -86,7 +89,13 @@ const SettingsForm = () => {
             console.log("QRCODE:", qrcode);
             return (qrcode);
             }
-          if (!isChecked)
+          if (!isChecked && !initial2FAEnabled)
+          {
+            const endpoint = `user/removeTwoFA`;
+            const qrcodegot: string = await fetchData(endpoint);
+            return "done";
+          }
+          if (!isChecked && initial2FAEnabled && inputtedTwoFA)
           {
             const endpoint = `user/removeTwoFA`;
             const qrcodegot: string = await fetchData(endpoint);
@@ -207,19 +216,19 @@ const SettingsForm = () => {
 					<Label> <Text fontSize='20px'>Lastname</Text></Label>
 					<TextInput type='text' placeholder={user.lastName} onChange={(e) => {setUser({...user, lastName: e.target.value})}}/>
 				</Item>
-                <Item>
-                    <Label htmlFor="upload-button">
-                    {!image.preview ? (
-                        <div>
+				<Item>
+					<Label htmlFor="upload-button">
+					{!image.preview ? (
+						<div>
 							<ImgContainer>
 								<Img src={'http://localhost:5000/' + user.avatar} alt='profileImg' width="300" height="300"/>
                         	</ImgContainer>
 							<Text>Click here to upload a new avatar</Text>
 						</div>
 							) 
-                        :	(<ImgContainer>
+						:	(<ImgContainer>
 								<Img src={image.preview} alt="dummy" width="300" height="300" />
-                            </ImgContainer>)
+							</ImgContainer>)
 					}
                     </Label>
                     <input type="file" id="upload-button" style={{ display: "none" }} 
@@ -227,7 +236,7 @@ const SettingsForm = () => {
                 </Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Blocked users</Text></Label>
-                    <Table>
+					<Table>
 					{ listblockedusers.length ?
                     <TableHeader><TableRow>
                         <TableHeaderCell>Username</TableHeaderCell>
@@ -247,42 +256,46 @@ const SettingsForm = () => {
                         {user2block ? SearchResult(user2block, "blocked") : ''}
 				<Item>
 					<Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
-                    <input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
-                    {isChecked && !initial2FAEnabled ?
-                        <Item>
-                      <img src={qrcode} alt="" />
-                      <a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
-                      <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
+					<input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
+					{isChecked && !initial2FAEnabled ?
+							<Item>
+					  	<img src={qrcode} alt="" />
+					  	<a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
+					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
+						  {!isChecked && initial2FAEnabled ?
+							<Item>
+					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
 				</Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Friends</Text></Label>
 					<Table>
-                    { user.friends.length ?
-                    <TableHeader><TableRow>
-                        <TableHeaderCell>Username</TableHeaderCell>
-                        <TableHeaderCell>First Name</TableHeaderCell>
-                        <TableHeaderCell>Last Name</TableHeaderCell>
-                        <TableHeaderCell>Edit</TableHeaderCell>
-                    </TableRow></TableHeader> : ''}
-                    <tbody>
-                        { user.friends.length ? listfriends : <Item>No friends</Item>}	
-					</tbody>
+						{ user.friends.length ?
+							<TableHeader><TableRow>
+								<TableHeaderCell>Username</TableHeaderCell>
+								<TableHeaderCell>First Name</TableHeaderCell>
+								<TableHeaderCell>Last Name</TableHeaderCell>
+								<TableHeaderCell>Edit</TableHeaderCell>
+							</TableRow></TableHeader> : ''}
+							<tbody>
+								{ user.friends.length ? listfriends : <Item>No friends</Item>}	
+							</tbody>
                     </Table>
-                    <TextContainer>
-                        <Text>Search for friends to add</Text>
-                    </TextContainer>
-                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
-                        {user2friend ? SearchResult(user2friend, "friends") : ''}
-				</Item>
-                {isChecked && !twoFAvalid && !initial2FAEnabled ? '' :
-				<Button onClick={uploadDataForm}><Text fontSize='15px'><Link href="http://localhost:8080/">Save changes</Link></Text></Button>}
+                    	<TextContainer>
+                        	<Text>Search for friends to add</Text>
+                    	</TextContainer>
+                        	<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
+                        	{user2friend ? SearchResult(user2friend, "friends") : ''}
+					</Item>
+					{isChecked && !twoFAvalid && !initial2FAEnabled ? '' :
+					<Button onClick={uploadDataForm}><Text fontSize='15px'>Save changes</Text></Button>}
+					<Button><Text fontSize='15px'><Link to="/">Back</Link></Text></Button>
 			</>
 		)};
-    return (
-		<SettingsContainer>
-            {user ? settingsData() : 'loading'}
-        </SettingsContainer>
-    );
+		return (
+			<SettingsContainer>
+				{user ? settingsData() : 'loading'}
+			</SettingsContainer>
+		);
 }
 
 export default SettingsForm;
