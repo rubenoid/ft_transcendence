@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const DashBoardContainer = styled.div`
-	height: 100vh;
+	height: 100%;
 	width: 100%;
 	display: grid;
 	grid-template-columns: 0fr 1fr 2fr 1.5fr 0fr;
@@ -44,5 +44,5 @@ export const Box = styled.div<BoxProps>`
 	border-radius: 5px;
 	grid-area: ${(props: BoxProps) => props.gridArea};
 	place-self: ${(props: BoxProps) => props.alignSelf};
-	overflow: hidden;
+	overflow: "scroll";
 `;

@@ -35,23 +35,23 @@ export class UserEntity {
 	@Column()
 	rating: number;
 
-	@Column({ default: true })
-	isActive: boolean;
-
-	@Column()
+	@Column({ default: false })
 	registered: boolean;
+
+	@Column({ default: false })
+	logedin: boolean;
 
 	@Column({ default: "" })
 	twoFactorSecret: string;
 
-	@Column()
+	@Column({ default: false })
 	twoFactorvalid: boolean;
 
 	@ManyToMany(() => UserEntity, {
 		onDelete: "SET NULL",
 		cascade: true,
 		nullable: true,
-	}) // ADDED nullable: true ??
+	})
 	@JoinTable()
 	friends: UserEntity[];
 

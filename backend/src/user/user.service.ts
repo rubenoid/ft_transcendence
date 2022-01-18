@@ -1,8 +1,15 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions } from "typeorm";
+import { writeFile } from "fs";
+import { MatchEntity } from "src/match/match.entity";
+import { GuardedSocket } from "src/overloaded";
+import { Server } from "socket.io";
 
 let currentId = 0;
+
+const userStatus = new Map<number, { status: string; client: GuardedSocket }>();
+
 @Injectable()
 export class UserService {
 	constructor(
@@ -43,9 +50,9 @@ export class UserService {
 	async addUser(): Promise<void> {
 		const newUser: UserEntity = new UserEntity();
 		newUser.id = currentId++;
-		newUser.firstName = "i dont know";
+		newUser.firstName = "iDonKnow";
 		newUser.lastName = "hallo";
-		newUser.userName = "woohoo";
+		newUser.userName = "abcdefghijklmnopqrstuvwxyz".charAt(currentId);
 		newUser.avatar = "img/test.jpeg";
 		newUser.rating = 10000;
 		newUser.wins = 99;
@@ -55,6 +62,7 @@ export class UserService {
 		newUser.registered = false;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
+		newUser.logedin = false;
 		await this.UserRepository.save(newUser);
 	}
 
@@ -79,6 +87,7 @@ export class UserService {
 		newUser.registered = registered;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
+		newUser.logedin = false;
 		await this.UserRepository.save(newUser);
 		console.log("end add w details");
 	}
@@ -120,6 +129,7 @@ export class UserService {
 		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
+		newUser.logedin = false; //?
 		await this.UserRepository.save(newUser);
 		return newUser.id;
 	}
@@ -146,5 +156,51 @@ export class UserService {
 		// if (User === undefined)
 		// 	throw "User not found findOne";
 		return User;
+	}
+
+	async saveAvatar(id: number, file: Express.Multer.File): Promise<void> {
+		const path = `./static/img/${id}.png`;
+		await writeFile(path, file.buffer, (data) => {
+			console.log("saved succesfuli", data);
+		});
+		const user = await this.getUserQueryOne({
+			where: { id: id },
+		});
+		user.avatar = "img/" + id + ".png";
+		await this.saveUser(user);
+	}
+
+	async userStatusById(toFind: number): Promise<string> {
+		const User = await this.UserRepository.findOne({ where: { id: toFind } });
+		if (User === undefined) throw "User not found";
+		if (User.logedin == false) return "offline";
+		return "online"; // add in in game
+	}
+
+	async updateUserStatus(
+		server: Server,
+		client: GuardedSocket,
+		type: string,
+	): Promise<void> {
+		if (client.user) {
+			const data = userStatus.get(client.user.id);
+
+			console.log("Data of client" + client.user.id + " " + data);
+
+			userStatus.set(client.user.id, { status: type, client: client });
+
+			server.emit("userUpdate", { id: client.user.id, status: type });
+		}
+	}
+
+	async getAllStatus(): Promise<object[]> {
+		const tosend = [];
+
+		userStatus.forEach(
+			(val: { status: string; client: GuardedSocket }, key: number) => {
+				tosend.push({ id: key, status: val.status });
+			},
+		);
+		return tosend;
 	}
 }

@@ -98,7 +98,7 @@ const handletwoFA = (e: any) => {
 
   useEffect(() => {
     async function inputAccessCode(): Promise<boolean> {
-      if (inputtedTwoFA.length != 6)
+      if (inputtedTwoFA && inputtedTwoFA.length != 6)
         return;
       const endpoint = `/auth/inputAccessCode`;
       const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
@@ -155,8 +155,7 @@ const handletwoFA = (e: any) => {
                       <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
                     <Item>
                     {registered  && !twoFA ?
-                    <Button><Text fontSize='15px'><Link href="http://localhost:5000/auth/login">sign in</Link></Text></Button> : ''}
-                    {/* // <Button><Text fontSize='15px'><Link href="http://localhost:8080/profile">sign in</Link></Text></Button> : ''} */}
+                    <Button><Text fontSize='15px'><a href="http://localhost:5000/auth/login">sign in</a></Text></Button> : ''}
                   </Item>
           </Form>
       </FormContainer>

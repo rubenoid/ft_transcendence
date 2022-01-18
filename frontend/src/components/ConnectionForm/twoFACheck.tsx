@@ -1,14 +1,15 @@
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
-import { RoundButton, List, LongList, Item, Link } from '../Utils/Utils';
+import { RoundButton, List, LongList, Item } from '../Utils/Utils';
 import { TextInput, Text } from '../Utils/Utils';
 import { postData, User, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
-
+import { useNavigate, Link } from 'react-router-dom';
 
 const TwoFACheck = () => {
 
+  const navigate = useNavigate();
   const [twoFA, settwoFA] = useState<boolean>(undefined);
   const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
 
@@ -22,6 +23,8 @@ const TwoFACheck = () => {
       { 
         settwoFA(true); 
         console.log("GOOD QR code inpute 2FA");
+        await fetchData("auth/twoFALogin");
+        navigate("/", {replace: true});
       }
       else
       { 
@@ -41,7 +44,7 @@ const TwoFACheck = () => {
                     </Item>
                     {twoFA ?
                     <Item>
-                      <Button><Text fontSize='15px'><Link href="http://localhost:8080/profile">sign in</Link></Text></Button>
+                      <Button><Text fontSize='15px'><Link to="/">sign in</Link></Text></Button>
                   </Item>
                   : ''}
           </Form>

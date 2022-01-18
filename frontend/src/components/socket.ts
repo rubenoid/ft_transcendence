@@ -10,9 +10,13 @@ const socketOptions = {
 const socket: Socket = io("http://localhost:5000", socketOptions);
 
 socket.on("connect", () => {
-	console.log(socket.id);
-	console.log("do something with data");
+	socket.emit("userConnect");
 });
+
+// socket.on("userUpdate", (data: string) => {
+// 	console.log(data);
+// })
+
 const messages = <HTMLInputElement>document.getElementById("messages");
 
 export const handlesSubmitNewMessages = (message: string): void => {

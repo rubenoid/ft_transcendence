@@ -51,8 +51,8 @@ export class MatchService {
 		User1.matches.push(newMatch);
 		User2.matches.push(newMatch);
 
-		this.userService.saveUser(User1);
-		this.userService.saveUser(User2);
+		await this.userService.saveUser(User1);
+		await this.userService.saveUser(User2);
 		return (
 			"Match created between" +
 			newMatch.players[0].id +
@@ -135,8 +135,17 @@ export class MatchService {
 			where: { id: id },
 			relations: ["matches"],
 		});
-
-		return user.matches;
+		const matches: MatchEntity[] = [];
+		for (let i = 0; i < user.matches.length; i++) {
+			const e = user.matches[i];
+			const matchFind: MatchEntity = await this.MatchRepository.findOne({
+				where: { id: user.matches[i].id },
+				relations: ["players"],
+			});
+			console.log("matchFind", matchFind);
+			matches.push(matchFind);
+		}
+		return matches;
 	}
 
 	async getAllMatches(): Promise<MatchEntity[]> {
