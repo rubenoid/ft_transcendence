@@ -60,7 +60,10 @@ export class AuthController {
 	@Public()
 	@UseGuards(RegisteringGuard)
 	@Get("logedin")
-	async logedin(@Req() req: GuardedRequest, @Res({ passthrough: true }) response: Response): Promise<void> {
+	async logedin(
+		@Req() req: GuardedRequest,
+		@Res({ passthrough: true }) response: Response,
+	): Promise<void> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
