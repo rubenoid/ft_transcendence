@@ -20,6 +20,7 @@ import { Public } from "src/auth/jwt.decorator";
 import { AuthGuard } from "@nestjs/passport";
 import { RegisteringGuard } from "src/auth/registering.guard";
 import { MatchEntity } from "src/match/match.entity";
+import { ChatEntity } from "src/chat/chat.entity";
 
 @Controller("user")
 export class UserController {
@@ -49,8 +50,6 @@ export class UserController {
 		});
 	}
 
-	@Public()
-	@UseGuards(RegisteringGuard) // so it can be used in the register part of form
 	@Get("me/chats")
 	async getMyChats(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
 		return (
