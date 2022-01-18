@@ -18,6 +18,8 @@ const RegistrationForm = () => {
   const [userName, setUserName] = useState<string>('');
   const [qrcode, setqrcode] = useState<string>(undefined);
   const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
+  const [twoFAvalid, settwoFAvalid] = useState<boolean>(undefined);
+
 
   useEffect(() => {
       async function getUsers(): Promise<User> {
@@ -31,16 +33,11 @@ const RegistrationForm = () => {
 
   useEffect(() => {
     console.log("in use effects setchangefa");
-      if (twoFA == true)
-      {  
+      if (twoFA == true)  {  
         setchangefa(true);
-        console.log("changefa", changefa);
       }
-      else
-      {  
+      else  {
         setchangefa(undefined);
-        console.log("changefa", changefa);
-
       }
 }, [twoFA]);
 
@@ -58,28 +55,13 @@ useEffect(() => {
   getQR();
 }, [registered]);
 
-// const getQRme= () => {
-//   async function getQR(): Promise<string> {
-//     const endpoint = `auth/getQr`;
-//     const qrcodegot: string = await fetchData(endpoint);
-//     console.log("fetched: qrcode", qrcodegot);
-//     setqrcode(qrcodegot);
-//     console.log("QRCODE:", qrcode);
-//     return (qrcode);
-//   }
-// }
-
 const handletwoFA = (e: any) => {
   e.preventDefault();
-  if (twoFA == true)
-  {  
+  if (twoFA == true)  {  
     settwoFA(false);
-    console.log("twoFA", twoFA);
   }
-  else
-  {  
+  else  {  
     settwoFA(true);
-    console.log("twoFA", twoFA);
   }
 }
 
@@ -104,11 +86,8 @@ const handletwoFA = (e: any) => {
       const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
       if (validated == true)
       { 
-        settwoFA(undefined); 
-        console.log("GOOD QR code inpute 2FA");
+        settwoFAvalid(true); 
       }
-      else
-        console.log("BAD QR code input 2FA");
       return (validated);
     }
     inputAccessCode();
@@ -117,6 +96,7 @@ const handletwoFA = (e: any) => {
   return (
       <FormContainer>
           <Form>
+          {registered ? '' : <Item>
                   <Item><RoundButton><Text fontSize='20px'>42</Text></RoundButton></Item>
                   <Item>
                     <Label> <Text fontSize='20px'>Username</Text></Label>
@@ -130,7 +110,7 @@ const handletwoFA = (e: any) => {
                   <Item>
                     <Label> <Text fontSize='20px'>Lastname</Text></Label>
                     <TextInput type='text' onChange={(e) => {setLastName(e.target.value)}}/>
-                  </Item>
+                  </Item></Item> }
                   <Item>
                   {registered ? '' : 
                     <Text>Enable Two factor Authenication</Text>
@@ -155,7 +135,11 @@ const handletwoFA = (e: any) => {
                       <Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
                     <Item>
                     {registered  && !twoFA ?
-                    <Button><Text fontSize='15px'><a href="http://localhost:5000/auth/login">sign in</a></Text></Button> : ''}
+                    <Button><Text fontSize='15px'><a href="http://localhost:5000/auth/logedin">sign in</a></Text></Button> : ''}
+                  </Item>
+                  <Item>
+                    {registered  && twoFA && twoFAvalid ?
+                    <Button><Text fontSize='15px'><a href="http://localhost:8080/checkTwoFA">sign in</a></Text></Button> : ''}
                   </Item>
           </Form>
       </FormContainer>

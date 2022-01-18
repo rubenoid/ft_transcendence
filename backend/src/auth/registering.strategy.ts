@@ -38,9 +38,9 @@ export class RegisteringStrategy extends PassportStrategy(
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: payload["id"] },
 		});
-		if (payload === null)// || user.registered == false || (user.twoFactorSecret.length && user.twoFactorvalid == false)) {
+		if (payload === null) {
 			throw new UnauthorizedException();
-		// }
+		}
 		return payload;
 	}
 }

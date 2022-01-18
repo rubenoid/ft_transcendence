@@ -52,10 +52,21 @@ export class AuthController {
 		if (user.twoFactorSecret.length) {
 			return response.redirect("http://localhost:8080/checkTwoFA");
 		}
-		console.log("2FA not enabled so go straight to profile");
 		user.logedin = true;
 		this.userService.saveUser(user);
-		return response.redirect("http://localhost:8080/");
+		return response.redirect("http://localhost:8080/logedin");
+	}
+
+	@Public()
+	@UseGuards(RegisteringGuard)
+	@Get("logedin")
+	async logedin(@Req() req: GuardedRequest, @Res({ passthrough: true }) response: Response): Promise<void> {
+		const user: UserEntity = await this.userService.getUserQueryOne({
+			where: { id: req.user.id },
+		});
+		user.logedin = true;
+		this.userService.saveUser(user);
+		return response.redirect("http://localhost:8080/logedin");
 	}
 
 	@Public()
@@ -63,21 +74,6 @@ export class AuthController {
 	@Get("getQr")
 	async return2fa(@Req() req: GuardedRequest): Promise<string> {
 		return await this.authService.create2fadiv(req.user.id);
-	}
-
-	@Public()
-	@UseGuards(RegisteringGuard)
-	@Get("twoFALogin")
-	async twoFALogin(
-		@Req() req: GuardedRequest,
-		@Res({ passthrough: true }) response: Response,
-	): Promise<void> {
-		const user: UserEntity = await this.userService.getUserQueryOne({
-			where: { id: req.user.id },
-		});
-		user.logedin = true;
-		this.userService.saveUser(user);
-		return response.redirect("http://localhost:8080/profile");
 	}
 
 	@Public()
@@ -133,14 +129,9 @@ export class AuthController {
 			where: { id: req.user.id },
 		});
 		user.logedin == false;
+		user.twoFactorvalid = false;
 		this.userService.saveUser(user);
 		console.log("user.logedin", user.logedin);
 		return response.redirect("http://localhost:8080/");
 	}
-	// @UseGuards(JwtAuthGuard)
-	// @Get("guarded-jwt")
-	// async hi4(@Req() req: GuardedRequest): Promise<string> {
-	// 	console.log(req.user);
-	// 	return "wow jwt thinks work!";
-	// }
 }

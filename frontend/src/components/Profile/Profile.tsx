@@ -42,7 +42,7 @@ const Profile = () => {
         const endpoint = '/auth/logout'
         await fetchData(endpoint);
         delete_cookie("AuthToken", undefined, undefined);
-        navigate("/login", {replace: true});
+        navigate("/reLogin", {replace: true});
     }
 
     const userInfo = () => {

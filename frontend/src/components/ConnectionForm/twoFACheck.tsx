@@ -23,8 +23,8 @@ const TwoFACheck = () => {
       { 
         settwoFA(true); 
         console.log("GOOD QR code inpute 2FA");
-        await fetchData("auth/twoFALogin");
-        navigate("/", {replace: true});
+        await fetchData("auth/logedin");
+        navigate("/logedin", {replace: true});
       }
       else
       { 
