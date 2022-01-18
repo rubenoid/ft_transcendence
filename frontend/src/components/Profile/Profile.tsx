@@ -106,7 +106,7 @@ const Profile = () => {
                     <Button onClick={handleUpload}>Upload</Button> */}
                 {/* </Item> */}
                 <TopContainer>
-                <Button><Text><Link to="/">Profile</Link></Text></Button>
+                <Button><Text><Link to={`/profile/${user.id}`}>Profile</Link></Text></Button>
                 <Button><Text><Link to="/settings">settings</Link></Text></Button>
                 <Button><Text><Link to="/game">Game</Link></Text></Button>
                 </TopContainer>

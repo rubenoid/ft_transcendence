@@ -17,8 +17,8 @@ export const DashBoard = () => {
             <Box gridArea='info2'><AddFriend/></Box>
             <Box  gridArea='game'>
             <Routes>
-                <Route path="/" element={<ProfileExtended/>}/>
-                <Route path="test" element={<p>jeff</p>}/>
+                <Route path="/" element={<p>Welcome!</p>}/>
+                <Route path="profile/:profileId" element={<ProfileExtended/>} />
                 <Route path="settings" element={<SettingsForm/>}/>
                 <Route path="game" element={<Pong/>}/>
             </Routes>
