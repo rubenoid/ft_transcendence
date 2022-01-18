@@ -9,10 +9,15 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 interface detailedUser extends User {
     matches: Match[],
+	status: string,
+}
+
+interface userStatus {
+    id: number;
+    status: string;
 }
 
 const ProfileExtended = () => {
-	const navigator = useNavigate();
 	const [user, setUser] = useState<detailedUser>(undefined);
 	const { profileId } = useParams();
 
@@ -21,6 +26,7 @@ const ProfileExtended = () => {
             const user: detailedUser = await fetchData(`/user/get/${profileId}`);
 			user.friends = await fetchData(`/friends/get/${profileId}`);
             user.matches = await fetchData(`/match/getUserHistory/${profileId}`);
+            user.status = await fetchData(`/user/userStatus/${profileId}`);
             setUser(user);
             return user;
         }
@@ -90,6 +96,10 @@ const ProfileExtended = () => {
                 <TopContainer>
 				    <Label> <Text fontSize='20px'>LastName</Text></Label>
                     <Text fontSize='20px'>{user.lastName}</Text>
+                </TopContainer>
+                <TopContainer>
+				    <Label> <Text fontSize='20px'>status</Text></Label>
+                    <Text fontSize='20px'>{user.status}</Text>
                 </TopContainer>
                 <TopContainer>
 				    <Label> <Text fontSize='20px'>losses</Text></Label>
