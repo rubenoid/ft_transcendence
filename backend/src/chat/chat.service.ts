@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Repository, FindOneOptions } from "typeorm";
 import { ChatEntity, ChatMessageEntity } from "./chat.entity";
 import { UserService } from "src/user/user.service";
+import { UserEntity } from "src/user/user.entity";
 
 @Injectable()
 export class ChatService {
@@ -20,19 +21,60 @@ export class ChatService {
 		return chats;
 	}
 
-	async createChat(): Promise<void> {
+	async getMessages(id: number): Promise<ChatMessageEntity[]> {
+		const data = await this.chatRepository.findOne({
+			where: { id: id },
+			relations: ["messages"],
+		});
+		if (data === undefined) return [];
+		return data.messages;
+	}
+
+	async createChat(ids: number[]): Promise<number> {
 		const toadd = new ChatEntity();
 
-		toadd.name = "Oscar, Ruben";
-		toadd.password = "aa";
+		toadd.name = "Unnamed Chat";
+		toadd.password = "";
 
-		const users = await this.userService.getUsers();
+		const users: UserEntity[] = [];
+
+		for (let i = 0; i < ids.length; i++) {
+			const usertmp = await this.userService.getUserQueryOne({
+				where: { id: ids[i] },
+			});
+			if (!usertmp) throw "user not found???";
+			users.push(usertmp);
+		}
 
 		if (users.length < 2) throw "kkr weinig users";
-		toadd.users = [users[0], users[1]];
+		toadd.users = users;
 		toadd.messages = [];
 
-		this.chatRepository.save(toadd);
+		const res = await this.chatRepository.save(toadd);
+
+		return res.id;
+	}
+
+	async addChatMessage(
+		userId: number,
+		data: string,
+		chatId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["messages"],
+		});
+
+		if (!chat) throw "no chat";
+
+		const toadd = new ChatMessageEntity();
+
+		toadd.data = data;
+		toadd.senderId = userId;
+
+		chat.messages.push(toadd);
+
+		await this.chatRepository.save(chat);
 	}
 
 	async createRandMessage(id: number): Promise<void> {

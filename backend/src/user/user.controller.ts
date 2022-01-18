@@ -11,6 +11,7 @@ import {
 import { GuardedRequest } from "src/overloaded";
 import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
+import { ChatEntity } from "../chat/chat.entity";
 
 @Controller("user")
 export class UserController {
@@ -26,6 +27,16 @@ export class UserController {
 	@Get("me")
 	async getme(@Req() req: GuardedRequest): Promise<UserEntity> {
 		return await this.userService.getUser(req.user.id as number);
+	}
+
+	@Get("me/chats")
+	async getMyChats(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
+		return (
+			await this.userService.getUserQueryOne({
+				where: { id: req.user.id },
+				relations: ["channels"],
+			})
+		).channels;
 	}
 
 	@Get("getByUserName/:username")
