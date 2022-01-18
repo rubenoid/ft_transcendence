@@ -32,6 +32,7 @@ const SettingsForm = () => {
     const [user2friend, setuser2friend] = useState<detailedUser>();
     const [user2block, setuser2block] = useState<detailedUser>();
 
+    const endpoints :string[] = [];
     useEffect(() => {
         async function getUser(): Promise<User> {
             const user: detailedUser = await fetchData('/user/meAndFriends');
@@ -56,6 +57,9 @@ const SettingsForm = () => {
     }, []);
 
 	const uploadDataForm= async (e: any) => {
+        for (let endpoint of endpoints) {
+            await fetchData(endpoint);
+        }
     	var formData = new FormData();
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
@@ -149,12 +153,15 @@ const SettingsForm = () => {
 	const settingsData = () => {
         const addChange = async (id: number, whatToChange: string) => {
             const endpoint: string = `/${whatToChange}/add/${id}`;
-            await fetchData(endpoint);
+            endpoints.push(endpoint)
+            // await fetchData(endpoint);
         };
         
         const removeChange = async (id: number, whatToChange : string) => {
+            
             const endpoint: string = `/${whatToChange}/remove/${id}`;
-            await fetchData(endpoint);
+            // await fetchData(endpoint);
+            endpoints.push(endpoint);
         };
         
         const SearchResult = (user2add: detailedUser, whatToChange : string) => {
