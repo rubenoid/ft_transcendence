@@ -40,6 +40,7 @@ export class UserController {
 		return await this.userService.getUser(req.user.id as number);
 	}
 
+
 	@Get("meAndFriends")
 	async meAndFriends(@Req() req: GuardedRequest): Promise<UserEntity> {
 		return await this.userService.getUserQueryOne({
@@ -50,6 +51,16 @@ export class UserController {
 
 	@Public()
 	@UseGuards(RegisteringGuard) // so it can be used in the register part of form
+	@Get("me/chats")
+	async getMyChats(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
+		return (
+			await this.userService.getUserQueryOne({
+				where: { id: req.user.id },
+				relations: ["channels"],
+			})
+		).channels;
+	}
+
 	@Get("getByUserName/:username")
 	async getUserByUsername(
 		@Param("username") username: string,
