@@ -7,6 +7,7 @@ import { Button, Item } from '../Utils/Utils';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { postData } from '../../API/API';
 import { useNavigate, Link } from 'react-router-dom';
+import { sharedHeroSection } from '../HeroSection/HeroSection';
 
 function delete_cookie( name: string, path: string | undefined, domain: string | undefined ) {
     if( get_cookie( name ) ) {
@@ -28,6 +29,7 @@ const Profile = () => {
     const navigate = useNavigate();
     const [user, setUser] = useState<User>(undefined);
 
+	const { isConnected, setIsConnected } = sharedHeroSection();
     useEffect(() => {
         async function getUser(): Promise<User> {
             const user: User = await fetchData('/user/me');
@@ -42,7 +44,8 @@ const Profile = () => {
         const endpoint = '/auth/logout'
         await fetchData(endpoint);
         delete_cookie("AuthToken", undefined, undefined);
-        navigate("/reLogin", {replace: true});
+        setIsConnected(false);
+        navigate("/", {replace: true});
     }
 
     const userInfo = () => {

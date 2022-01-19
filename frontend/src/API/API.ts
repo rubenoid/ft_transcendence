@@ -33,6 +33,10 @@ const headers = {
 	},
 };
 
+export const updateHeaders = () => {
+	headers.headers.Authorization = Cookies.get("AuthToken");
+}
+
 export const fetchData = async <T>(url: string): Promise<T> => {
 	return await instance
 		.get(url, headers)

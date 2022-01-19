@@ -5,39 +5,40 @@ import  ConnectionForm from '../ConnectionForm/ConnectionForm';
 import  RegistrationForm from '../ConnectionForm/RegistrationForm';
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import TwoFACheck from '../ConnectionForm/twoFACheck';
-import { fetchData }  from '../../API/API';
+import { fetchData, updateHeaders }  from '../../API/API';
 import { useNavigate, Navigate } from "react-router-dom";
+import { useBetween } from "use-between";
 
 type UserProps = {
 	isConnected: boolean
 }
 
-// const Content = (usr: UserProps) => {
+const ConnectionStatus = () => {
 
-//     if (usr.isConnected)
-//         return (<DashBoard/>);
-//     else
-//         return (<ConnectionForm/>);
-// }
+	const [isConnected, setIsConnected] = useState<boolean>(undefined);
+	return {isConnected, setIsConnected};
+}
+
+export const sharedHeroSection = () => useBetween(ConnectionStatus);
 
 const HeroSection = () => {
 
-	const [isConnected, setisConnected] = useState<boolean>(undefined);
-
+	const { isConnected, setIsConnected } = sharedHeroSection();
 	useEffect(() => {
 		async function getUser(): Promise<void> {
+			updateHeaders();
 			const user: any = await fetchData('/user/me');
 			if (user) {
-				setisConnected(true);
+				setIsConnected(true);
 			}
 			else {
-				setisConnected(false);
+				setIsConnected(false);
 			}
-			console.log("isConnected", isConnected);
+			console.log(" useEffect isConnected", isConnected, document.cookie);
 		}
+		console.log("in use effects is connected", isConnected)
 		getUser();
-	},[]
-	);
+	},[isConnected]);
 
 
 	const router = () => {
@@ -49,8 +50,8 @@ const HeroSection = () => {
 				<Route path='/login'    element={!isConnected ? <ConnectionForm/> : <Navigate to="/"/>}/>
 				<Route path='/register' element={!isConnected ? <RegistrationForm/> : <Navigate to="/login"/>}/>
 				<Route path='/checkTwoFA' element={<TwoFACheck/>}/> 
-				<Route path='/reLogin'    element={<ConnectionForm/>}/>
-				<Route path='/logedin'    element={<DashBoard/>}/>
+				{/* <Route path='/reLogin'    element={<ConnectionForm/>}/>
+				<Route path='/logedin'    element={<DashBoard/>}/> */}
 			</Routes>
 		</BrowserRouter>
 		);
@@ -62,4 +63,5 @@ const HeroSection = () => {
 		</HeroContainer>
 	);
 }
+
 export default HeroSection;
