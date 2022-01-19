@@ -18,20 +18,20 @@ export type Match = {
 };
 
 export interface Message {
-    data: string;
-    senderId: number;
-};
+	data: string;
+	senderId: number;
+}
 
 export interface Channel {
-    id: number;
-    name: string;
-    users: User[];
-    messages: Message[];
-};
+	id: number;
+	name: string;
+	users: User[];
+	messages: Message[];
+}
 
 export interface detailedUser extends User {
-	twoFactorSecret: string,
-    blockedUsers: number[],
-    blockedUsersAsUsers: detailedUser[],
+	twoFactorSecret: string;
+	blockedUsers: number[];
+	blockedUsersAsUsers: detailedUser[];
 	initial2FAEnabled: boolean;
 }
