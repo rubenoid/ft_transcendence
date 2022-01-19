@@ -39,10 +39,10 @@ export class AuthService {
 	async getQrRetSecret(id: number): Promise<object> {
 		const codedata = twofa.getTwoFactorAuthenticationCode();
 		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
-		return {qrcode: qrcode, secret: codedata.base32};
+		return { qrcode: qrcode, secret: codedata.base32 };
 	}
 
-	async saveNewQr(id: number, secret: string) {
+	async saveNewQr(id: number, secret: string): Promise<void> {
 		console.log("save secret");
 		const user: UserEntity = await this.userService.getUser(id);
 		user.twoFactorSecret = secret;

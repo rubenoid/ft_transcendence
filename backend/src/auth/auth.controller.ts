@@ -86,7 +86,10 @@ export class AuthController {
 	}
 
 	@Get("saveSecret/:secret")
-	async saveSecret(@Param("secret") secret: string, @Req() req: GuardedRequest): Promise<void> {
+	async saveSecret(
+		@Param("secret") secret: string,
+		@Req() req: GuardedRequest,
+	): Promise<void> {
 		return await this.authService.saveNewQr(req.user.id, secret);
 	}
 
@@ -94,8 +97,7 @@ export class AuthController {
 	async testQrCode(
 		@Body("usertoken") usertoken: string,
 		@Body("secret") secret: string,
-	): Promise<boolean>
-	{
+	): Promise<boolean> {
 		return this.authService.check2faInput(usertoken, secret);
 	}
 
