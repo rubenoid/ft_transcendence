@@ -41,14 +41,10 @@ const TwoFACheck = () => {
   return (
       <FormContainer>
           <Form> 
-                    <Item>
-                      <Label> <Text fontSize='20px'>Enter your 2FA code</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/>
-                    </Item>
-                    {twoFA ?
-                    <Item>
-                      <Button><Text fontSize='15px'><Link to="/">sign in</Link></Text></Button>
-                  </Item>
-                  : ''}
+              <Item>
+                <Label> <Text fontSize='20px'>Enter your 2FA code</Text></Label>
+                <TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/>
+              </Item>
           </Form>
       </FormContainer>
   );
