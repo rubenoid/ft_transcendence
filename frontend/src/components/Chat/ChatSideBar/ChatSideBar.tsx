@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SideBar } from './ChatSideBarElements';
-import { Button } from '../../Utils/Utils';
+import { Button } from '../../Utils/Buttons/Button/Button';
 import { User, fetchData, postData } from '../../../API/API';
 import { Channel } from "../Chat";
 import { List, Item } from '../../Utils/List/List';

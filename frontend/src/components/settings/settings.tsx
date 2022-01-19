@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
-import { Button } from '../Utils/Utils';
+import { Button } from '../Utils/Buttons/Button/Button';
 import { fetchData, postData, User } from '../../API/API';
 import { SettingsContainer } from './SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';

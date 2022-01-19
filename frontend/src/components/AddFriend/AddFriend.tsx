@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, WidgetContainer } from '../Utils/Utils';
+import { WidgetContainer } from '../Utils/Containers/Containers';
+import { Button } from '../Utils/Buttons/Button/Button';
 import { fetchData, User } from '../../API/API';
 import { SearchResultContainer } from './AddFriendElements';
 import { TextInput } from '../Utils/TextInput/TextInput';

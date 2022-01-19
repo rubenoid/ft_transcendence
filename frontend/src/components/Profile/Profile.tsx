@@ -1,8 +1,8 @@
 import React, { useState, useEffect,  } from 'react';
-import { WidgetContainer } from '../Utils/Utils';
+import { WidgetContainer } from '../Utils/Containers/Containers';
 import { ImgContainer, Img, TopContainer } from './ProfileElements';
 import { fetchData, User } from '../../API/API';
-import { Button } from '../Utils/Utils';
+import { Button } from '../Utils/Buttons/Button/Button';
 import { useNavigate, Link } from 'react-router-dom';
 import { RoundButton } from '../Utils/Buttons/Round/RoundButton';
 import { Text } from '../Utils/Text/Text';

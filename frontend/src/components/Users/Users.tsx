@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchData, User } from '../../API/API';
-import { WidgetContainer } from '../Utils/Utils';
+import { WidgetContainer } from '../Utils/Containers/Containers';
 import { Table, TableHeaderCell, TableBody, TableRow, TableHeader, TableCell } from '../Utils/Table/Table'
 import socket from "../socket";
 import { Text } from '../Utils/Text/Text';
