@@ -25,12 +25,14 @@ const SettingsForm = () => {
 
     const [isChecked, setIsChecked] = useState(undefined);
     const [qrcode, setqrcode] = useState<string>(undefined);
-    const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
+    const [inputtedTwoFA, setinputtedTwoFA] = useState<string>("");
     const [twoFAvalid, settwoFAvalid] = useState<boolean>(undefined);
 
     const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
     const [user2friend, setuser2friend] = useState<detailedUser>();
     const [user2block, setuser2block] = useState<detailedUser>();
+
+    const [saved, setsaved] = useState<boolean>(undefined);
 
     const endpoints :string[] = [];
     useEffect(() => {
@@ -111,9 +113,11 @@ const SettingsForm = () => {
         	const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
         	if (validated == true)
         	{ 
+                console.log("TWOFAVALID");
         		settwoFAvalid(true); 
 				if (user.initial2FAEnabled == true)
 				{
+                    console.log("removing twofa");
 					const endpoint = `user/removeTwoFA`;
 					const qrcodegot: string = await fetchData(endpoint);
 				}
@@ -154,13 +158,11 @@ const SettingsForm = () => {
         const addChange = async (id: number, whatToChange: string) => {
             const endpoint: string = `/${whatToChange}/add/${id}`;
             endpoints.push(endpoint)
-            // await fetchData(endpoint);
         };
         
         const removeChange = async (id: number, whatToChange : string) => {
             
             const endpoint: string = `/${whatToChange}/remove/${id}`;
-            // await fetchData(endpoint);
             endpoints.push(endpoint);
         };
         
@@ -256,14 +258,6 @@ const SettingsForm = () => {
 				<Item>
 					<Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
 					<input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
-					{isChecked && !user.initial2FAEnabled ?
-							<Item>
-					  	<img src={qrcode} alt="" />
-					  	<a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
-					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
-						  {!isChecked && user.initial2FAEnabled ?
-							<Item>
-					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
 				</Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Friends</Text></Label>
@@ -285,7 +279,21 @@ const SettingsForm = () => {
                         	<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
                         	{user2friend ? SearchResult(user2friend, "friends") : ''}
 					</Item>
-					{(UserNameValid == false || (isChecked && !twoFAvalid && !user.initial2FAEnabled)  || (!isChecked && !twoFAvalid && user.initial2FAEnabled)) ? '' :
+
+					{isChecked && !user.initial2FAEnabled && saved ?
+							<Item>
+					  	<img src={qrcode} alt="" />
+					  	<a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
+					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
+						  {!isChecked && user.initial2FAEnabled && saved ?
+							<Item>
+					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
+                          {(((isChecked && !user.initial2FAEnabled)  || (!isChecked && user.initial2FAEnabled)) && !inputtedTwoFA) ? 
+                    <Button onClick={() =>setsaved(true)}><Text fontSize='15px'>Save changes to twoFA</Text></Button> 
+                    : ''}
+                    {(UserNameValid == false || (isChecked && !twoFAvalid && !user.initial2FAEnabled)  || (!isChecked && !twoFAvalid && user.initial2FAEnabled)) ? 
+                    ''
+                    :
 					<Button onClick={uploadDataForm}><Text fontSize='15px'>Save changes</Text></Button>}
 					<Button><Text fontSize='15px'><Link to="/">Back</Link></Text></Button>
 			</>
