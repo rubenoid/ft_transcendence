@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
-import { postData, User, fetchData } from '../../API/API';
+import { postData, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
 import { Text } from '../Utils/Text/Text';
 import { TextInput } from '../Utils/TextInput/TextInput';
 import { Item } from '../Utils/List/List';
 import { RoundButton } from '../Utils/Buttons/Round/RoundButton';
+import { User } from '../../Types/Types';
 
 const RegistrationForm = () => {
 

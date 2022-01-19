@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
 import { Button } from '../Utils/Buttons/Button/Button';
-import { fetchData, postData, User } from '../../API/API';
+import { fetchData, postData } from '../../API/API';
 import { SettingsContainer } from './SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer } from '../Profile/ProfileElements';
@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Item } from '../Utils/List/List';
 import { Text } from '../Utils/Text/Text';
 import { TextInput } from '../Utils/TextInput/TextInput';
+import { User } from '../../Types/Types'
 
 interface detailedUser extends User {
 	twoFactorSecret: string,

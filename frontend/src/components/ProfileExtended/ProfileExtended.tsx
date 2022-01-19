@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
-import { fetchData, User, Match } from '../../API/API';
-import { SettingsContainer } from '../settings/SettingsElements';
+import { fetchData} from '../../API/API';
+import { User, Match } from '../../Types/Types';
+import { SettingsContainer } from '../Settings/SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer, TopContainer } from '../Profile/ProfileElements';
 import { Link, useNavigate, useParams } from 'react-router-dom';

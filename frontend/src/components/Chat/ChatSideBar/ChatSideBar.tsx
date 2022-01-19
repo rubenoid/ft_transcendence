@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { SideBar } from './ChatSideBarElements';
 import { Button } from '../../Utils/Buttons/Button/Button';
-import { User, fetchData, postData } from '../../../API/API';
-import { Channel } from "../Chat";
+import { fetchData, postData } from '../../../API/API';
+import { Channel } from "../../../Types/Types";
 import { List, Item } from '../../Utils/List/List';
+import { User } from '../../../Types/Types';
 
 type ChatSideBarProps = {
     setSelectedUser: React.Dispatch<React.SetStateAction<Channel>>

@@ -6,8 +6,9 @@ import AddFriend from '../AddFriend/AddFriend';
 import Chat from '../Chat/Chat';
 import Profile from '../Profile/Profile';
 import { Route, Routes } from 'react-router-dom';
-import SettingsForm from '../settings/settings';
+import SettingsForm from '../Settings/Settings';
 import ProfileExtended from '../ProfileExtended/ProfileExtended'
+import SideBar from '../SideBar/SideBar';
 
 export const DashBoard = () => {
     return (
@@ -23,7 +24,7 @@ export const DashBoard = () => {
                 <Route path="game" element={<Pong/>}/>
             </Routes>
             </Box>
-            <Box  gridArea='chat' alignSelf='center'><Chat/></Box>
+            <Box  gridArea='chat' alignSelf='center'><SideBar/></Box>
         </DashBoardContainer>
     );
 }

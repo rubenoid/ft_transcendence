@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
-import { postData, User, fetchData } from '../../API/API';
+import { postData, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
 import { useNavigate, Link } from 'react-router-dom';
 import { Item } from '../Utils/List/List';

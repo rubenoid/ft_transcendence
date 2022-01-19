@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { WidgetContainer } from '../Utils/Containers/Containers';
 import { Button } from '../Utils/Buttons/Button/Button';
-import { fetchData, User } from '../../API/API';
+import { fetchData } from '../../API/API';
 import { SearchResultContainer } from './AddFriendElements';
 import { TextInput } from '../Utils/TextInput/TextInput';
 import { Text } from '../Utils/Text/Text';
+import { User } from '../../Types/Types';
 
 const AddFriend = () => {
     

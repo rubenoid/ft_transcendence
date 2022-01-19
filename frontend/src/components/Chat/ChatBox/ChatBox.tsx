@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {TopContainer, ChatBoxContainer, InputContainer, SendIconContainer} from './ChatBoxElements';
 import { ChatContainer } from '../ChatElements';
 import { AiOutlineSend as SendIcon} from 'react-icons/ai';
-import { User, fetchData, postData } from '../../../API/API';
-import { Channel, Message } from "../Chat";
+import { fetchData, postData } from '../../../API/API';
+import { Channel, Message } from "../../../Types/Types";
 import { TextInput } from '../../Utils/TextInput/TextInput';
 import { Text } from '../../Utils/Text/Text';
 
