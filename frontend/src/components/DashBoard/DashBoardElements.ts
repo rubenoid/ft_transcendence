@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const DashBoardContainer = styled.div`
-	height: 100%;
+	height: 100vh;
 	width: 100%;
 	display: grid;
 	grid-template-columns: 0fr 1fr 2fr 1.5fr 0fr;

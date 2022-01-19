@@ -10,22 +10,23 @@ import SettingsForm from '../settings/settings';
 import ProfileExtended from '../ProfileExtended/ProfileExtended'
 
 export const DashBoard = () => {
-    return (
-        <DashBoardContainer>
-            <Box gridArea='info1'><Users/></Box>
-            <Box gridArea='profile'><Profile></Profile></Box>
-            <Box gridArea='info2'><AddFriend/></Box>
-            <Box  gridArea='game'>
-            <Routes>
-                <Route path="/" element={<p>Welcome!</p>}/>
-                <Route path="profile/:profileId" element={<ProfileExtended/>} />
-                <Route path="settings" element={<SettingsForm/>}/>
-                <Route path="game" element={<Pong/>}/>
-            </Routes>
-            </Box>
-            <Box  gridArea='chat' alignSelf='center'><Chat/></Box>
-        </DashBoardContainer>
-    );
+	return (
+		<DashBoardContainer>
+			<Box gridArea='info1'><Users/></Box>
+			<Box gridArea='profile'><Profile></Profile></Box>
+			<Box gridArea='info2'><AddFriend/></Box>
+			<Box  gridArea='game'>
+			<Routes>
+				<Route path="/" element={<p>Welcome!</p>}/>
+				<Route path="profile/:profileId" element={<ProfileExtended/>} />
+				<Route path="settings" element={<SettingsForm/>}/>
+				<Route path="game/:gameId" element={<Pong/>}/>
+				<Route path="game" element={<Pong/>}/>
+			</Routes>
+			</Box>
+			<Box gridArea='chat' alignSelf='center'><Chat/></Box>
+		</DashBoardContainer>
+	);
 }
 
 export default DashBoard;

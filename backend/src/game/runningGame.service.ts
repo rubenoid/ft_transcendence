@@ -71,12 +71,6 @@ export class RunningGame {
 		this.ballDir = new Point(-1, -1);
 		this.playersPos = [new Point(200, 20), new Point(200, 580)];
 		this.service = serviceRef;
-
-		this.server.to(this.roomId).emit("gameInit", {
-			decor: this.decor,
-			players: [this.players[0].user.id, this.players[1].user.id],
-		});
-		this.run();
 	}
 
 	moveSpeed = 100;
@@ -144,11 +138,15 @@ export class RunningGame {
 	}
 
 	run(): void {
+		this.server.to(this.roomId).emit("gameInit", {
+			decor: this.decor,
+			players: [this.players[0].user.id, this.players[1].user.id],
+		});
 		const counter = 0;
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
-			if (this.score[0] > 1 || this.score[1] > 1) {
+			if (this.score[0] > 4 || this.score[1] > 4) {
 				clearInterval(this.interval);
 				this.server.to(this.roomId).emit("gameFinished");
 				this.service.handleFinishedGame(this);
