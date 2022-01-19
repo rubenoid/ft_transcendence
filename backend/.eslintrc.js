@@ -16,6 +16,7 @@ module.exports = {
   },
   ignorePatterns: ['.eslintrc.js'],
   rules: {
+  "indent": ["error", "tab"],
 	"camelcase": "error",
 	"@typescript-eslint/no-unused-vars": "off",
 	'@typescript-eslint/interface-name-prefix': 'off',
