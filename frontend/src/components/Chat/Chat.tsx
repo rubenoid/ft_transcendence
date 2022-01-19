@@ -9,6 +9,7 @@ import { User } from '../../API/API';
 export interface Message {
     data: string;
     senderId: number;
+    channelId: number;
 }
 
 export interface Channel {

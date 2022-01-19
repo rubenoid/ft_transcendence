@@ -3,7 +3,8 @@ import {TopContainer, ChatBoxContainer, InputContainer, SendIconContainer} from 
 import { TextInput, Text, List, LongList, Item } from '../../Utils/Utils';
 import { ChatContainer } from '../ChatElements';
 import { AiOutlineSend as SendIcon} from 'react-icons/ai';
-import { User, fetchData, postData } from '../../../API/API'
+import { User, fetchData, postData } from '../../../API/API';
+import socket from '../../socket';
 import { Channel, Message } from "../Chat";
 
 type ChatBoxProps = {
@@ -25,13 +26,20 @@ const ChatBox = (props: ChatBoxProps) => {
         getMessages();
     }, [props.chatWith]);
 
+    useEffect(() => {
+        socket.on("NewMessage", (msg: Message) => {
+            if (msg.channelId != props.chatWith.id)
+                return;
+            msgHistory.push(msg);
+        });
+
+    }, []);
+
     const history = msgHistory.map((msg: Message, key: number) => {
         return <Item key={key}><Text color='black'>{msg.data}</Text></Item>;
     });
 
     const addToHistory = async () => {
-        msgHistory.push({data: msgToSend, senderId: -1});
-
         await postData("chat/addChatMessage", {data: msgToSend, chatId: props.chatWith.id });
         setMsgToSend('');
     }

@@ -3,6 +3,8 @@ import { Repository, FindOneOptions } from "typeorm";
 import { ChatEntity, ChatMessageEntity } from "./chat.entity";
 import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
+import { GuardedSocket } from "src/overloaded";
+import { Socket, Server } from "socket.io";
 
 @Injectable()
 export class ChatService {
@@ -12,6 +14,21 @@ export class ChatService {
 
 		private userService: UserService,
 	) {}
+
+	clients: GuardedSocket[] = [];
+
+	handleConnect(client: GuardedSocket) {
+		this.clients.push(client);
+	}
+
+	handleDisconnect(client: Socket)
+	{
+		const res = this.clients.findIndex(x => x.id == client.id);
+
+		if (res > 0)
+			this.clients.splice(res, 1);
+	}
+
 
 	async getAllChats(): Promise<ChatEntity[]> {
 		const chats = await this.chatRepository.find({
@@ -56,13 +73,14 @@ export class ChatService {
 	}
 
 	async addChatMessage(
-		userId: number,
+		server: Server,
+		client: GuardedSocket,
 		data: string,
 		chatId: number,
 	): Promise<void> {
 		const chat = await this.chatRepository.findOne({
 			where: { id: chatId },
-			relations: ["messages"],
+			relations: ["messages", "users"],
 		});
 
 		if (!chat) throw "no chat";
@@ -70,9 +88,19 @@ export class ChatService {
 		const toadd = new ChatMessageEntity();
 
 		toadd.data = data;
-		toadd.senderId = userId;
+		toadd.senderId = client.user.id;
 
 		chat.messages.push(toadd);
+
+		const 
+		for (let i = 0; i < chat.users.length; i++) {
+			const e = chat.users[i];
+			const found = this.clients.find(x => x.user.id == e.id);
+			if (found)
+			{
+				server.to(found.id).emit()
+			}
+		}
 
 		await this.chatRepository.save(chat);
 	}

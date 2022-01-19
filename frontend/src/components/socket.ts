@@ -13,6 +13,10 @@ socket.on("connect", () => {
 	socket.emit("userConnect");
 });
 
+socket.on("reconnect", () => {
+	socket.emit("userConnect");
+});
+
 // socket.on("userUpdate", (data: string) => {
 // 	console.log(data);
 // })
