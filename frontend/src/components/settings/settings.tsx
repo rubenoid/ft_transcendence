@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table, TextContainer } from '../Utils/Utils';
-import { RoundButton, Item } from '../Utils/Utils';
+import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
+import { Button } from '../Utils/Utils';
 import { fetchData, postData, User } from '../../API/API';
-import { SettingsContainer, UsersContainer } from './SettingsElements';
+import { SettingsContainer } from './SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer } from '../Profile/ProfileElements';
 import { SearchResultContainer } from '../AddFriend/AddFriendElements';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Item } from '../Utils/List/List';
+import { Text } from '../Utils/Text/Text';
+import { TextInput } from '../Utils/TextInput/TextInput';
 
 interface detailedUser extends User {
 	twoFactorSecret: string,
@@ -241,9 +243,7 @@ const SettingsForm = () => {
                     </tbody>
                     </Table>
                     </Item>
-                    <TextContainer>
                         <Text>Search for users to block</Text>
-                    </TextContainer>
                         <TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "blocked")}></TextInput>
                         {user2block ? SearchResult(user2block, "blocked") : ''}
 				<Item>
@@ -272,9 +272,7 @@ const SettingsForm = () => {
 								{ user.friends.length ? listfriends : <Item>No friends</Item>}	
 							</tbody>
                     </Table>
-                    	<TextContainer>
                         	<Text>Search for friends to add</Text>
-                    	</TextContainer>
                         	<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
                         	{user2friend ? SearchResult(user2friend, "friends") : ''}
 					</Item>

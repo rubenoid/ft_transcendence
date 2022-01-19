@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table, TextContainer } from '../Utils/Utils';
-import { RoundButton, Item } from '../Utils/Utils';
-import { fetchData, postData, User, Match } from '../../API/API';
-import { SettingsContainer, UsersContainer } from '../settings/SettingsElements';
+import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
+import { fetchData, User, Match } from '../../API/API';
+import { SettingsContainer } from '../settings/SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer, TopContainer } from '../Profile/ProfileElements';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Item } from '../Utils/List/List';
+import { Text } from '../Utils/Text/Text';
 
 interface detailedUser extends User {
     matches: Match[],

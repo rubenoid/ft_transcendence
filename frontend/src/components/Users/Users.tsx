@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { fetchData, User } from '../../API/API';
-import { Item, WidgetContainer, TextContainer } from '../Utils/Utils';
-import { Text, Table, TableHeaderCell, TableBody, TableRow, TableHeader, TableCell } from '../Utils/Utils'
+import { WidgetContainer } from '../Utils/Utils';
+import { Table, TableHeaderCell, TableBody, TableRow, TableHeader, TableCell } from '../Utils/Table/Table'
 import socket from "../socket";
+import { Text } from '../Utils/Text/Text';
 
 interface detailedUser extends User {
 	status: string,
@@ -68,9 +69,7 @@ const Users = () => {
 
     return (
         <WidgetContainer>
-            <TextContainer>
-                <Text>Users</Text>
-            </TextContainer>
+            <Text>Users</Text>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -82,7 +81,7 @@ const Users = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    { userlist ? userlist : <Item>Loading</Item> }
+                    { userlist ? userlist : <TableRow><TableCell>Loading</TableCell></TableRow> }
                 </TableBody>
             </Table>
         </WidgetContainer>

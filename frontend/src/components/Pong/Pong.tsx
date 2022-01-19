@@ -3,8 +3,8 @@ import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas, PlayerCont
 
 import  PongImgUrl  from '../../../public/pong.png';
 import { User, fetchData } from '../../API/API';
-import { Text } from '../Utils/Utils'
 import socket from '../socket';
+import { Text } from '../Utils/Text/Text';
 
 class Point {
 	x;
