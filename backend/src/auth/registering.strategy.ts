@@ -27,7 +27,6 @@ export class RegisteringStrategy extends PassportStrategy(
 					if (data == "") {
 						return null;
 					}
-					console.log("jwt data:", data);
 					return data;
 				},
 			]),

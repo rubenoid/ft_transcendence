@@ -59,6 +59,7 @@ export class UserController {
 		).channels;
 	}
 
+	@Public()
 	@Get("getByUserName/:username")
 	async getUserByUsername(
 		@Param("username") username: string,
@@ -71,6 +72,7 @@ export class UserController {
 		return await this.userService.getUserAvatarById(parseInt(id));
 	}
 
+	@Public()
 	@Get("random")
 	async addUserRand(): Promise<void> {
 		return await this.userService.addUser();
