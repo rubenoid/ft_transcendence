@@ -30,7 +30,7 @@ const SettingsForm = () => {
     const [isChecked, setIsChecked] = useState(undefined);
     const [qrcode, setqrcode] = useState<newQrData>(undefined);
     const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
-    const [twoFAvalid, settwoFAvalid] = useState<boolean>(undefined);
+    const [twoFAvalid, settwoFAvalid] = useState<boolean>(true);
     const [initial2FAEnabled, setinitial2FAEnabled] = useState<boolean>(undefined);
 
     const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
@@ -46,10 +46,12 @@ const SettingsForm = () => {
         async function getUser(): Promise<User> {
             const user: detailedUser = await fetchData('/user/meAndFriends');
             if (user.twoFactorSecret.length == 0) {
+                console.log("TWO FA DISABLED");
                 setIsChecked(false);
                 setinitial2FAEnabled(false);
             }
             else {
+                console.log("TWO FA ENABLED");
                 setIsChecked(true);
                 setinitial2FAEnabled(true);
             }
@@ -94,35 +96,43 @@ const SettingsForm = () => {
     }
 
     /* two FA change */
-    useEffect(() => {
-        async function getQR(): Promise<void> {
-        console.log("isChecked", isChecked);
-        console.log("initial2FAEnabled", initial2FAEnabled);
-        if (isChecked && !initial2FAEnabled)
-            {        
-            const res: newQrData = await fetchData('auth/getQrRetSecret');
-            console.log("QRCODE:", res);
-            setqrcode(res);
-            }
-        }
-        getQR();
-    }, [isChecked]);
-
     const twoFAChange = () => {
         setIsChecked(!isChecked);
-        if (!isChecked)
-            setinputtedTwoFA(undefined);
+        console.log("CHECKED?", isChecked);
+        if (initial2FAEnabled)
+            settwoFAvalid(isChecked == true);
+        else
+            settwoFAvalid(isChecked == false);
+
+        if (isChecked && !initial2FAEnabled) {        
+            fetchData('auth/getQrRetSecret').then((data: newQrData) => {
+                setqrcode(data);
+            });
+        }
+        // if (isChecked == false) {
+        //     setIsChecked(true);
+        // }
+        // else
+        // {
+        //     setIsChecked(false);
+        // }
+        console.log("2CHECKED?", isChecked);
       };
 
       useEffect(() => {
 		async function inputAccessCode(): Promise<void> {
-        	if (inputtedTwoFA != undefined && inputtedTwoFA.length != 6)
+        	if (inputtedTwoFA == undefined || inputtedTwoFA.length != 6)
         		return;
+            console.log("inputAccessCode:", inputtedTwoFA, inputtedTwoFA.length)
             if (initial2FAEnabled == true)
             {
                 const validated: boolean = await postData(`/auth/inputAccessCode`, {usertoken: inputtedTwoFA});
                 if (validated)  {
                     endpoints.push(`user/removeTwoFA`);
+                    settwoFAvalid(true); 
+                }
+                else {
+                    settwoFAvalid(false);
                 }
             }
             else
@@ -134,6 +144,9 @@ const SettingsForm = () => {
                     endpoints.push(endpoint);
                     settwoFAvalid(true); 
                 }
+                else {
+                    settwoFAvalid(false);
+                }
             }
         }
         inputAccessCode();
@@ -142,7 +155,7 @@ const SettingsForm = () => {
 
       /* upload avatar */
       const handleFileUpload = (e: any) => {
-        if (e.target.files.length) {
+        if (e.target.files && e.target.files.length) {
           setImage({
             preview: URL.createObjectURL(e.target.files[0]),
             raw: e.target.files[0],
@@ -251,42 +264,45 @@ const SettingsForm = () => {
 				<Item>
 					<Label> <Text fontSize='20px'>Blocked users</Text></Label>
 					<Table>
-					{ listblockedusers.length ?
-                    <TableHeader><TableRow>
-                        <TableHeaderCell>Username</TableHeaderCell>
-                        <TableHeaderCell>First Name</TableHeaderCell>
-                        <TableHeaderCell>Last Name</TableHeaderCell>
-                        <TableHeaderCell>Edit</TableHeaderCell>
-                    </TableRow></TableHeader> : ''}
-                    <tbody>
-                    { listblockedusers.length ? listblockedusers : <Item>No blocked users</Item>}
-                    </tbody>
+						<TableHeader>
+							<TableRow>
+								<TableHeaderCell>Username</TableHeaderCell>
+								<TableHeaderCell>First Name</TableHeaderCell>
+								<TableHeaderCell>Last Name</TableHeaderCell>
+								<TableHeaderCell>Edit</TableHeaderCell>
+							</TableRow>
+						</TableHeader>
+						<tbody>
+							{ listblockedusers && listblockedusers.length ? listblockedusers : null}
+						</tbody>
                     </Table>
                     </Item>
                     <TextContainer>
                         <Text>Search for users to block</Text>
                     </TextContainer>
-                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "blocked")}></TextInput>
+                        <TextInput type="text" placeholder="Tyse to search..." onChange={(e) => handleChangeSearch(e.target.value, "blocked")}></TextInput>
                         {user2block ? SearchResult(user2block, "blocked") : ''}
 				<Item>
 					<Label> <Text fontSize='20px'>Friends</Text></Label>
 					<Table>
-						{ user.friends.length ?
-							<TableHeader><TableRow>
+						<TableHeader>
+							<TableRow>
 								<TableHeaderCell>Username</TableHeaderCell>
 								<TableHeaderCell>First Name</TableHeaderCell>
 								<TableHeaderCell>Last Name</TableHeaderCell>
 								<TableHeaderCell>Edit</TableHeaderCell>
-							</TableRow></TableHeader> : ''}
-							<tbody>
-								{ user.friends.length ? listfriends : <Item>No friends</Item>}	
-							</tbody>
+							</TableRow>
+						</TableHeader>
+						<tbody>
+							{ user.friends && user.friends.length ? listfriends : null}
+						</tbody>	
                     </Table>
-                    	<TextContainer>
-                        	<Text>Search for friends to add</Text>
-                    	</TextContainer>
-                        	<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
-                        	{user2friend ? SearchResult(user2friend, "friends") : ''}
+
+					<TextContainer>
+						<Text>Search for friends to add</Text>
+					</TextContainer>
+						<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
+						{user2friend ? SearchResult(user2friend, "friends") : ''}
 					</Item>
                     <Item>
 					    <Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
@@ -312,7 +328,16 @@ const SettingsForm = () => {
                             )
                             : '') 
                     }
-					<Button onClick={uploadDataForm}><Text fontSize='15px'>Save changes</Text></Button>
+                    {twoFAvalid === false ? (
+                        <>
+                        <Button disabled><Text fontSize='15px'>Save changes</Text></Button>
+                        </>
+                    ): (
+                        <>
+                        <Button onClick={uploadDataForm}><Text fontSize='15px'>Save changes</Text></Button>
+                        </>
+                    )}
+
 					<Button><Text fontSize='15px'><Link to="/">Back</Link></Text></Button>
 			</>
 		)};
