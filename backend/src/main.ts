@@ -5,7 +5,7 @@ import * as cookieParser from "cookie-parser";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { join } from "path";
 
-async function bootstrap(): Promise<void> {
+async function bootstrap() {
 	const app = await NestFactory.create<NestExpressApplication>(AppModule);
 	app.enableCors();
 	app.use(cookieParser());

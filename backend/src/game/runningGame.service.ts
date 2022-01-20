@@ -20,7 +20,7 @@ export class Line {
 	}
 }
 
-function intersect(ball: Point, line: Line): boolean {
+function intersect(ball: Point, line: Line) {
 	if (line.p1.y == line.p2.y) {
 		if (ball.x + 5 < line.p1.x) return false;
 		if (ball.x - 5 > line.p2.x) return false;
