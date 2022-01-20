@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
-const PlayButton = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-}
+const PlayButton = (): JSX.Element => {
+	return <div></div>;
+};
 
 export default PlayButton;

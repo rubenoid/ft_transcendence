@@ -70,10 +70,7 @@ export class MatchService {
 			players[0].losses++;
 		}
 
-		toAdd.players = [
-			players[0],
-			players[1],
-		];
+		toAdd.players = [players[0], players[1]];
 		console.log("saved game!");
 		this.MatchRepository.save(toAdd);
 		this.userService.saveUser(players[0]);

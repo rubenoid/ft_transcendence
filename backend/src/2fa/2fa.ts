@@ -36,29 +36,3 @@ export async function check2faInput(
 	});
 	return check;
 }
-
-function UserInput(query: string) {
-	const rl = readline.createInterface({
-		input: process.stdin,
-		output: process.stdout,
-	});
-
-	return new Promise((resolve) =>
-		rl.question(query, (ans) => {
-			rl.close();
-			resolve(ans);
-		}),
-	);
-}
-
-// export async function runexample() {
-// 	const data = getTwoFactorAuthenticationCode();
-// 	console.log(data);
-// 	secrets.push(data.base32);
-// 	createQrCodeAsImg(data.otpauthUrl);
-// 	while (1) {
-// 		check2faInput((await UserInput("Pong online")) as string, data.base32);
-// 	}
-// 	console.log("passed example");
-// }
-//
