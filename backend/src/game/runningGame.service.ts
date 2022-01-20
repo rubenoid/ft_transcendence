@@ -142,7 +142,6 @@ export class RunningGame {
 			decor: this.decor,
 			players: [this.players[0].user.id, this.players[1].user.id],
 		});
-		const counter = 0;
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
@@ -160,7 +159,7 @@ export class RunningGame {
 	}
 
 	async updatePos(keys: boolean[], player: number): Promise<void> {
-		const playerref = player == 1 ? this.playersPos[0] : this.playersPos[1];
+		const playerref = player == 1 ? this.playersPos[1] : this.playersPos[0];
 
 		if (keys[0]) {
 			playerref.x -= 200 * this.deltaTime;

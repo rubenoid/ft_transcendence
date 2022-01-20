@@ -44,11 +44,9 @@ export class GameService {
 
 	joinGame(server: Server, client: GuardedSocket, id: string): void {
 		const game = this.getRunningGame(id);
-
 		if (game) {
 			client.join(game.roomId);
 			if (game.players.length < 2) {
-				game.server = server;
 				game.players.push(client);
 				if (game.players.length == 2) {
 					game.run();
@@ -86,7 +84,6 @@ export class GameService {
 		client2: GuardedSocket,
 		server: Server,
 	): void {
-		console.log("in start match");
 		console.log("adding" + client1.id + " and " + client2.id);
 		const roomid = (Math.random() + 1).toString(36).substring(7);
 
@@ -130,7 +127,7 @@ export class GameService {
 
 	async handlePositionUpdate(client: Socket, keys: boolean[]): Promise<void> {
 		const game = this.games.find(
-			(x) => x.players[0].id == client.id || x.players[1].id == client.id,
+			(x) => (x.players[0] && x.players[0].id == client.id) || (x.players[1] && x.players[1].id == client.id)
 		);
 		if (game != undefined) {
 			game.updatePos(keys, game.players[1].id == client.id ? 1 : 0);

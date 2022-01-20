@@ -102,7 +102,6 @@ class PongRenderer {
 const Pong = () => {
 
 	const	canvasRef = useRef(null);
-	let		renderer: PongRenderer | undefined;
 	const [isQueueing, setQueue] = useState<boolean>(false);
 	const [displayStatus, setDisplay] = useState(GameStatus.base);
 	const [scores, setScores] = useState([0, 0]);
@@ -115,7 +114,8 @@ const Pong = () => {
 
 	useEffect(() => {
 		const canvas = canvasRef.current
-		const context = canvas.getContext('2d')
+		const context = canvas.getContext('2d');
+		const renderer: PongRenderer | undefined = new PongRenderer(context, []);
 
 		document.addEventListener('keydown', function(event) {
 			if (event.key.toLocaleLowerCase() == 'a'
@@ -135,9 +135,6 @@ const Pong = () => {
 			|| event.key.toLocaleLowerCase() == 'arrowright')
 				keys[1] = false;
 		});
-		
-
-		renderer = new PongRenderer(context, []);
 
 		socket.on("gameUpdate", (Data: {positions: Point[], ballpos: Point}) => {
 			renderer.players = Data.positions;
@@ -149,6 +146,7 @@ const Pong = () => {
 
 		socket.on("gameInit", (data: {decor: Line[], players: number[]}) => {
 			renderer.decor = data.decor;
+			console.log("going to get my players");
 			fetchData(`/user/get/${data.players[0]}`).then((player1: User) => {
 				console.log("got player 1", player1);
 				fetchData(`/user/get/${data.players[1]}`).then((player2: User) => {
@@ -166,6 +164,7 @@ const Pong = () => {
 		
 			history.pushState(null, '', `/game/${gameId}`);
 			setDisplay(GameStatus.ingame);
+			console.log("startMatch finished funct MATCH");
 		});
 	
 		socket.on("gameFinished", () => {
@@ -192,9 +191,13 @@ const Pong = () => {
 				setDisplay(GameStatus.base);
 				return;
 			}
-			const players = [await fetchData(`/user/get/${data.players[0]}`),
-							await fetchData(`/user/get/${data.players[1]}`)
-						];
+			
+			const players: User[] = [];
+			if (data.players[0])
+				players.push(await fetchData(`/user/get/${data.players[0]}`));				
+			if (data.players[1])
+				players.push(await fetchData(`/user/get/${data.players[1]}`));
+	
 			setPlayers(players)
 			setScores(data.scores);
 			if (!data.running)
