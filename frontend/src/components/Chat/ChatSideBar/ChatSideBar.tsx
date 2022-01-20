@@ -31,7 +31,7 @@ const ChatSideBar = (props: ChatSideBarProps): JSX.Element => {
 			return friends;
 		}
 		getFriends();
-	}, [fetchData]);
+	}, []);
 
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
@@ -41,7 +41,7 @@ const ChatSideBar = (props: ChatSideBarProps): JSX.Element => {
 			return channels;
 		}
 		getChannels();
-	}, [fetchData]);
+	}, []);
 
 	const listFriends = friends.map((user: User, key: number) => {
 		return (

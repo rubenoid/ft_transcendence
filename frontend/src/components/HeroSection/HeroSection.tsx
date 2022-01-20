@@ -34,7 +34,7 @@ const HeroSection = (): JSX.Element => {
 			console.log("isConnected", isConnected);
 		}
 		getUser();
-	}, []);
+	});
 
 	const router = () => {
 		return (

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { MouseEvent, useEffect } from "react";
 import { useState } from "react";
 import { FormContainer, Form, Label, Button } from "./ConnectionFormElements";
 import { RoundButton, List, LongList, Item, Link } from "../Utils/Utils";
@@ -36,7 +36,7 @@ const RegistrationForm = (): JSX.Element => {
 			setchangefa(undefined);
 			console.log("changefa", changefa);
 		}
-	}, [twoFA]);
+	}, [twoFA, changefa]);
 
 	useEffect(() => {
 		async function getQR(): Promise<string> {
@@ -51,7 +51,7 @@ const RegistrationForm = (): JSX.Element => {
 			return qrcode;
 		}
 		getQR();
-	}, [registered]);
+	}, [registered, qrcode, twoFA]);
 
 	// const getQRme= () => {
 	//   async function getQR(): Promise<string> {
@@ -64,7 +64,9 @@ const RegistrationForm = (): JSX.Element => {
 	//   }
 	// }
 
-	const handletwoFA = (e: Event): void => {
+	const handletwoFA = (
+		e: React.MouseEvent<Element, globalThis.MouseEvent>,
+	): void => {
 		e.preventDefault();
 		if (twoFA == true) {
 			settwoFA(false);
@@ -76,7 +78,7 @@ const RegistrationForm = (): JSX.Element => {
 	};
 
 	const registerNewUser = (
-		e: Event,
+		e: React.MouseEvent<Element, globalThis.MouseEvent>,
 		userName: string,
 		firstName: string,
 		lastName: string,

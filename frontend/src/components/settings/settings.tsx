@@ -19,7 +19,7 @@ import { Img, ImgContainer } from "../Profile/ProfileElements";
 import { SearchResultContainer } from "../AddFriend/AddFriendElements";
 import { Link, useNavigate } from "react-router-dom";
 
-interface HTMLInputEvent extends Event {
+interface HTMLInputEvent extends HTMLInputElement {
 	target: HTMLInputElement & EventTarget;
 }
 
@@ -120,7 +120,7 @@ const SettingsForm = (): JSX.Element => {
 			});
 			if (validated == true) {
 				settwoFAvalid(true);
-				if (user.initial2FAEnabled == true) {
+				if (user && user.initial2FAEnabled == true) {
 					const endpoint = `user/removeTwoFA`;
 					const qrcodegot: string = await fetchData(endpoint);
 				}
@@ -130,7 +130,7 @@ const SettingsForm = (): JSX.Element => {
 	}, [inputtedTwoFA]);
 
 	/* upload avatar */
-	const handleFileUpload = (e: HTMLInputEvent) => {
+	const handleFileUpload = (e: React.ChangeEvent<HTMLInputEvent>) => {
 		if (e.target.files.length) {
 			setImage(URL.createObjectURL(e.target.files[0]));
 		}
@@ -169,7 +169,7 @@ const SettingsForm = (): JSX.Element => {
 				<SearchResultContainer>
 					<Text>{user2add.userName}</Text>
 					<Button
-						onClick={(e) => {
+						onClick={() => {
 							addChange(user2add.id, whatToChange);
 						}}
 					>

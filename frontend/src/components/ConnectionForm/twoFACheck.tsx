@@ -31,7 +31,7 @@ const TwoFACheck = (): JSX.Element => {
 			return validated;
 		}
 		inputAccessCode();
-	}, [inputtedTwoFA]);
+	}, [inputtedTwoFA, navigate]);
 
 	return (
 		<FormContainer>

@@ -28,7 +28,7 @@ const AddFriend = (): JSX.Element => {
 	console.log(user);
 	console.log("UserName->" + userName);
 
-	const addFriend = async (id: number): void => {
+	const addFriend = async (id: number) => {
 		const endpoint = `/friends/add/${id}`;
 		await fetchData(endpoint);
 	};

@@ -91,17 +91,17 @@ class PongRenderer {
 
 const Pong = (): JSX.Element => {
 	const canvasRef = useRef(null);
-	let renderer: PongRenderer | undefined;
 
 	const lines = [
 		new Line(new Point(20, 20), new Point(20, 580)),
 		new Line(new Point(380, 20), new Point(380, 580)),
 	];
-	const keys = [false, false];
 
 	useEffect(() => {
+		const keys = [false, false];
 		const canvas = canvasRef.current;
 		const context = canvas.getContext("2d");
+		const renderer: PongRenderer = new PongRenderer(context, lines);
 
 		document.addEventListener("keydown", function (event) {
 			if (
@@ -128,8 +128,6 @@ const Pong = (): JSX.Element => {
 			)
 				keys[1] = false;
 		});
-
-		renderer = new PongRenderer(context, lines);
 
 		socket.on("gameUpdate", (Data: { positions: Point[]; ballpos: Point }) => {
 			renderer.players = Data.positions;

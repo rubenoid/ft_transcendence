@@ -41,7 +41,7 @@ const Users = (): JSX.Element => {
 			setListUsers();
 		}
 		getUsers();
-	}, [fetchData]);
+	}, []);
 
 	useEffect(() => {
 		socket.on("userUpdate", (data: userStatus) => {
