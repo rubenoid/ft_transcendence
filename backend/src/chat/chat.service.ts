@@ -47,6 +47,12 @@ export class ChatService {
 		return data.messages;
 	}
 
+	async getChatData(id: number): Promise<ChatEntity> {
+		const data = await this.chatRepository.findOne({where: {id: id}});
+
+		return data;
+	}
+
 	async createChat(ids: number[]): Promise<number> {
 		const toadd = new ChatEntity();
 
@@ -92,13 +98,12 @@ export class ChatService {
 
 		chat.messages.push(toadd);
 
-		const 
 		for (let i = 0; i < chat.users.length; i++) {
 			const e = chat.users[i];
 			const found = this.clients.find(x => x.user.id == e.id);
 			if (found)
 			{
-				server.to(found.id).emit()
+				server.to(found.id).emit("newMessage", "EMPTY");
 			}
 		}
 

@@ -4,7 +4,7 @@ import { Button } from '../../Utils/Buttons/Button/Button';
 import { fetchData, postData } from '../../../API/API';
 import { Channel } from "../../../Types/Types";
 import { List, Item } from '../../Utils/List/List';
-import { User } from '../../../Types/Types';
+import { User } from '../../../Types/Types'; 
 
 type ChatSideBarProps = {
     setSelectedUser: React.Dispatch<React.SetStateAction<Channel>>
@@ -16,10 +16,12 @@ const ChatSideBar = (props: ChatSideBarProps) => {
 
     async function createNewChat(id: number) {
         
-        const chatId = await postData("chat/createNewChat", {ids: [id]});
+        const chatId: number = await postData("chat/createNewChat", {ids: [id]});
         console.log(chatId);
 
-        // props.setSelectedUser(undefined);
+        const chatData: any = await fetchData(`chat/get/${chatId}`);
+        console.log("cheatData: ", chatData)
+        props.setSelectedUser(chatData);
     }
 
     async function openChat(channel: Channel) {
@@ -39,7 +41,7 @@ const ChatSideBar = (props: ChatSideBarProps) => {
     useEffect(() => {
         async function getChannels(): Promise<Channel[]> {
             const channels: Channel[] = await fetchData('/user/me/chats');
-            console.log('USERS->', channels);
+            console.log('USERS->h', channels);
             setChannels(channels);
             return channels;
         }

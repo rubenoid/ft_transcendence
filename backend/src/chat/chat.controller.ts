@@ -17,13 +17,9 @@ export class ChatController {
 		return await this.chatService.getMessages(parseInt(id));
 	}
 
-	@Post("addChatMessage")
-	async addChatMessage(
-		@Req() req: GuardedRequest,
-		@Body("data") data: string,
-		@Body("chatId") chatId: number,
-	): Promise<void> {
-		return await this.chatService.addChatMessage(req.user.id, data, chatId);
+	@Get("get/:id")
+	async getChatData(@Param("id") id: string): Promise<ChatEntity> {
+		return await this.chatService.getChatData(parseInt(id));
 	}
 
 	@Post("createNewChat")
