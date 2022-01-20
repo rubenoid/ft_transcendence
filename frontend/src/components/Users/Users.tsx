@@ -82,7 +82,7 @@ const Users = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    { userlist ? userlist : <TableRow><TableCell>Loading</TableCell></TableRow> }
+                    { userlist ? userlist : null}
                 </TableBody>
             </Table>
         </WidgetContainer>

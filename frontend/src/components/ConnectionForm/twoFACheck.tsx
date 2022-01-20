@@ -4,6 +4,7 @@ import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
 import { postData, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
 import { useNavigate, Link } from 'react-router-dom';
+import { sharedHeroSection } from '../HeroSection/HeroSection';
 import { Item } from '../Utils/List/List';
 import { TextInput } from '../Utils/TextInput/TextInput';
 import { Text } from '../Utils/Text/Text';
@@ -13,19 +14,20 @@ const TwoFACheck = () => {
   const navigate = useNavigate();
   const [twoFA, settwoFA] = useState<boolean>(undefined);
   const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
+  const { isConnected, setIsConnected } = sharedHeroSection();
 
   useEffect(() => {
     async function inputAccessCode(): Promise<boolean> {
-      if (inputtedTwoFA.length != 6)
+      if (inputtedTwoFA && inputtedTwoFA.length != 6)
         return;
-      const endpoint = `/auth/inputAccessCode`;
-      const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
+      const validated: boolean = await postData(`/auth/inputAccessCode`, {usertoken: inputtedTwoFA});
       if (validated == true)
       { 
         settwoFA(true); 
         console.log("GOOD QR code inpute 2FA");
-        await fetchData("auth/twoFALogin");
-        navigate("/", {replace: true});
+        await fetchData("auth/logedin");
+        setIsConnected(true);
+        navigate("/logedin", {replace: true});
       }
       else
       { 
@@ -40,14 +42,10 @@ const TwoFACheck = () => {
   return (
       <FormContainer>
           <Form> 
-                    <Item>
-                      <Label> <Text fontSize='20px'>Enter your 2FA code</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/>
-                    </Item>
-                    {twoFA ?
-                    <Item>
-                      <Button><Text fontSize='15px'><Link to="/">sign in</Link></Text></Button>
-                  </Item>
-                  : ''}
+              <Item>
+                <Label> <Text fontSize='20px'>Enter your 2FA code</Text></Label>
+                <TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/>
+              </Item>
           </Form>
       </FormContainer>
   );

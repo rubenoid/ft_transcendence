@@ -26,17 +26,28 @@ export class AuthService {
 		}
 		return null;
 	}
+
 	async create2fadiv(id: number): Promise<string> {
 		const user: UserEntity = await this.userService.getUser(id);
 		const codedata = twofa.getTwoFactorAuthenticationCode();
 		user.twoFactorSecret = codedata.base32;
 		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
 		await this.userService.saveUser(user);
-		return `
-		${qrcode}
-			`;
-		// <image src="${qrcode}">
-		// <p>We will only show this once! so be sure to save it or you're fucked</p>
+		return qrcode;
+	}
+
+	async getQrRetSecret(id: number): Promise<object> {
+		const codedata = twofa.getTwoFactorAuthenticationCode();
+		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
+		return { qrcode: qrcode, secret: codedata.base32 };
+	}
+
+	async saveNewQr(id: number, secret: string): Promise<void> {
+		console.log("save secret");
+		const user: UserEntity = await this.userService.getUser(id);
+		user.twoFactorSecret = secret;
+		user.twoFactorvalid = true;
+		await this.userService.saveUser(user);
 	}
 
 	async check2faInput(input: string, secret: string): Promise<boolean> {
