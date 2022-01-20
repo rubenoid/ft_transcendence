@@ -40,4 +40,14 @@ export class ChatController {
 	async clearAll(): Promise<void> {
 		return await this.chatService.clear();
 	}
+
+	@Post("addChatMessage")
+	async addChatMessage(
+		@Req() req: GuardedRequest,
+		@Body("data") data: string,
+		@Body("chatId") chatId: number,
+	) : Promise<void>	{
+		this.chatService.addChatMessage(null, null, data, chatId);
+		return;
+	}
 }

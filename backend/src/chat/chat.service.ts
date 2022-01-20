@@ -48,7 +48,10 @@ export class ChatService {
 	}
 
 	async getChatData(id: number): Promise<ChatEntity> {
-		const data = await this.chatRepository.findOne({where: {id: id}});
+		const data = await this.chatRepository.findOne(
+			{where: {id: id},
+			relations: ["users"]
+		});
 
 		return data;
 	}

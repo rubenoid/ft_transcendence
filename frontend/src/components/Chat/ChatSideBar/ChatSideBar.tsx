@@ -30,7 +30,7 @@ const ChatSideBar = (props: ChatSideBarProps): JSX.Element => {
 	useEffect(() => {
 		async function getFriends(): Promise<User[]> {
 			const friends: User[] = await fetchData("/friends/me");
-			console.log("USERS->", friends);
+			console.log("USERS->am", friends);
 			setFriends(friends);
 			return friends;
 		}
@@ -40,7 +40,7 @@ const ChatSideBar = (props: ChatSideBarProps): JSX.Element => {
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
 			const channels: Channel[] = await fetchData("/user/me/chats");
-			console.log("USERS->", channels);
+			console.log("USERS->a,", channels);
 			setChannels(channels);
 			return channels;
 		}

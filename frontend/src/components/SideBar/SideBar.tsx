@@ -3,9 +3,12 @@ import { SideBarContainer } from "./SideBarElements";
 import { Button } from "../Utils/Buttons/Button/Button";
 import FriendsView from "./FriendsView/FriendsView";
 import ChannelsView from "./ChannelsView/ChannelsView";
+import { Channel } from "../../Types/Types";
+import ChatBox from "./ChatBox/ChatBox";
 
 const SideBar = (): JSX.Element => {
 	const [isFriendsView, setFriendsView] = useState(true);
+	const [selectedUser, setSelectedUser] = useState<Channel>();
 
 	return (
 		<SideBarContainer>
@@ -23,7 +26,8 @@ const SideBar = (): JSX.Element => {
 			>
 				Channels
 			</Button>
-			{isFriendsView ? <FriendsView /> : <ChannelsView />}
+			{isFriendsView ? <FriendsView setSelectedUser={setSelectedUser} /> : <ChannelsView />}
+			{selectedUser ? <ChatBox chatWith={selectedUser} /> : ""}
 		</SideBarContainer>
 	);
 };

@@ -11,7 +11,7 @@ const ChannelsView = (): JSX.Element => {
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
 			const channels: Channel[] = await fetchData("/user/me/chats");
-			console.log("USERS->", channels);
+			console.log("USERS-d>ddb", channels);
 			setChannels(channels);
 			return channels;
 		}
