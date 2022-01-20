@@ -12,14 +12,14 @@ const ChatSideBar = (props: ChatSideBarProps): JSX.Element => {
 	const [friends, setFriends] = useState<User[]>([]);
 	const [channels, setChannels] = useState<Channel[]>([]);
 
-	async function createNewChat(id: number) {
+	async function createNewChat(id: number): Promise<void> {
 		const chatId = await postData("chat/createNewChat", { ids: [id] });
 		console.log(chatId);
 
 		// props.setSelectedUser(undefined);
 	}
 
-	async function openChat(channel: Channel) {
+	async function openChat(channel: Channel): Promise<void> {
 		props.setSelectedUser(channel);
 	}
 

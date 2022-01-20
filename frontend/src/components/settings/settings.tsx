@@ -67,7 +67,7 @@ const SettingsForm = (): JSX.Element => {
 		getUser();
 	}, []);
 
-	const uploadDataForm = async () => {
+	const uploadDataForm = async (): void => {
 		const formData = new FormData();
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
@@ -78,7 +78,7 @@ const SettingsForm = (): JSX.Element => {
 	};
 
 	/* username valid */
-	const handleUserName = (e: string) => {
+	const handleUserName = (e: string): void => {
 		async function getUsersforUsername(): Promise<void> {
 			const endpoint = `/user/getByUserName/${e}`;
 			const UserFromUserName: User = await fetchData(endpoint);
@@ -106,7 +106,7 @@ const SettingsForm = (): JSX.Element => {
 		getQR();
 	}, [isChecked]);
 
-	const twoFAChange = () => {
+	const twoFAChange = (): void => {
 		setIsChecked(!isChecked);
 		if (!isChecked) setinputtedTwoFA(undefined);
 	};
@@ -130,7 +130,7 @@ const SettingsForm = (): JSX.Element => {
 	}, [inputtedTwoFA]);
 
 	/* upload avatar */
-	const handleFileUpload = (e: React.ChangeEvent<HTMLInputEvent>) => {
+	const handleFileUpload = (e: React.ChangeEvent<HTMLInputEvent>): void => {
 		if (e.target.files.length) {
 			setImage(URL.createObjectURL(e.target.files[0]));
 		}
@@ -138,7 +138,7 @@ const SettingsForm = (): JSX.Element => {
 	};
 
 	/* blocked and friends editing */
-	const handleChangeSearch = (e: string, whatToChange: string) => {
+	const handleChangeSearch = (e: string, whatToChange: string): void => {
 		async function getUser4Change(): Promise<User> {
 			const endpoint = `/user/getByUserName/${e}`;
 			const user: detailedUser = await fetchData(endpoint);
@@ -153,18 +153,27 @@ const SettingsForm = (): JSX.Element => {
 		getUser4Change();
 	};
 
-	const settingsData = () => {
-		const addChange = async (id: number, whatToChange: string) => {
+	const settingsData = (): JSX.Element => {
+		const addChange = async (
+			id: number,
+			whatToChange: string,
+		): Promise<void> => {
 			const endpoint = `/${whatToChange}/add/${id}`;
 			await fetchData(endpoint);
 		};
 
-		const removeChange = async (id: number, whatToChange: string) => {
+		const removeChange = async (
+			id: number,
+			whatToChange: string,
+		): Promise<void> => {
 			const endpoint = `/${whatToChange}/remove/${id}`;
 			await fetchData(endpoint);
 		};
 
-		const SearchResult = (user2add: detailedUser, whatToChange: string) => {
+		const SearchResult = (
+			user2add: detailedUser,
+			whatToChange: string,
+		): JSX.Element => {
 			return (
 				<SearchResultContainer>
 					<Text>{user2add.userName}</Text>

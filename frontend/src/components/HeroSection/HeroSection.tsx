@@ -36,7 +36,7 @@ const HeroSection = (): JSX.Element => {
 		getUser();
 	});
 
-	const router = () => {
+	const router = (): JSX.Element => {
 		return (
 			<BrowserRouter>
 				<Routes>

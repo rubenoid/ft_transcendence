@@ -22,6 +22,7 @@ module.exports = {
 		"@typescript-eslint/no-unused-vars": "off",
 		'@typescript-eslint/interface-name-prefix': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'error',
+		"@typescript-eslint/explicit-function-return-type": "off",
 		'@typescript-eslint/no-explicit-any': 'error',
 		'react/jsx-uses-react': 'error',
 		'react/jsx-uses-vars': 'error',
@@ -30,6 +31,12 @@ module.exports = {
 		"react-hooks/rules-of-hooks": "error",
 		"react-hooks/exhaustive-deps": "off"
 	},
+	overrides: [{
+		"files": ["*.ts", "*.tsx"],
+		"rules": {
+			"@typescript-eslint/explicit-function-return-type": ["error", {"allowExpressions": true}]
+		}
+	}],
 	settings: {
 		react: {
 			pragma: "React",

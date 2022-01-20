@@ -41,7 +41,7 @@ const ProfileExtended = (): JSX.Element => {
 		getUser();
 	}, [profileId]);
 
-	const settingsData = () => {
+	const settingsData = (): JSX.Element => {
 		const listfriends = user.friends.map((value: User, key: number) => {
 			return (
 				<Link key={key} to={`/profile/${value.id}`}>

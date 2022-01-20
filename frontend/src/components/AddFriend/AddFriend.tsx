@@ -28,12 +28,12 @@ const AddFriend = (): JSX.Element => {
 	console.log(user);
 	console.log("UserName->" + userName);
 
-	const addFriend = async (id: number) => {
+	const addFriend = async (id: number): Promise<void> => {
 		const endpoint = `/friends/add/${id}`;
 		await fetchData(endpoint);
 	};
 
-	const SearchResult = () => {
+	const SearchResult = (): JSX.Element => {
 		return (
 			<SearchResultContainer>
 				<Text>{user.userName}</Text>

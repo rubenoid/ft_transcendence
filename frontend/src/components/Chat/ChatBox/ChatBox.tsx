@@ -20,7 +20,7 @@ const ChatBox = (props: ChatBoxProps): JSX.Element => {
 	const [msgHistory, setMsgHistory] = useState<Message[]>([]);
 
 	useEffect(() => {
-		async function getMessages() {
+		async function getMessages(): Promise<void> {
 			const messages: Message[] = await fetchData(
 				`chat/messages/${props.chatWith.id}`,
 			);
@@ -39,7 +39,7 @@ const ChatBox = (props: ChatBoxProps): JSX.Element => {
 		);
 	});
 
-	const addToHistory = async () => {
+	const addToHistory = async (): Promise<void> => {
 		msgHistory.push({ data: msgToSend, senderId: -1 });
 
 		await postData("chat/addChatMessage", {

@@ -83,7 +83,7 @@ const RegistrationForm = (): JSX.Element => {
 		firstName: string,
 		lastName: string,
 		twoFAenabled: boolean,
-	) => {
+	): void => {
 		e.preventDefault();
 		if (userName && firstName && lastName && !user) {
 			console.log("registering with TWOFA is", twoFAenabled);

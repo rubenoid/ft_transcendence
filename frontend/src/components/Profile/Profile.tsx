@@ -12,7 +12,7 @@ function deleteCookie(
 	name: string,
 	path: string | undefined,
 	domain: string | undefined,
-) {
+): void {
 	if (getCookie(name)) {
 		document.cookie =
 			name +
@@ -71,14 +71,14 @@ const Profile = (): JSX.Element => {
 	//     await postData("/user/uploadAvatar", formData, {'Content-Type': 'multipart/form-data'});
 	//     console.log("upload gone through");
 	//   };
-	async function logout() {
+	async function logout(): Promise<void> {
 		const endpoint = "/auth/logout";
 		await fetchData(endpoint);
 		deleteCookie("AuthToken", undefined, undefined);
 		navigate("/login", { replace: true });
 	}
 
-	const userInfo = () => {
+	const userInfo = (): JSX.Element => {
 		return (
 			<>
 				<TopContainer>
