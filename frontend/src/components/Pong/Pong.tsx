@@ -2,10 +2,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas, PlayerContainerTop, PlayerContainerBot, ScoreContainer, ScoreText, FinishedContainer } from './PongElements'
 
 import  PongImgUrl  from '../../../public/pong.png';
-import { User, fetchData } from '../../API/API';
-import { Text } from '../Utils/Utils'
+import { fetchData } from '../../API/API';
+import { Text } from '../Utils/Text/Text';
 import socket from '../socket';
 import { useParams } from 'react-router-dom';
+import { User } from '../../Types/Types';
+
 
 enum GameStatus {
 	base,

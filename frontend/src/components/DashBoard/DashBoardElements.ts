@@ -4,11 +4,11 @@ export const DashBoardContainer = styled.div`
 	height: 100vh;
 	width: 100%;
 	display: grid;
-	grid-template-columns: 0fr 1fr 2fr 1.5fr 0fr;
+	grid-template-columns: 0.5fr 2fr 0.5fr;
 	grid-template-areas:
-		". profile game chat ."
-		". info1 game chat ."
-		". info2 game chat .";
+		"profile game chat"
+		"info1 game chat"
+		"info2 game chat";
 	grid-gap: 10px;
 	background-color: #8ec5fc;
 	background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%);

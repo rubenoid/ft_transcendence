@@ -79,7 +79,7 @@ export const ScoreContainer = styled.div`
 
 export const ScoreText = styled.p`
 	color: black;
-	padding 5px 10px;
+	padding: 5px 10px;
 `;
 
 export const FinishedContainer = styled.div`

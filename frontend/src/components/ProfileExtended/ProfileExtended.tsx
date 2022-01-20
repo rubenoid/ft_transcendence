@@ -1,18 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table, TextContainer } from '../Utils/Utils';
-import { RoundButton, Item } from '../Utils/Utils';
-import { fetchData, postData, User, Match } from '../../API/API';
-import { SettingsContainer, UsersContainer } from '../settings/SettingsElements';
+import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
+import { fetchData} from '../../API/API';
+import { User, Match } from '../../Types/Types';
+import { SettingsContainer } from '../Settings/SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer, TopContainer } from '../Profile/ProfileElements';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Item } from '../Utils/List/List';
+import { Text } from '../Utils/Text/Text';
 
 interface detailedUser extends User {
     matches: Match[],
+	status: string,
+}
+
+interface userStatus {
+    id: number;
+    status: string;
 }
 
 const ProfileExtended = () => {
-	const navigator = useNavigate();
 	const [user, setUser] = useState<detailedUser>(undefined);
 	const { profileId } = useParams();
 
@@ -21,6 +28,7 @@ const ProfileExtended = () => {
             const user: detailedUser = await fetchData(`/user/get/${profileId}`);
 			user.friends = await fetchData(`/friends/get/${profileId}`);
             user.matches = await fetchData(`/match/getUserHistory/${profileId}`);
+            user.status = await fetchData(`/user/userStatus/${profileId}`);
             setUser(user);
             return user;
         }
@@ -90,6 +98,10 @@ const ProfileExtended = () => {
                 <TopContainer>
 				    <Label> <Text fontSize='20px'>LastName</Text></Label>
                     <Text fontSize='20px'>{user.lastName}</Text>
+                </TopContainer>
+                <TopContainer>
+				    <Label> <Text fontSize='20px'>status</Text></Label>
+                    <Text fontSize='20px'>{user.status}</Text>
                 </TopContainer>
                 <TopContainer>
 				    <Label> <Text fontSize='20px'>losses</Text></Label>

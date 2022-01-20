@@ -1,19 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import { TextInput, Text, WidgetContainer, Button, TableRow, TableCell, TableHeader, TableHeaderCell, Table, TextContainer } from '../Utils/Utils';
-import { RoundButton, Item } from '../Utils/Utils';
-import { fetchData, postData, User } from '../../API/API';
-import { SettingsContainer, UsersContainer } from './SettingsElements';
+import { TableRow, TableCell, TableHeader, TableHeaderCell, Table } from '../Utils/Table/Table';
+import { Button } from '../Utils/Buttons/Button/Button';
+import { fetchData, postData } from '../../API/API';
+import { SettingsContainer } from './SettingsElements';
 import { Label } from '../ConnectionForm/ConnectionFormElements';
 import { Img, ImgContainer } from '../Profile/ProfileElements';
 import { SearchResultContainer } from '../AddFriend/AddFriendElements';
 import { Link, useNavigate } from 'react-router-dom';
-
+import { Item } from '../Utils/List/List';
+import { Text } from '../Utils/Text/Text';
+import { TextInput } from '../Utils/TextInput/TextInput';
+import { User } from '../../Types/Types'
 
 interface detailedUser extends User {
 	twoFactorSecret: string,
     blockedUsers: number[],
     blockedUsersAsUsers: detailedUser[],
-	initial2FAEnabled: boolean;
+}
+
+interface newQrData {
+    qrcode: string;
+    secret: string;
 }
 
 const SettingsForm = () => {
@@ -24,24 +31,32 @@ const SettingsForm = () => {
     const [file, setfile] = useState(undefined);
 
     const [isChecked, setIsChecked] = useState(undefined);
-    const [qrcode, setqrcode] = useState<string>(undefined);
+    const [qrcode, setqrcode] = useState<newQrData>(undefined);
     const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
-    const [twoFAvalid, settwoFAvalid] = useState<boolean>(undefined);
+    const [twoFAvalid, settwoFAvalid] = useState<boolean>(true);
+    const [initial2FAEnabled, setinitial2FAEnabled] = useState<boolean>(undefined);
 
     const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
     const [user2friend, setuser2friend] = useState<detailedUser>();
     const [user2block, setuser2block] = useState<detailedUser>();
 
+    const [saved, setsaved] = useState<boolean>(undefined);
+
+    const [endpoints, setEndpoints] = useState([]);
+
+
     useEffect(() => {
         async function getUser(): Promise<User> {
             const user: detailedUser = await fetchData('/user/meAndFriends');
             if (user.twoFactorSecret.length == 0) {
+                console.log("TWO FA DISABLED");
                 setIsChecked(false);
-                user.initial2FAEnabled = false;
+                setinitial2FAEnabled(false);
             }
             else {
+                console.log("TWO FA ENABLED");
                 setIsChecked(true);
-                user.initial2FAEnabled = true;
+                setinitial2FAEnabled(true);
             }
             user.blockedUsersAsUsers = [];
             for (let blockeduser of user.blockedUsers)
@@ -56,6 +71,11 @@ const SettingsForm = () => {
     }, []);
 
 	const uploadDataForm= async (e: any) => {
+        e.preventDefault();
+        console.log(endpoints);
+        for (let endpoint of endpoints) {
+            await fetchData(endpoint);
+        }
     	var formData = new FormData();
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
@@ -79,41 +99,58 @@ const SettingsForm = () => {
     }
 
     /* two FA change */
-    useEffect(() => {
-        async function getQR(): Promise<string> {
-        if (isChecked && !user.initial2FAEnabled)
-            {           
-            const endpoint = `auth/getQr`;
-            const qrcodegot: string = await fetchData(endpoint);
-            setqrcode(qrcodegot);
-            console.log("QRCODE:", qrcode);
-            return (qrcode);
-            }
-        }
-        getQR();
-    }, [isChecked]);
-
     const twoFAChange = () => {
         setIsChecked(!isChecked);
-        if (!isChecked)
-            setinputtedTwoFA(undefined);
+        console.log("CHECKED?", isChecked);
+        if (initial2FAEnabled)
+            settwoFAvalid(isChecked == true);
+        else
+            settwoFAvalid(isChecked == false);
+
+        if (isChecked && !initial2FAEnabled) {        
+            fetchData('auth/getQrRetSecret').then((data: newQrData) => {
+                setqrcode(data);
+            });
+        }
+        // if (isChecked == false) {
+        //     setIsChecked(true);
+        // }
+        // else
+        // {
+        //     setIsChecked(false);
+        // }
+        console.log("2CHECKED?", isChecked);
       };
 
       useEffect(() => {
 		async function inputAccessCode(): Promise<void> {
-        	if (inputtedTwoFA && inputtedTwoFA.length != 6)
+        	if (inputtedTwoFA == undefined || inputtedTwoFA.length != 6)
         		return;
-        	const endpoint = `/auth/inputAccessCode`;
-        	const validated: boolean = await postData(endpoint, {usertoken: inputtedTwoFA});
-        	if (validated == true)
-        	{ 
-        		settwoFAvalid(true); 
-				if (user.initial2FAEnabled == true)
-				{
-					const endpoint = `user/removeTwoFA`;
-					const qrcodegot: string = await fetchData(endpoint);
-				}
-			}
+            console.log("inputAccessCode:", inputtedTwoFA, inputtedTwoFA.length)
+            if (initial2FAEnabled == true)
+            {
+                const validated: boolean = await postData(`/auth/inputAccessCode`, {usertoken: inputtedTwoFA});
+                if (validated)  {
+                    endpoints.push(`user/removeTwoFA`);
+                    settwoFAvalid(true); 
+                }
+                else {
+                    settwoFAvalid(false);
+                }
+            }
+            else
+            {
+                const validated: boolean = await postData(`/auth/testQrCode`, {usertoken: inputtedTwoFA, secret: qrcode.secret});
+                if (validated)
+                {
+                    const endpoint: string = `/auth/saveSecret/${qrcode.secret}`;
+                    endpoints.push(endpoint);
+                    settwoFAvalid(true); 
+                }
+                else {
+                    settwoFAvalid(false);
+                }
+            }
         }
         inputAccessCode();
       }, [inputtedTwoFA]);
@@ -121,7 +158,7 @@ const SettingsForm = () => {
 
       /* upload avatar */
       const handleFileUpload = (e: any) => {
-        if (e.target.files.length) {
+        if (e.target.files && e.target.files.length) {
           setImage({
             preview: URL.createObjectURL(e.target.files[0]),
             raw: e.target.files[0],
@@ -149,12 +186,13 @@ const SettingsForm = () => {
 	const settingsData = () => {
         const addChange = async (id: number, whatToChange: string) => {
             const endpoint: string = `/${whatToChange}/add/${id}`;
-            await fetchData(endpoint);
+            endpoints.push(endpoint)
         };
         
         const removeChange = async (id: number, whatToChange : string) => {
+            
             const endpoint: string = `/${whatToChange}/remove/${id}`;
-            await fetchData(endpoint);
+            endpoints.push(endpoint);
         };
         
         const SearchResult = (user2add: detailedUser, whatToChange : string) => {
@@ -202,11 +240,11 @@ const SettingsForm = () => {
                 </Item>
 				<Item>
 				<Label> <Text fontSize='20px'>FirstName</Text></Label>
-					<TextInput type='text' placeholder={user.firstName} onChange={(e) => {setUser({...user, firstName: e.target.value})}}/>
+					<TextInput type='text' placeholder={user.firstName} onChange={(e) => {user.firstName = e.target.value}}/>
 					</Item>
 				<Item>
 					<Label> <Text fontSize='20px'>Lastname</Text></Label>
-					<TextInput type='text' placeholder={user.lastName} onChange={(e) => {setUser({...user, lastName: e.target.value})}}/>
+					<TextInput type='text' placeholder={user.lastName} onChange={(e) => {user.lastName = e.target.value}}/>
 				</Item>
 				<Item>
 					<Label htmlFor="upload-button">
@@ -229,57 +267,77 @@ const SettingsForm = () => {
 				<Item>
 					<Label> <Text fontSize='20px'>Blocked users</Text></Label>
 					<Table>
-					{ listblockedusers.length ?
-                    <TableHeader><TableRow>
-                        <TableHeaderCell>Username</TableHeaderCell>
-                        <TableHeaderCell>First Name</TableHeaderCell>
-                        <TableHeaderCell>Last Name</TableHeaderCell>
-                        <TableHeaderCell>Edit</TableHeaderCell>
-                    </TableRow></TableHeader> : ''}
-                    <tbody>
-                    { listblockedusers.length ? listblockedusers : <Item>No blocked users</Item>}
-                    </tbody>
-                    </Table>
-                    </Item>
-                    <TextContainer>
-                        <Text>Search for users to block</Text>
-                    </TextContainer>
-                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "blocked")}></TextInput>
-                        {user2block ? SearchResult(user2block, "blocked") : ''}
-				<Item>
-					<Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
-					<input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
-					{isChecked && !user.initial2FAEnabled ?
-							<Item>
-					  	<img src={qrcode} alt="" />
-					  	<a href="http://localhost:5000/auth/getQr" download="QRCode"></a>
-					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
-						  {!isChecked && user.initial2FAEnabled ?
-							<Item>
-					  	<Label> <Text fontSize='20px'>Input2FA code pls</Text></Label><TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/></Item>  : ''} 
-				</Item>
-				<Item>
-					<Label> <Text fontSize='20px'>Friends</Text></Label>
-					<Table>
-						{ user.friends.length ?
-							<TableHeader><TableRow>
+						<TableHeader>
+							<TableRow>
 								<TableHeaderCell>Username</TableHeaderCell>
 								<TableHeaderCell>First Name</TableHeaderCell>
 								<TableHeaderCell>Last Name</TableHeaderCell>
 								<TableHeaderCell>Edit</TableHeaderCell>
-							</TableRow></TableHeader> : ''}
-							<tbody>
-								{ user.friends.length ? listfriends : <Item>No friends</Item>}	
-							</tbody>
+							</TableRow>
+						</TableHeader>
+						<tbody>
+							{ listblockedusers && listblockedusers.length ? listblockedusers : null}
+						</tbody>
                     </Table>
-                    	<TextContainer>
-                        	<Text>Search for friends to add</Text>
-                    	</TextContainer>
-                        	<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
-                        	{user2friend ? SearchResult(user2friend, "friends") : ''}
+                    </Item>
+                        <Text>Search for users to block</Text>
+                        <TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "blocked")}></TextInput>
+                        {user2block ? SearchResult(user2block, "blocked") : ''}
+				<Item>
+					<Label> <Text fontSize='20px'>Friends</Text></Label>
+					<Table>
+						<TableHeader>
+							<TableRow>
+								<TableHeaderCell>Username</TableHeaderCell>
+								<TableHeaderCell>First Name</TableHeaderCell>
+								<TableHeaderCell>Last Name</TableHeaderCell>
+								<TableHeaderCell>Edit</TableHeaderCell>
+							</TableRow>
+						</TableHeader>
+						<tbody>
+							{ user.friends && user.friends.length ? listfriends : null}
+						</tbody>	
+                    </Table>
+					<Item>
+						<Text>Search for friends to add</Text>
+                    </Item>
+						<TextInput type="text" placeholder="Type to search..." onChange={(e) => handleChangeSearch(e.target.value, "friends")}></TextInput>
+						{user2friend ? SearchResult(user2friend, "friends") : ''}
 					</Item>
-					{(UserNameValid == false || (isChecked && !twoFAvalid && !user.initial2FAEnabled)  || (!isChecked && !twoFAvalid && user.initial2FAEnabled)) ? '' :
-					<Button onClick={uploadDataForm}><Text fontSize='15px'>Save changes</Text></Button>}
+                    <Item>
+					    <Label> <Text fontSize='20px'>Two Factor Authentication</Text></Label>
+					    <input type="checkbox" checked={isChecked} onChange={twoFAChange}/>
+				    </Item>
+
+                    {isChecked && !initial2FAEnabled ? 
+                        <Item>
+                            { qrcode !== undefined && qrcode.qrcode !== undefined ? <img src={qrcode.qrcode} alt="" /> : "loading" }
+                            <Label>
+                                <Text fontSize='20px'>Input2FA code pls</Text>
+                            </Label>
+                            <TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/>
+                        </Item>
+                        : (
+                            !isChecked && initial2FAEnabled ? (
+                                <Item>
+                                    <Label>
+                                        <Text fontSize='20px'>Your 2fa code please</Text>
+                                    </Label>
+                                    <TextInput type='text' onChange={(e) => {setinputtedTwoFA(e.target.value)}}/>
+                                </Item>
+                            )
+                            : '') 
+                    }
+                    {twoFAvalid === false ? (
+                        <>
+                        <Button disabled><Text fontSize='15px'>Save changes</Text></Button>
+                        </>
+                    ): (
+                        <>
+                        <Button onClick={uploadDataForm}><Text fontSize='15px'>Save changes</Text></Button>
+                        </>
+                    )}
+
 					<Button><Text fontSize='15px'><Link to="/">Back</Link></Text></Button>
 			</>
 		)};
