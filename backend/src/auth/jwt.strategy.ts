@@ -34,9 +34,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: payload["id"] },
 		});
-		// console.log("in jwt validate user.logedin", user.logedin);
-		// console.log("user.twoFactorvalid", user.twoFactorvalid);
-		// console.log("user.twoFactorSecret", user.twoFactorSecret);
 		if (payload === null || user.logedin == false || (user.twoFactorSecret.length && user.twoFactorvalid == false)) {
 			throw new UnauthorizedException();
 		}

@@ -20,6 +20,7 @@ export const DashBoard = () => {
             <Routes>
                 <Route path="/" element={<p>Welcome!</p>}/>
                 <Route path="profile/:profileId" element={<ProfileExtended/>} />
+        				<Route path="game/:gameId" element={<Pong/>}/>
                 <Route path="settings" element={<SettingsForm/>}/>
                 <Route path="game" element={<Pong/>}/>
             </Routes>
