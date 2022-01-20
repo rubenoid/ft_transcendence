@@ -1,7 +1,7 @@
 import {
 	Entity,
 	Column,
-	PrimaryGeneratedColumn,
+	PrimaryColumn,
 	JoinColumn,
 	OneToOne,
 	ManyToMany,
@@ -10,8 +10,8 @@ import {
 import { UserEntity } from "src/user/user.entity";
 @Entity()
 export class MatchEntity {
-	@PrimaryGeneratedColumn()
-	id: number;
+	@PrimaryColumn()
+	id: string;
 
 	@ManyToMany(() => UserEntity, (user) => user.matches, { cascade: true })
 	@JoinTable()

@@ -38,6 +38,29 @@ export class GameService {
 		private userService: UserService,
 	) {}
 
+	getRunningGame(id: string): RunningGame | undefined {
+		return this.games.find((x) => x.roomId == id);
+	}
+
+	joinGame(server: Server, client: GuardedSocket, id: string): void {
+		const game = this.getRunningGame(id);
+		if (game) {
+			client.join(game.roomId);
+			if (game.players.length < 2) {
+				game.players.push(client);
+				if (game.players.length == 2) {
+					game.run();
+					server.to(game.roomId).emit("startMatch", game.roomId);
+				}
+			} else {
+				server.to(client.id).emit("gameInit", {
+					decor: game.decor,
+					players: [game.players[0].user.id, game.players[1].user.id],
+				});
+			}
+		}
+	}
+
 	handleFinishedGame(finished: RunningGame): void {
 		this.userService.updateUserStatus(
 			finished.server,
@@ -50,9 +73,7 @@ export class GameService {
 			"Online",
 		);
 
-		const idx = this.games.findIndex(
-			(x) => "runningGame" + x.roomId === finished.roomId,
-		);
+		const idx = this.games.findIndex((x) => x.roomId === finished.roomId);
 
 		this.matchService.saveMatch(finished);
 		this.games.splice(idx, 1);
@@ -63,9 +84,8 @@ export class GameService {
 		client2: GuardedSocket,
 		server: Server,
 	): void {
-		console.log("in start match");
 		console.log("adding" + client1.id + " and " + client2.id);
-		const roomid = "runningGame" + this.gameId++;
+		const roomid = (Math.random() + 1).toString(36).substring(7);
 
 		client1.join(roomid);
 		client2.join(roomid);
@@ -74,15 +94,40 @@ export class GameService {
 		this.userService.updateUserStatus(server, client2, "In game");
 
 		const mapid = Math.round(Math.random() * 2);
-		this.games.push(
-			new RunningGame([client1, client2], maps[mapid], roomid, server, this),
+		const newGame = new RunningGame(
+			[client1, client2],
+			maps[mapid],
+			roomid,
+			server,
+			this,
 		);
-		server.to(roomid).emit("startMatch");
+
+		this.games.push(newGame);
+		newGame.run();
+		server.to(roomid).emit("startMatch", roomid);
+	}
+
+	createLobby(client: GuardedSocket, server: Server): string {
+		const roomid = (Math.random() + 1).toString(36).substring(7);
+
+		const mapid = Math.round(Math.random() * 2);
+		const newGame = new RunningGame(
+			[client],
+			maps[mapid],
+			roomid,
+			server,
+			this,
+		);
+
+		client.join(newGame.roomId);
+		this.games.push(newGame);
+
+		return roomid;
 	}
 
 	async handlePositionUpdate(client: Socket, keys: boolean[]): Promise<void> {
 		const game = this.games.find(
-			(x) => x.players[0].id == client.id || x.players[1].id == client.id,
+			(x) => (x.players[0] && x.players[0].id == client.id) || (x.players[1] && x.players[1].id == client.id)
 		);
 		if (game != undefined) {
 			game.updatePos(keys, game.players[1].id == client.id ? 1 : 0);

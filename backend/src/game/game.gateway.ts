@@ -7,6 +7,7 @@ import { Logger, Req, UseGuards } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { GameService } from "./game.service";
 import { GuardedSocket } from "src/overloaded";
+import { JwtAuthGuard } from "../auth/jwt.guard";
 
 @WebSocketGateway()
 export class GameGateway {
@@ -28,7 +29,18 @@ export class GameGateway {
 	}
 
 	@SubscribeMessage("positionUpdate")
-	handleMessage(client: GuardedSocket, payload: boolean[]): void {
+	positionUpdate(client: GuardedSocket, payload: boolean[]): void {
 		this.gameService.handlePositionUpdate(client, payload);
+	}
+
+	@SubscribeMessage("joinGame")
+	joinGame(client: GuardedSocket, payload: string): void {
+		this.gameService.joinGame(this.server, client, payload);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("createNewGame")
+	createNewGame(client: GuardedSocket, payload: string): string {
+		return this.gameService.createLobby(client, this.server);
 	}
 }

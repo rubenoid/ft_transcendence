@@ -29,38 +29,6 @@ export class MatchService {
 		}
 	}
 
-	async newMatch(Playerid1: number, Playerid2: number): Promise<string> {
-		const User1 = await this.userService.getUserQueryOne({
-			where: { id: Playerid1 },
-			relations: ["matches"],
-		});
-		if (!User1) throw "User one not found";
-		const User2 = await this.userService.getUserQueryOne({
-			where: { id: Playerid2 },
-			relations: ["matches"],
-		});
-		if (!User2) throw "User two not found";
-		const newMatch: MatchEntity = new MatchEntity();
-		newMatch.players = [User1, User2];
-		newMatch.scorePlayer1 = 0;
-		newMatch.scorePlayer2 = 0;
-		await this.MatchRepository.save(newMatch);
-
-		if (!User1.matches) User1.matches = [];
-		if (!User2.matches) User2.matches = [];
-		User1.matches.push(newMatch);
-		User2.matches.push(newMatch);
-
-		await this.userService.saveUser(User1);
-		await this.userService.saveUser(User2);
-		return (
-			"Match created between" +
-			newMatch.players[0].id +
-			"and" +
-			newMatch.players[1].id
-		);
-	}
-
 	async addPlayerToQueue(
 		connection: GuardedSocket,
 		server: Server,
@@ -82,6 +50,7 @@ export class MatchService {
 	async saveMatch(game: RunningGame): Promise<void> {
 		const toAdd = new MatchEntity();
 
+		toAdd.id = game.roomId;
 		toAdd.scorePlayer1 = game.score[0];
 		toAdd.scorePlayer2 = game.score[1];
 
@@ -103,7 +72,7 @@ export class MatchService {
 
 		toAdd.players = [
 			players[0],
-			// players[1],
+			players[1],
 		];
 		console.log("saved game!");
 		this.MatchRepository.save(toAdd);
@@ -111,17 +80,7 @@ export class MatchService {
 		this.userService.saveUser(players[1]);
 	}
 
-	async increaseScore(Matchid: number, Playerid: number): Promise<void> {
-		const Match = await this.MatchRepository.findOne({
-			where: { id: Matchid },
-		});
-		if (!Match) throw "No match found";
-		if (Playerid === Match.players[0].id) Match.scorePlayer1++;
-		else if (Playerid === Match.players[1].id) Match.scorePlayer2++;
-		else throw "No player with id " + Playerid + " in match " + Matchid;
-		await this.MatchRepository.save(Match);
-	}
-	async getMatch(id: number): Promise<MatchEntity> {
+	async getMatch(id: string): Promise<MatchEntity> {
 		const Match = await this.MatchRepository.findOne({
 			where: { id: id },
 			relations: ["players"],

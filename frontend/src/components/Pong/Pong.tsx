@@ -1,10 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas, PlayerContainerTop, PlayerContainerBot, ScoreContainer, ScoreText } from './PongElements'
+import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas, PlayerContainerTop, PlayerContainerBot, ScoreContainer, ScoreText, FinishedContainer } from './PongElements'
 
 import  PongImgUrl  from '../../../public/pong.png';
-import { User, fetchData } from '../../API/API';
-import { Text } from '../Utils/Utils'
+import { fetchData } from '../../API/API';
+import { Text } from '../Utils/Text/Text';
 import socket from '../socket';
+import { useParams } from 'react-router-dom';
+import { User } from '../../Types/Types';
+
+
+enum GameStatus {
+	base,
+	finished,
+	inviteWait,
+	ingame,
+}
+
+interface fetchedGameData {
+	running: boolean;
+	scores: number[];
+	players: number[];
+}
 
 class Point {
 	x;
@@ -87,19 +103,21 @@ class PongRenderer {
 
 const Pong = () => {
 
-	const canvasRef = useRef(null);
-	let renderer: PongRenderer | undefined;
+	const	canvasRef = useRef(null);
+	const [isQueueing, setQueue] = useState<boolean>(false);
+	const [displayStatus, setDisplay] = useState(GameStatus.base);
+	const [scores, setScores] = useState([0, 0]);
+	const [players, setPlayers] = useState([undefined, undefined]);
+	const [inviteLink, setInviteLink] = useState(undefined);
 
-	const lines = [
-		new Line(new Point(20, 20), new Point(20, 580) ),
-		new Line(new Point(380, 20), new Point(380, 580) ),
-	
-	];
+	const { gameId } = useParams();
+
 	let keys = [false, false];
 
 	useEffect(() => {
 		const canvas = canvasRef.current
-		const context = canvas.getContext('2d')
+		const context = canvas.getContext('2d');
+		const renderer: PongRenderer | undefined = new PongRenderer(context, []);
 
 		document.addEventListener('keydown', function(event) {
 			if (event.key.toLocaleLowerCase() == 'a'
@@ -119,9 +137,6 @@ const Pong = () => {
 			|| event.key.toLocaleLowerCase() == 'arrowright')
 				keys[1] = false;
 		});
-		
-
-		renderer = new PongRenderer(context, lines);
 
 		socket.on("gameUpdate", (Data: {positions: Point[], ballpos: Point}) => {
 			renderer.players = Data.positions;
@@ -133,6 +148,7 @@ const Pong = () => {
 
 		socket.on("gameInit", (data: {decor: Line[], players: number[]}) => {
 			renderer.decor = data.decor;
+			console.log("going to get my players");
 			fetchData(`/user/get/${data.players[0]}`).then((player1: User) => {
 				console.log("got player 1", player1);
 				fetchData(`/user/get/${data.players[1]}`).then((player2: User) => {
@@ -144,14 +160,18 @@ const Pong = () => {
 			})
 		});
 
-		socket.on("startMatch", () => {
+		socket.on("startMatch", (gameId: string) => {
 			console.log("STARTING MATCH");
-			setDisplay(false);
+			const history = window.history;
+		
+			history.pushState(null, '', `/game/${gameId}`);
+			setDisplay(GameStatus.ingame);
+			console.log("startMatch finished funct MATCH");
 		});
 	
 		socket.on("gameFinished", () => {
 			console.log("game finished!");
-			setDisplay(true);
+			setDisplay(GameStatus.finished);
 			setQueue(false);
 		});
 
@@ -159,15 +179,49 @@ const Pong = () => {
 			setScores(scores);
 		});
   
-	}, [])
+	}, []);
+
+	useEffect(() => {
+		console.log("THING CHANGE", gameId);
+		async function loadGame() {
+			const data: fetchedGameData = await fetchData(`/game/getDetails/${gameId}`);
+			console.log(`/game/getDetails/${gameId}`, data);
+			if (data === undefined)
+			{
+				setPlayers([])
+				setScores([0,0]);
+				setDisplay(GameStatus.base);
+				return;
+			}
+			
+			const players: User[] = [];
+			if (data.players[0])
+				players.push(await fetchData(`/user/get/${data.players[0]}`));				
+			if (data.players[1])
+				players.push(await fetchData(`/user/get/${data.players[1]}`));
 	
-	const [isQueueing, setQueue] = useState<boolean>(false);
-	const [displayButton, setDisplay] = useState(true);
-	const [scores, setScores] = useState([0, 0]);
-	const [players, setPlayers] = useState([undefined, undefined]);
+			setPlayers(players)
+			setScores(data.scores);
+			if (!data.running)
+				setDisplay(GameStatus.finished);
+			else
+			{
+				console.log("Starting to spectateGame");
+				socket.emit("joinGame", gameId);
+				setDisplay(GameStatus.ingame);
+			}
+		}
+
+		if (gameId === undefined)
+		{
+			setDisplay(GameStatus.base);
+			return;
+		}
+		else
+			loadGame();
+	}, [gameId]);
 	
 	function addToQueue() {
-
 		if (isQueueing)
 		{
 			socket.emit("removeFromQueue");
@@ -177,6 +231,13 @@ const Pong = () => {
 			socket.emit("addToQueue");
 		}
 		setQueue(!isQueueing);
+	}
+
+	async function createLinkGame() {
+		socket.emit("createNewGame", (data: string) => {
+			setInviteLink(data);
+			setDisplay(GameStatus.inviteWait);	
+		});
 	}
 
     return (
@@ -191,9 +252,30 @@ const Pong = () => {
 					<ScoreText>{players[1] ? players[1].userName : 'loading'}</ScoreText>
 					<ScoreContainer><ScoreText>{scores[1]}</ScoreText></ScoreContainer>
 				</PlayerContainerBot>
-				<ButtonContainer display={displayButton}>
-					<Button><Text fontSize='20px' onClick={addToQueue}>{isQueueing ? 'In Queue' : 'Play Online'}</Text></Button>
-				</ButtonContainer>
+
+				{
+					displayStatus == GameStatus.finished ? (
+						<FinishedContainer>
+							<Text fontSize='20px'>Game Finished!</Text>
+							<Text fontSize='20px' color="black"> {scores[0]} - {scores[1]} </Text>
+							<Button onClick={addToQueue}>Play Again</Button>
+						</FinishedContainer>
+					) : (
+					displayStatus == GameStatus.base ? (
+						<ButtonContainer>
+							<Button><Text fontSize='15px' onClick={addToQueue}>{isQueueing ? 'In Queue' : 'Play Online'}</Text></Button>
+							<Button><Text fontSize='15px' onClick={createLinkGame}>{isQueueing ? 'In Queue' : 'Create a link'}</Text></Button>
+						</ButtonContainer>
+					) : (
+						displayStatus == GameStatus.inviteWait ? (
+							<FinishedContainer>
+							<Text fontSize='20px'>Created a lobby!</Text>
+							<Text fontSize='15px' color="black">http://localhost:8080/game/{inviteLink}</Text>
+							<Text>Waiting for players</Text>
+						</FinishedContainer>
+					) : "")
+					)
+				}
             </PongContainer>
         </>
     );
