@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 import { useState } from 'react';
 import { FormContainer, Form, Label, Button } from './ConnectionFormElements';
-import { RoundButton, List, LongList, Item } from '../Utils/Utils';
-import { TextInput, Text } from '../Utils/Utils';
-import { postData, User, fetchData } from '../../API/API';
+import { postData, fetchData } from '../../API/API';
 import QRCode from "qrcode.react";
 import { useNavigate, Link } from 'react-router-dom';
 import { sharedHeroSection } from '../HeroSection/HeroSection';
+import { Item } from '../Utils/List/List';
+import { TextInput } from '../Utils/TextInput/TextInput';
+import { Text } from '../Utils/Text/Text';
 
 const TwoFACheck = () => {
 

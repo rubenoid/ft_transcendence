@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Item, TextInput ,Text, Button, WidgetContainer, TextContainer, RoundButton } from '../Utils/Utils';
-import { fetchData, User } from '../../API/API';
+import { WidgetContainer } from '../Utils/Containers/Containers';
+import { Button } from '../Utils/Buttons/Button/Button';
+import { fetchData } from '../../API/API';
 import { SearchResultContainer } from './AddFriendElements';
-import { MdPersonAdd as AddIcon } from 'react-icons/md';
+import { TextInput } from '../Utils/TextInput/TextInput';
+import { Text } from '../Utils/Text/Text';
+import { User } from '../../Types/Types';
 
 const AddFriend = () => {
     
@@ -39,9 +42,7 @@ const AddFriend = () => {
 
     return (
         <WidgetContainer>
-            <TextContainer>
                 <Text>Search for User</Text>
-            </TextContainer>
                 <TextInput type="text" placeholder="Type to search..." onChange={(e) => setUserName(e.target.value)}></TextInput>
                 {user && user.userName == userName ? SearchResult() : ''}
         </WidgetContainer>
