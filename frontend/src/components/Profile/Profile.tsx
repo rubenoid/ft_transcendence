@@ -1,12 +1,12 @@
 import React, { useState, useEffect,  } from 'react';
-import { RoundButton, TextContainer, WidgetContainer } from '../Utils/Utils';
+import { WidgetContainer } from '../Utils/Containers/Containers';
 import { ImgContainer, Img, TopContainer } from './ProfileElements';
-import { Text } from '../Utils/Utils';
-import { fetchData, User } from '../../API/API';
-import { Button, Item } from '../Utils/Utils';
-import { Label } from '../ConnectionForm/ConnectionFormElements';
-import { postData } from '../../API/API';
+import { fetchData } from '../../API/API';
+import { User } from '../../Types/Types';
+import { Button } from '../Utils/Buttons/Button/Button';
 import { useNavigate, Link } from 'react-router-dom';
+import { RoundButton } from '../Utils/Buttons/Round/RoundButton';
+import { Text } from '../Utils/Text/Text';
 
 function delete_cookie( name: string, path: string | undefined, domain: string | undefined ) {
     if( get_cookie( name ) ) {

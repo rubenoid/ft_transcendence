@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { PongContainer, PongImg, Button, ButtonContainer, PongCanvas, PlayerContainerTop, PlayerContainerBot, ScoreContainer, ScoreText } from './PongElements'
-
-import  PongImgUrl  from '../../../public/pong.png';
-import { User, fetchData } from '../../API/API';
-import { Text } from '../Utils/Utils'
+import { User } from '../../Types/Types';
+import { fetchData } from '../../API/API';
 import socket from '../socket';
+import { Text } from '../Utils/Text/Text';
 
 class Point {
 	x;
