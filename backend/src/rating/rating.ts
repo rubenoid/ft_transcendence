@@ -1,8 +1,10 @@
-export class newRating {
+export class RatingService {
 
-    /* scoreDifference is always a positive number */
+    /*  scoreDifference is always a positive number
+        K factor is between 12 and 32
+    */
     kFactor(scoreDifference: number): number {
-        return (10 + scoreDifference);
+        return (7 + scoreDifference * 5);
     }
 
     /* returns a value between 0 and 1 */
@@ -14,7 +16,7 @@ export class newRating {
         const K = this.kFactor(Math.abs(scorePlayer - scoreOpponent));
         const E = this.expectedWin(playerRating, opponentRating);
         const won = scorePlayer > scoreOpponent ? 1 : 0;
-        return playerRating + (K * (won - E));
+        return Math.round(playerRating + (K * (won - E)));
     }
 
 }
