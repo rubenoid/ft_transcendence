@@ -7,6 +7,7 @@ import { Server, Socket } from "socket.io";
 import { GameService } from "src/game/game.service";
 import { RunningGame } from "src/game/runningGame.service";
 import { GuardedSocket } from "src/overloaded";
+import { RatingService } from "src/rating/rating";
 
 const queuedSock: GuardedSocket[] = [];
 
@@ -16,6 +17,7 @@ export class MatchService {
 		@Inject("MATCH_REPOSITORY")
 		private MatchRepository: Repository<MatchEntity>,
 		private userService: UserService,
+		private ratingService: RatingService,
 		@Inject(forwardRef(() => GameService))
 		private gameService: GameService,
 	) {}
@@ -69,6 +71,19 @@ export class MatchService {
 			players[1].wins++;
 			players[0].losses++;
 		}
+
+		players[0].rating = this.ratingService.newRating(
+			players[0].rating,
+			players[1].rating,
+			game.score[0],
+			game.score[1],
+		);
+		players[1].rating = this.ratingService.newRating(
+			players[1].rating,
+			players[0].rating,
+			game.score[1],
+			game.score[0],
+		);
 
 		toAdd.players = [players[0], players[1]];
 		console.log("saved game!");
