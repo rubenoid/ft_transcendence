@@ -22,6 +22,24 @@ export class ChatController {
 		return await this.chatService.getChatData(parseInt(id));
 	}
 
+	@Post("createNewChannel")
+	async createNewChannel(@Req() req: GuardedRequest,
+		@Body("name") name: string,
+		@Body("userIds") userIds: number[],
+		@Body("isPublic") isPublic: number,
+		@Body("password") password: string,
+	)
+	{
+		userIds.push(req.user.id);
+		return await this.chatService.createChannel(name, userIds, isPublic, password);
+	}
+
+	@Get("public")
+	async getPublicChannels() : Promise<ChatEntity[]>
+	{
+		return await this.chatService.returnPublicChannels();
+	}
+
 	@Post("createNewChat")
 	async createNewChat(
 		@Req() req: GuardedRequest,

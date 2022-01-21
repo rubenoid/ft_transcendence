@@ -18,6 +18,9 @@ export class ChatEntity {
 	password: string;
 
 	@Column()
+	isPublic: boolean;
+
+	@Column()
 	name: string;
 
 	@ManyToMany(() => UserEntity, (user) => user.channels, { cascade: true })

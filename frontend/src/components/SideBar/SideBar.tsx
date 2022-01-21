@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { SideBarContainer } from "./SideBarElements";
+import { SideBarContainer, SideViewWrapper } from "./SideBarElements";
 import { Button } from "../Utils/Buttons/Button/Button";
 import FriendsView from "./FriendsView/FriendsView";
 import ChannelsView from "./ChannelsView/ChannelsView";
 import { Channel } from "../../Types/Types";
 import ChatBox from "./ChatBox/ChatBox";
 import { useBetween } from "use-between";
+
 
 const ChatState = (): {
 	channel: Channel;
@@ -39,8 +40,10 @@ const SideBar = (): JSX.Element => {
 			>
 				Channels
 			</Button>
-			<div>{isFriendsView ? <FriendsView /> : <ChannelsView />}</div>
-			<ChatBox />
+			<SideViewWrapper>
+				{isFriendsView ? <FriendsView /> : <ChannelsView />}
+				<ChatBox />
+			</SideViewWrapper>
 		</SideBarContainer>
 	);
 };

@@ -34,6 +34,7 @@ const ChatBox = (): JSX.Element => {
 			const messages: Message[] = await fetchData(
 				`chat/messages/${channel.id}`,
 			);
+			msgHistory.length = 0;
 			msgHistory.push(...messages);
 			setMsgHistory([...msgHistory]);
 		}
@@ -71,6 +72,13 @@ const ChatBox = (): JSX.Element => {
 		setMsgToSend("");
 	};
 
+	const outputChatName = () => {
+		var ret : string;
+		ret = channel.name.replace(user.userName + ",", '');
+		ret = ret.replace(", " + user.userName, '');
+		return ret;
+	}
+	
 	return (
 		<>
 			{!channel ? (
@@ -78,13 +86,13 @@ const ChatBox = (): JSX.Element => {
 			) : (
 				<ChatBoxContainer>
 					<TopContainer>
-						<Text>{channel.name}</Text>
+						<Text>{outputChatName()}</Text>
 					</TopContainer>
 					<ChatContainer>
 						{history.length ? (
 							history
 						) : (
-							<Text color="white">Send your first message !</Text>
+							<Text color="black">Send your first message !</Text>
 						)}
 					</ChatContainer>
 					<InputContainer>

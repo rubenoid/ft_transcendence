@@ -6,6 +6,7 @@ import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
 import { SharedChatState } from "../SideBar";
 import {
+	FriendsViewContainer,
 	FriendsCardContainer,
 	FriendsTitleContainer,
 	FriendsCardButton,
@@ -84,14 +85,14 @@ const FriendsView = (): JSX.Element => {
 	});
 
 	return (
-		<div>
+		<FriendsViewContainer>
 			<List>
 				<Item>
 					<Text>Friends:</Text>
 				</Item>
 				{friends.length ? listFriends : <Item>No Friends Yet, Add one !</Item>}
 			</List>
-		</div>
+		</FriendsViewContainer>
 	);
 };
 

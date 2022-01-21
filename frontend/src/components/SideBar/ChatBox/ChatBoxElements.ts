@@ -16,8 +16,8 @@ export const TopContainer = styled.div`
 `;
 
 export const ChatContainer = styled.div`
-	background-color: white;
-	height: 500px;
+	background-color: lightblue;
+	height: 300px;
 	width: 100%;
 	overflow-y: scroll;
 `;

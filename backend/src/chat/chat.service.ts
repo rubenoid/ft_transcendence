@@ -5,6 +5,7 @@ import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
 import { GuardedSocket } from "src/overloaded";
 import { Socket, Server } from "socket.io";
+import { ProtectorService } from '../protector/protector';
 
 @Injectable()
 export class ChatService {
@@ -16,6 +17,8 @@ export class ChatService {
 		private chatMessageRepository: Repository<ChatMessageEntity>,
 
 		private userService: UserService,
+
+		private protectorService: ProtectorService,
 	) {}
 
 	clients: GuardedSocket[] = [];
@@ -89,13 +92,42 @@ export class ChatService {
 		return -1;
 	}
 
+	async returnPublicChannels() : Promise<ChatEntity[]> {
+		console.log("HAHAHAHAHAHAHAHAHHAHAHAH");
+		
+		const data = await this.chatRepository.find({ where: {isPublic: true}});
+		return data;
+	}
+
+	async createChannel(name: string, userIds: number[], isPublic: number, password: string): Promise<number> {
+		const toadd = new ChatEntity();
+
+		toadd.isPublic = isPublic == 0 ? false : true;
+		toadd.name = name;
+		toadd.users = [];
+		toadd.password = await this.protectorService.hash(password);
+
+		console.log("IDS:", userIds);
+		for (let i = 0; i < userIds.length; i++) {
+			const usertmp = await this.userService.getUserQueryOne({
+				where: { id: userIds[i] },
+			});
+			if (!usertmp) throw "user not found???";
+			toadd.users.push(usertmp);
+		}
+		const res = await this.chatRepository.save(toadd);
+
+		return res.id;
+	}
+
 	async createChat(ids: number[]): Promise<number> {
 		const found = await this.findChatMatch(ids);
 		if (found != -1) return found;
 		const toadd = new ChatEntity();
 
-		toadd.name = "Unnamed Chat";
+		toadd.name = '';
 		toadd.password = "";
+		toadd.isPublic = false;
 
 		const users: UserEntity[] = [];
 
@@ -105,6 +137,9 @@ export class ChatService {
 			});
 			if (!usertmp) throw "user not found???";
 			users.push(usertmp);
+			toadd.name += usertmp.userName;
+			if (i + 1 != ids.length)
+				toadd.name += ', ';
 		}
 
 		if (users.length < 2) throw "kkr weinig users";
