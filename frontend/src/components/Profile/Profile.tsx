@@ -8,6 +8,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { SharedHeroSection } from "../HeroSection/HeroSection";
 import { RoundButton } from "../Utils/Buttons/Round/RoundButton";
 import { Text } from "../Utils/Text/Text";
+import { useBetween } from "use-between";
 
 function deleteCookie(
 	name: string,
@@ -30,10 +31,23 @@ function getCookie(name: string): boolean {
 	});
 }
 
+const UserState = (): {
+	user: User;
+	setUser: React.Dispatch<React.SetStateAction<User>>;
+} => {
+	const [user, setUser] = useState<User>(undefined);
+	return { user, setUser };
+};
+
+export const SharedUserState = (): {
+	user: User;
+	setUser: React.Dispatch<React.SetStateAction<User>>;
+} => useBetween(UserState);
+
 const Profile = (): JSX.Element => {
 	const navigate = useNavigate();
-	const [user, setUser] = useState<User>(undefined);
 
+	const { user, setUser } = SharedUserState();
 	const { isConnected, setIsConnected } = SharedHeroSection();
 	useEffect(() => {
 		async function getUser(): Promise<User> {

@@ -4,8 +4,11 @@ import {
 	ChatBoxContainer,
 	InputContainer,
 	SendIconContainer,
+	MsgContainer,
+	MsgContainerOther,
+	MsgText,
 } from "./ChatBoxElements";
-import { ChatContainer } from "../../Chat/ChatElements";
+import { ChatContainer } from "./ChatBoxElements";
 // import { ChatContainer } from "../ChatElements";
 import { AiOutlineSend as SendIcon } from "react-icons/ai";
 import { fetchData, postData } from "../../../API/API";
@@ -13,79 +16,96 @@ import { Channel, Message } from "../../../Types/Types";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { Text } from "../../Utils/Text/Text";
 import socket from "../../socket";
+import { SharedChatState } from "../SideBar";
+import { SharedUserState } from "../../Profile/Profile";
+// type ChatBoxProps = {
+// 	// chatWith: React.Dispatch<React.SetStateAction<Channel>>;
+// };
 
-type ChatBoxProps = {
-	chatWith: Channel;
-};
-
-const ChatBox = (props: ChatBoxProps): JSX.Element => {
+const ChatBox = (): JSX.Element => {
 	const [msgToSend, setMsgToSend] = useState<string>("");
 	const [msgHistory, setMsgHistory] = useState<Message[]>([]);
+	const { channel, setChannel } = SharedChatState();
+	const { user, setUser } = SharedUserState();
 
 	useEffect(() => {
+		if (!channel) return;
 		async function getMessages(): Promise<void> {
 			const messages: Message[] = await fetchData(
-				`chat/messages/${props.chatWith.id}`,
+				`chat/messages/${channel.id}`,
 			);
-
-			console.log("messges:", messages);
-			setMsgHistory(messages);
+			msgHistory.push(...messages);
+			setMsgHistory([...msgHistory]);
 		}
-		getMessages();
-	}, [props.chatWith]);
 
-	useEffect(() => {
-		socket.on("NewMessage", (msg: Message) => {
-			if (msg.channelId != props.chatWith.id) return;
-			msgHistory.push(msg);
-		});
-	}, []);
+		function recieveMessage(msg: Message): void {
+			if (channel) {
+				msgHistory.push(msg);
+				setMsgHistory([...msgHistory]);
+			}
+		}
+
+		socket.on("newMessage", recieveMessage);
+
+		getMessages();
+	}, [channel]);
 
 	const history = msgHistory.map((msg: Message, key: number) => {
 		return (
-			<Text key={key} color="black">
-				{msg.data}
-			</Text>
+			<>
+				{msg.senderId != user.id ? (
+					<MsgContainerOther key={key}>
+						<MsgText color="black">{msg.data}</MsgText>
+					</MsgContainerOther>
+				) : (
+					<MsgContainer key={key}>
+						<MsgText color="black">{msg.data}</MsgText>
+					</MsgContainer>
+				)}
+			</>
 		);
 	});
 
 	const addToHistory = async (): Promise<void> => {
-		await postData("chat/addChatMessage", {
-			data: msgToSend,
-			chatId: props.chatWith.id,
-		});
+		socket.emit("addChatMessage", { data: msgToSend, chatId: channel.id });
 		setMsgToSend("");
 	};
 
 	return (
-		<ChatBoxContainer>
-			<TopContainer>
-				<Text>{props.chatWith.name}</Text>
-			</TopContainer>
-			<ChatContainer>
-				{history.length ? (
-					history
-				) : (
-					<Text color="black">Send your first message !</Text>
-				)}
-			</ChatContainer>
-			<InputContainer>
-				<TextInput
-					type="text"
-					value={msgToSend}
-					onChange={(e) => {
-						setMsgToSend(e.target.value);
-					}}
-				></TextInput>
-				<SendIconContainer
-					onClick={() => {
-						addToHistory();
-					}}
-				>
-					<SendIcon />
-				</SendIconContainer>
-			</InputContainer>
-		</ChatBoxContainer>
+		<>
+			{!channel ? (
+				""
+			) : (
+				<ChatBoxContainer>
+					<TopContainer>
+						<Text>{channel.name}</Text>
+					</TopContainer>
+					<ChatContainer>
+						{history.length ? (
+							history
+						) : (
+							<Text color="white">Send your first message !</Text>
+						)}
+					</ChatContainer>
+					<InputContainer>
+						<TextInput
+							type="text"
+							value={msgToSend}
+							onChange={(e) => {
+								setMsgToSend(e.target.value);
+							}}
+						></TextInput>
+						<SendIconContainer
+							onClick={() => {
+								addToHistory();
+							}}
+						>
+							<SendIcon />
+						</SendIconContainer>
+					</InputContainer>
+				</ChatBoxContainer>
+			)}
+		</>
 	);
 };
 

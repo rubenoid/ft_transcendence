@@ -16,17 +16,47 @@ export const TopContainer = styled.div`
 `;
 
 export const ChatContainer = styled.div`
-	background-color: #000;
-	height: 100%;
+	background-color: white;
+	height: 500px;
 	width: 100%;
+	overflow-y: scroll;
 `;
 
 export const InputContainer = styled.div`
-	border-radius: 5px;
 	position: relative;
 	display: flex;
 	width: 100%;
 	background: #393b4c;
+`;
+
+export const MsgContainer = styled.div`
+	padding: 8px;
+	margin: 8px;
+	border-radius: 5px;
+	width: fit-content;
+	max-width: 250px;
+	background-color: blue;
+`;
+
+export const MsgContainerOther = styled.div`
+	padding: 8px;
+	margin: 8px;
+	border-radius: 5px;
+	width: fit-content;
+	max-width: 250px;
+	background-color: grey;
+`;
+
+export const MsgText = styled.p`
+	word-break: break-all;
+	color: black;
+	@media screen and (max-width: 768px) {
+		font-size: 24px;
+	}
+
+	@media screen and (max-width: 480px) {
+		font-size: 18px;
+	}
 `;
 
 export const SendIconContainer = styled.div`

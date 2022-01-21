@@ -6,12 +6,12 @@ import {
 	OnGatewayConnection,
 	OnGatewayDisconnect,
 } from "@nestjs/websockets";
-import { Socket, Server,  } from "socket.io";
+import { Socket, Server } from "socket.io";
 //import { ChatService, IncomingChatMessage } from './chat.service';
 import { Logger, UseGuards } from "@nestjs/common";
 import { GuardedSocket } from "src/overloaded";
 import { JwtAuthGuard } from "../auth/jwt.guard";
-import { ChatService } from './chat.service';
+import { ChatService } from "./chat.service";
 
 @WebSocketGateway({ cors: { origin: "*" } })
 export class ChatGateway
@@ -38,8 +38,21 @@ export class ChatGateway
 
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("userConnect")
-	userConnect(client: GuardedSocket) {
+	userConnect(client: GuardedSocket): void {
 		this.chatService.handleConnect(client);
 	}
 
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("addChatMessage")
+	addChatMessage(
+		client: GuardedSocket,
+		payload: { data: string; chatId: number },
+	): void {
+		this.chatService.addChatMessage(
+			this.server,
+			client,
+			payload.data,
+			payload.chatId,
+		);
+	}
 }

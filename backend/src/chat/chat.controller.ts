@@ -31,23 +31,8 @@ export class ChatController {
 		return await this.chatService.createChat(ids);
 	}
 
-	@Get("createRandomMessage/:id")
-	async createRandomMessage(@Param("id") id: string): Promise<void> {
-		return await this.chatService.createRandMessage(parseInt(id));
-	}
-
 	@Get("clear")
-	async clearAll(): Promise<void> {
+	async clear(): Promise<void> {
 		return await this.chatService.clear();
-	}
-
-	@Post("addChatMessage")
-	async addChatMessage(
-		@Req() req: GuardedRequest,
-		@Body("data") data: string,
-		@Body("chatId") chatId: number,
-	) : Promise<void>	{
-		this.chatService.addChatMessage(null, null, data, chatId);
-		return;
 	}
 }

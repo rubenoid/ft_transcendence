@@ -3,7 +3,6 @@ import { DashBoardContainer, Box } from "./DashBoardElements";
 import Users from "../Users/Users";
 import Pong from "../Pong/Pong";
 import AddFriend from "../AddFriend/AddFriend";
-import Chat from "../Chat/Chat";
 import Profile from "../Profile/Profile";
 import { Route, Routes } from "react-router-dom";
 import SettingsForm from "../Settings/Settings";

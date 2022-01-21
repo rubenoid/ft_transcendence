@@ -5,10 +5,23 @@ import FriendsView from "./FriendsView/FriendsView";
 import ChannelsView from "./ChannelsView/ChannelsView";
 import { Channel } from "../../Types/Types";
 import ChatBox from "./ChatBox/ChatBox";
+import { useBetween } from "use-between";
+
+const ChatState = (): {
+	channel: Channel;
+	setChannel: React.Dispatch<React.SetStateAction<Channel>>;
+} => {
+	const [channel, setChannel] = useState<Channel>(undefined);
+	return { channel, setChannel };
+};
+
+export const SharedChatState = (): {
+	channel: Channel;
+	setChannel: React.Dispatch<React.SetStateAction<Channel>>;
+} => useBetween(ChatState);
 
 const SideBar = (): JSX.Element => {
 	const [isFriendsView, setFriendsView] = useState(true);
-	const [selectedUser, setSelectedUser] = useState<Channel>();
 
 	return (
 		<SideBarContainer>
@@ -26,8 +39,8 @@ const SideBar = (): JSX.Element => {
 			>
 				Channels
 			</Button>
-			{isFriendsView ? <FriendsView setSelectedUser={setSelectedUser} /> : <ChannelsView />}
-			{selectedUser ? <ChatBox chatWith={selectedUser} /> : ""}
+			<div>{isFriendsView ? <FriendsView /> : <ChannelsView />}</div>
+			<ChatBox />
 		</SideBarContainer>
 	);
 };

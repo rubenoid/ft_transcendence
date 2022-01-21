@@ -4,9 +4,11 @@ import { fetchData } from "../../../API/API";
 import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel } from "../../../Types/Types";
+import { SharedChatState } from "../SideBar";
 
 const ChannelsView = (): JSX.Element => {
 	const [channels, setChannels] = useState<Channel[]>([]);
+	const { channel, setChannel } = SharedChatState();
 
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
@@ -18,10 +20,22 @@ const ChannelsView = (): JSX.Element => {
 		getChannels();
 	}, [fetchData]);
 
+	async function openChat(id: number): Promise<void> {
+		const channelData: Channel = await fetchData(`/chat/get/${id}`);
+
+		setChannel(channelData);
+	}
+
 	const listChannels = channels.map((channel: Channel, key: number) => {
 		return (
 			<Item key={channel.id}>
-				<Button>{channel.name}</Button>
+				<Button
+					onClick={() => {
+						openChat(channel.id);
+					}}
+				>
+					{channel.name}
+				</Button>
 			</Item>
 		);
 	});

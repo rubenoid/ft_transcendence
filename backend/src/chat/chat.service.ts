@@ -12,23 +12,24 @@ export class ChatService {
 		@Inject("CHAT_REPOSITORY")
 		private chatRepository: Repository<ChatEntity>,
 
+		@Inject("CHAT_MESSAGE_REPOSITORY")
+		private chatMessageRepository: Repository<ChatMessageEntity>,
+
 		private userService: UserService,
 	) {}
 
 	clients: GuardedSocket[] = [];
 
-	handleConnect(client: GuardedSocket) {
+	handleConnect(client: GuardedSocket): void {
 		this.clients.push(client);
 	}
 
-	handleDisconnect(client: Socket)
-	{
-		const res = this.clients.findIndex(x => x.id == client.id);
+	handleDisconnect(client: Socket): void {
+		const res = this.clients.findIndex((x) => x.id == client.id);
 
-		if (res > 0)
-			this.clients.splice(res, 1);
+		console.log("User disconnected");
+		if (res >= 0) this.clients.splice(res, 1);
 	}
-
 
 	async getAllChats(): Promise<ChatEntity[]> {
 		const chats = await this.chatRepository.find({
@@ -48,15 +49,49 @@ export class ChatService {
 	}
 
 	async getChatData(id: number): Promise<ChatEntity> {
-		const data = await this.chatRepository.findOne(
-			{where: {id: id},
-			relations: ["users"]
+		const data = await this.chatRepository.findOne({
+			where: { id: id },
+			relations: ["users", "messages"],
 		});
 
 		return data;
 	}
 
+	async findChatMatch(ids: number[]): Promise<number> {
+		const allChannels: number[] = [];
+		const users: UserEntity[] = [];
+		for (let i = 0; i < ids.length; i++) {
+			users[i] = await this.userService.getUserQueryOne({
+				where: { id: ids[0] },
+				relations: ["channels"],
+			});
+		}
+		for (let i = 0; i < users.length; i++) {
+			for (let x = 0; x < users[i].channels.length; x++) {
+				allChannels.push(users[i].channels[x].id);
+			}
+		}
+
+		for (let i = 0; i < allChannels.length; i++) {
+			const channel: ChatEntity = await this.chatRepository.findOne({
+				where: { id: allChannels[i] },
+				relations: ["users"],
+			});
+
+			if (channel.users.length == ids.length) {
+				let k = 0;
+				for (; k < ids.length; k++) {
+					if (channel.users.findIndex((x) => x.id == ids[k]) == -1) break;
+				}
+				if (k == ids.length) return channel.id;
+			}
+		}
+		return -1;
+	}
+
 	async createChat(ids: number[]): Promise<number> {
+		const found = await this.findChatMatch(ids);
+		if (found != -1) return found;
 		const toadd = new ChatEntity();
 
 		toadd.name = "Unnamed Chat";
@@ -101,47 +136,30 @@ export class ChatService {
 
 		chat.messages.push(toadd);
 
-		for (let i = 0; i < chat.users.length; i++) {
-			const e = chat.users[i];
-			const found = this.clients.find(x => x.user.id == e.id);
-			if (found)
-			{
-				server.to(found.id).emit("newMessage", "EMPTY");
+		for (let i = 0; i < this.clients.length; i++) {
+			const e = this.clients[i];
+			console.log(e.user.id, e.id);
+		}
+
+		for (let i = 0; i < this.clients.length; i++) {
+			const found = chat.users.find((x) => x.id == this.clients[i].user.id);
+			if (found) {
+				console.log("Yes!");
+				server.to(this.clients[i].id).emit("newMessage", {
+					data: data,
+					senderId: client.user.id,
+					channelId: chatId,
+				});
 			}
 		}
 
 		await this.chatRepository.save(chat);
 	}
 
-	async createRandMessage(id: number): Promise<void> {
-		const chat = await this.chatRepository.findOne(id);
-
-		console.log("1");
-
-		if (!chat) throw "no chat";
-
-		console.log("2");
-
-		if (!chat.messages) chat.messages = [];
-
-		console.log(chat);
-
-		const toadd = new ChatMessageEntity();
-
-		toadd.data = "hallo!!";
-
-		toadd.senderId = 0;
-
-		chat.messages.push(toadd);
-		await this.chatRepository.save(chat);
-	}
-
 	async clear(): Promise<void> {
-		const chats = await this.chatRepository.find();
-
-		for (let i = 0; i < chats.length; i++) {
-			const e = chats[i];
-			await this.chatRepository.remove(e);
-		}
+		const messages = await this.chatMessageRepository.find();
+		await this.chatMessageRepository.remove(messages);
+		const chats = await this.chatRepository.find({ relations: ["messages"] });
+		await this.chatRepository.remove(chats);
 	}
 }

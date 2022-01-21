@@ -4,15 +4,23 @@ import { fetchData, postData } from "../../../API/API";
 import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
+import { SharedChatState } from "../SideBar";
+import {
+	FriendsCardContainer,
+	FriendsTitleContainer,
+	FriendsCardButton,
+	FriendsButtonContainer,
+	FriendsImageContainer,
+	FriendsNameContainer,
+} from "./FriendsViewElements";
+import { Img } from "../../Profile/ProfileElements";
+import { useNavigate, Link } from "react-router-dom";
 
-type ChatSideBarProps = {
-	setSelectedUser: React.Dispatch<React.SetStateAction<Channel>>;
-};
-
-// const FriendsView = (): JSX.Element => {
-const FriendsView = (props: ChatSideBarProps): JSX.Element => {
+const FriendsView = (): JSX.Element => {
+	const navigate = useNavigate();
 	const [friends, setFriends] = useState<User[]>([]);
-	
+	const { channel, setChannel } = SharedChatState();
+
 	async function createNewChat(id: number): Promise<void> {
 		console.log("createNewChattt");
 		const chatId: number = await postData("chat/createNewChat", { ids: [id] });
@@ -20,7 +28,7 @@ const FriendsView = (props: ChatSideBarProps): JSX.Element => {
 
 		const chatData: Channel = await fetchData(`chat/get/${chatId}`);
 		console.log("cheatData: ", chatData);
-		props.setSelectedUser(chatData);
+		setChannel(chatData);
 	}
 
 	useEffect(() => {
@@ -31,18 +39,46 @@ const FriendsView = (props: ChatSideBarProps): JSX.Element => {
 			return friends;
 		}
 		getFriends();
-	}, [fetchData]);
+	}, []);
+
+	function goToProfile(id: number): void {
+		navigate(`/profile/${id}`, { replace: true });
+	}
 
 	const listFriends = friends.map((user: User, key: number) => {
 		return (
 			<Item key={user.id}>
-				<Button
-					onClick={() => {
-						createNewChat(user.id);
-					}}
-				>
-					{user.userName}
-				</Button>
+				<FriendsCardContainer>
+					<FriendsTitleContainer>
+						<FriendsImageContainer>
+							<Img src={"http://localhost:5000/" + user.avatar} />
+						</FriendsImageContainer>
+						<FriendsNameContainer>
+							<Text color="black">{user.userName}</Text>
+							<Text color="black">{"Online"}</Text>
+						</FriendsNameContainer>
+					</FriendsTitleContainer>
+					<FriendsButtonContainer>
+						<div>
+							<FriendsCardButton
+								onClick={() => {
+									goToProfile(user.id);
+								}}
+							>
+								👤
+							</FriendsCardButton>
+						</div>
+						<div>
+							<FriendsCardButton
+								onClick={() => {
+									createNewChat(user.id);
+								}}
+							>
+								✉
+							</FriendsCardButton>
+						</div>
+					</FriendsButtonContainer>
+				</FriendsCardContainer>
 			</Item>
 		);
 	});

@@ -20,7 +20,7 @@ export type Match = {
 export interface Message {
 	data: string;
 	senderId: number;
-    channelId: number;
+	channelId: number;
 }
 
 export interface Channel {

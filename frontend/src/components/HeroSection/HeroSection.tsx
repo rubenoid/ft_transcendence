@@ -64,7 +64,7 @@ const HeroSection = (): JSX.Element => {
 					/>
 					<Route path="/checkTwoFA" element={<TwoFACheck />} />
 					{/* <Route path='/reLogin'    element={<ConnectionForm/>}/> */}
-					<Route path="/logedin" element={<DashBoard />} />
+					{/* <Route path="/logedin" element={<DashBoard />} /> */}
 				</Routes>
 			</BrowserRouter>
 		);
