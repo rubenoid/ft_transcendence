@@ -55,8 +55,8 @@ export class UserService {
 		newUser.userName = "abcdefghijklmnopqrstuvwxyz".charAt(currentId);
 		newUser.avatar = "img/test.jpeg";
 		newUser.rating = 10000;
-		newUser.wins = 99;
-		newUser.losses = 1;
+		newUser.wins = 0;
+		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.registered = false;
@@ -80,8 +80,8 @@ export class UserService {
 		newUser.userName = username;
 		newUser.avatar = "img/test.jpeg";
 		newUser.rating = 10000;
-		newUser.wins = 99;
-		newUser.losses = 1;
+		newUser.wins = 0;
+		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.registered = registered;

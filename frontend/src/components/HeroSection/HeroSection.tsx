@@ -1,63 +1,79 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { HeroContainer } from './HeroSectionElements';
-import DashBoard from '../DashBoard/DashBoard';
-import  ConnectionForm from '../ConnectionForm/ConnectionForm';
-import  RegistrationForm from '../ConnectionForm/RegistrationForm';
-import { BrowserRouter, Routes, Route} from 'react-router-dom';
-import TwoFACheck from '../ConnectionForm/twoFACheck';
-import { fetchData }  from '../../API/API';
+import React, { useState, useEffect, useLayoutEffect } from "react";
+import { HeroContainer } from "./HeroSectionElements";
+import DashBoard from "../DashBoard/DashBoard";
+import ConnectionForm from "../ConnectionForm/ConnectionForm";
+import RegistrationForm from "../ConnectionForm/RegistrationForm";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import TwoFACheck from "../ConnectionForm/twoFACheck";
+import { fetchData, updateHeaders } from "../../API/API";
 import { useNavigate, Navigate } from "react-router-dom";
+import { useBetween } from "use-between";
+import { User } from "../../Types/Types";
 
 type UserProps = {
-	isConnected: boolean
-}
+	isConnected: boolean;
+};
 
-// const Content = (usr: UserProps) => {
+const ConnectionStatus = (): {
+	isConnected: boolean;
+	setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
+} => {
+	const [isConnected, setIsConnected] = useState<boolean>(undefined);
+	return { isConnected, setIsConnected };
+};
 
-//     if (usr.isConnected)
-//         return (<DashBoard/>);
-//     else
-//         return (<ConnectionForm/>);
-// }
+export const SharedHeroSection = (): {
+	isConnected: boolean;
+	setIsConnected: React.Dispatch<React.SetStateAction<boolean>>;
+} => useBetween(ConnectionStatus);
 
-const HeroSection = () => {
-
-	const [isConnected, setisConnected] = useState<boolean>(undefined);
-
+const HeroSection = (): JSX.Element => {
+	const { isConnected, setIsConnected } = SharedHeroSection();
 	useEffect(() => {
 		async function getUser(): Promise<void> {
-			const user: any = await fetchData('/user/me');
+			updateHeaders();
+			const user: User = await fetchData("/user/me");
 			if (user) {
-				setisConnected(true);
+				setIsConnected(true);
+			} else {
+				setIsConnected(false);
 			}
-			else {
-				setisConnected(false);
-			}
-			console.log("isConnected", isConnected);
+			console.log(" useEffect isConnected", isConnected, document.cookie);
 		}
+		console.log("in use effects is connected", isConnected);
 		getUser();
-	},[]
-	);
+	}, [isConnected]);
 
-
-	const router = () => {
+	const router = (): JSX.Element => {
 		return (
-
-		<BrowserRouter>
-			<Routes>
-				<Route path='/*'         element={isConnected ? <DashBoard/> : <Navigate to="/login"/>}/>
-				<Route path='/login'    element={!isConnected ? <ConnectionForm/> : <Navigate to="/"/>}/>
-				<Route path='/register' element={!isConnected ? <RegistrationForm/> : <Navigate to="/login"/>}/>
-				<Route path='/checkTwoFA' element={<TwoFACheck/>}/> 
-			</Routes>
-		</BrowserRouter>
+			<BrowserRouter>
+				<Routes>
+					<Route
+						path="/*"
+						element={isConnected ? <DashBoard /> : <Navigate to="/login" />}
+					/>
+					<Route
+						path="/login"
+						element={!isConnected ? <ConnectionForm /> : <Navigate to="/" />}
+					/>
+					<Route
+						path="/register"
+						element={
+							!isConnected ? <RegistrationForm /> : <Navigate to="/login" />
+						}
+					/>
+					<Route path="/checkTwoFA" element={<TwoFACheck />} />
+					{/* <Route path='/reLogin'    element={<ConnectionForm/>}/> */}
+					<Route path="/logedin" element={<DashBoard />} />
+				</Routes>
+			</BrowserRouter>
 		);
-		
-	}
+	};
 	return (
 		<HeroContainer>
-			{isConnected == undefined ? 'loading' : router()}
+			{isConnected == undefined ? "loading" : router()}
 		</HeroContainer>
 	);
-}
+};
+
 export default HeroSection;

@@ -23,24 +23,19 @@ export const PongImg = styled.img`
 	opacity: 0.7;
 `;
 
-type ButtonProps = {
-	display: boolean;
-};
-
-export const ButtonContainer = styled.div<ButtonProps>`
+export const ButtonContainer = styled.div`
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	border-radius: 5px;
 	background-color: #393b4c;
 	transform: translate(-50%, -50%);
-	padding: 0px;
+	padding: 10px;
 	opacity: 0.9;
-	display: ${(props: ButtonProps) => (props.display ? "block" : "none")};
 `;
 
 export const Button = styled.button`
-	width: 100%;
+	width: 160px;
 	margin: 10px;
 	background-color: #04aa6d;
 	color: white;
@@ -84,5 +79,15 @@ export const ScoreContainer = styled.div`
 
 export const ScoreText = styled.p`
 	color: black;
-	padding 5px 10px;
+	padding: 5px 10px;
+`;
+
+export const FinishedContainer = styled.div`
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border-radius: 5px;
+	background-color: #b1b1b1;
+	transform: translate(-50%, -50%);
+	padding: 10px;
 `;
