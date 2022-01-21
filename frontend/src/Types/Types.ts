@@ -27,6 +27,8 @@ export interface Channel {
 	id: number;
 	name: string;
 	users: User[];
+	isPublic: boolean;
+	isProtected: boolean;
 	messages: Message[];
 }
 

@@ -6,7 +6,7 @@ import { DatabaseModule } from "src/database/database.module";
 import { ChatService } from "./chat.service";
 import { UserModule } from "src/user/user.module";
 import { ChatGateway } from "./chat.gateway";
-import { ProtectorService } from '../protector/protector';
+import { ProtectorService } from "../protector/protector";
 
 @Module({
 	imports: [DatabaseModule, UserModule],

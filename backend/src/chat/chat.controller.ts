@@ -13,31 +13,55 @@ export class ChatController {
 	}
 
 	@Get("messages/:id")
-	async returnMyChats(@Param("id") id: string): Promise<ChatMessageEntity[]> {
-		return await this.chatService.getMessages(parseInt(id));
+	async returnMyChats(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<ChatMessageEntity[]> {
+		return await this.chatService.getMessages(parseInt(id), req.user.id);
 	}
 
 	@Get("get/:id")
-	async getChatData(@Param("id") id: string): Promise<ChatEntity> {
-		return await this.chatService.getChatData(parseInt(id));
+	async getChatData(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<ChatEntity> {
+		return await this.chatService.getChatData(parseInt(id), req.user.id);
+	}
+
+	@Post("enterProtected")
+	async enterProtected(
+		@Req() req: GuardedRequest,
+		@Body("password") password: string,
+		@Body("chatId") chatId: number,
+	): Promise<boolean> {
+		return this.chatService.enterProtected(password, chatId, req.user.id);
 	}
 
 	@Post("createNewChannel")
-	async createNewChannel(@Req() req: GuardedRequest,
+	async createNewChannel(
+		@Req() req: GuardedRequest,
 		@Body("name") name: string,
 		@Body("userIds") userIds: number[],
 		@Body("isPublic") isPublic: number,
 		@Body("password") password: string,
-	)
-	{
+	): Promise<number> {
 		userIds.push(req.user.id);
-		return await this.chatService.createChannel(name, userIds, isPublic, password);
+		return await this.chatService.createChannel(
+			name,
+			userIds,
+			isPublic,
+			password,
+		);
 	}
 
 	@Get("public")
-	async getPublicChannels() : Promise<ChatEntity[]>
-	{
+	async getPublicChannels(): Promise<ChatEntity[]> {
 		return await this.chatService.returnPublicChannels();
+	}
+
+	@Get("isProtected/:id")
+	async isProtected(@Param("id") id: string): Promise<boolean> {
+		return await this.chatService.isProtected(parseInt(id));
 	}
 
 	@Post("createNewChat")

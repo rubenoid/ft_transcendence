@@ -5,21 +5,27 @@ import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
 import { SharedChatState } from "../SideBar";
-import { ChannelTitleContainer, ChannelCreateContainer } from './ChannelsViewElements';
+import {
+	ChannelTitleContainer,
+	ChannelCreateContainer,
+	ChannelCard,
+} from "./ChannelsViewElements";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
 import { Form } from "../../ConnectionForm/ConnectionFormElements";
 
 class CreateChannelsForm {
-	name: string = "";
+	name = "";
 	userIds: number[] = [];
 	isPublic: number;
-	password: string = "";
+	password = "";
 }
 
 const ChannelsView = (): JSX.Element => {
 	const [channels, setChannels] = useState<Channel[]>([]);
-	const [channelForm, setChannelForm] = useState<CreateChannelsForm>(new CreateChannelsForm);
+	const [channelForm, setChannelForm] = useState<CreateChannelsForm>(
+		new CreateChannelsForm(),
+	);
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const [userSearched, setUserSearched] = useState<User>(undefined);
 	const [usersAdded, setUsersAdded] = useState<User[]>([]);
@@ -28,16 +34,21 @@ const ChannelsView = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
+			let channels: Channel[] = await fetchData("/chat/public");
 
-			const channels: Channel[] = await fetchData("/chat/public");
-			
 			const tmp: Channel[] = await fetchData("/user/me/chats");
 
 			channels.push(...tmp);
 
-			channels.filter((value, i, arr) => arr.findIndex(x => x.id == value.id) === i);
-
-			console.log("USERS-d>ddb", channels);
+			console.log(channels);
+			channels = channels.filter((value, i, arr) => {
+				console.log(
+					"Finding",
+					value.id,
+					arr.findIndex((x) => x.id == value.id) === i,
+				);
+				return arr.findIndex((x) => x.id == value.id) === i;
+			});
 
 			setChannels(channels);
 			return channels;
@@ -51,20 +62,19 @@ const ChannelsView = (): JSX.Element => {
 		setChannel(channelData);
 	}
 
-	async function addNewGroup(): Promise<void> {
-		
-	}
-
 	const listChannels = channels.map((channel: Channel, key: number) => {
 		return (
 			<Item key={channel.id}>
-				<Button
+				<ChannelCard
 					onClick={() => {
 						openChat(channel.id);
 					}}
 				>
-					{channel.name}
-				</Button>
+					<Text color="black" fontSize="20px">
+						{channel.name}
+					</Text>
+					<Text>{channel.isProtected ? "🔑" : ""}</Text>
+				</ChannelCard>
 			</Item>
 		);
 	});
@@ -88,11 +98,7 @@ const ChannelsView = (): JSX.Element => {
 		getUser4Change();
 	};
 
-
-	const SearchResult = (
-		user2add: User,
-		whatToChange: string,
-	): JSX.Element => {
+	const SearchResult = (user2add: User, whatToChange: string): JSX.Element => {
 		return (
 			<SearchResultContainer>
 				<Text>{user2add.userName}</Text>
@@ -111,11 +117,11 @@ const ChannelsView = (): JSX.Element => {
 		);
 	};
 
-	function updatePrivacy(e: any) {
-		setChannelForm({...channelForm, isPublic: e.currentTarget.value});
+	function updatePrivacy(e: number): void {
+		setChannelForm({ ...channelForm, isPublic: e });
 	}
 
-	async function uploadCreateChannel() {
+	async function uploadCreateChannel(): Promise<void> {
 		const res: number = await postData("/chat/createNewChannel", channelForm);
 
 		const chan: Channel = await fetchData(`/chat/get/${res}`);
@@ -123,47 +129,88 @@ const ChannelsView = (): JSX.Element => {
 		setShowForm(false);
 	}
 
-	const listUsersAdded = usersAdded.map((user: User, key: number) => {
-		return (
-			<Text key={key} color="black">{user.userName}</Text>
-		);
-	});
+	const listUsersAdded = usersAdded.map(
+		(user: User, key: number): JSX.Element => {
+			return (
+				<Text key={key} color="black">
+					{user.userName}
+				</Text>
+			);
+		},
+	);
 
-
-	const createGroupForm = () => {
+	const createGroupForm = (): JSX.Element => {
 		return (
 			<>
 				<ChannelCreateContainer>
 					<Text color="black">Name of group</Text>
-					<TextInput type="text" onChange={(e) => {channelForm.name = e.target.value}}/>
+					<TextInput
+						type="text"
+						onChange={(e) => {
+							channelForm.name = e.target.value;
+						}}
+					/>
 					<Text color="black">Privacy</Text>
-					<input type="radio" name="privacy" value={0} onChange={updatePrivacy} />Public<br />
-					<input type="radio" name="privacy" value={1} onChange={updatePrivacy} />Private<br />
-					<input type="radio" name="privacy" value={2} onChange={updatePrivacy} />Protected<br />
+					<input
+						type="radio"
+						name="privacy"
+						value={"0"}
+						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
+					/>
+					Public
+					<br />
+					<input
+						type="radio"
+						name="privacy"
+						value={"1"}
+						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
+					/>
+					Private
+					<br />
+					<input
+						type="radio"
+						name="privacy"
+						value={"2"}
+						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
+					/>
+					Protected
+					<br />
 					{channelForm && channelForm.isPublic == 2 ? (
 						<TextInput
 							type="text"
 							placeholder="Type to search..."
-							onChange={(e) => channelForm.password = e.target.value}>
-						</TextInput>
-					) : ''}
+							onChange={(e) => (channelForm.password = e.target.value)}
+						></TextInput>
+					) : (
+						""
+					)}
 					<Text color="black">Search for users to add</Text>
-						<TextInput
-							type="text"
-							placeholder="Type to search..."
-							value={userToAddText}
-							onChange={(e) => handleChangeSearch(e.target.value)}>	
-						</TextInput>
-						{userSearched ? SearchResult(userSearched, "") : ""}
-						{usersAdded ? listUsersAdded : "" }
-						
-					<Button onClick={() => {uploadCreateChannel()}}>Create</Button>
-					<Button onClick={() => {setShowForm(false)}}>Cancel</Button>
+					<TextInput
+						type="text"
+						placeholder="Type to search..."
+						value={userToAddText}
+						onChange={(e) => handleChangeSearch(e.target.value)}
+					></TextInput>
+					{userSearched ? SearchResult(userSearched, "") : ""}
+					{usersAdded ? listUsersAdded : ""}
+					<Button
+						onClick={() => {
+							uploadCreateChannel();
+						}}
+					>
+						Create
+					</Button>
+					<Button
+						onClick={() => {
+							setShowForm(false);
+						}}
+					>
+						Cancel
+					</Button>
 				</ChannelCreateContainer>
 			</>
-
-		)
-	}
+		);
+	};
 
 	return (
 		<div>
@@ -173,7 +220,13 @@ const ChannelsView = (): JSX.Element => {
 						<Text>Channels</Text>
 						<Text>Create a new group</Text>
 					</div>
-					<Button onClick={() => {setShowForm(true)}}>+</Button>
+					<Button
+						onClick={() => {
+							setShowForm(true);
+						}}
+					>
+						+
+					</Button>
 				</ChannelTitleContainer>
 				{showForm ? createGroupForm() : ""}
 				{channels.length ? listChannels : <h2>No Channels Yet, Add one !</h2>}

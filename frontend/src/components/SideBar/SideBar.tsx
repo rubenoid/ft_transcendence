@@ -7,7 +7,6 @@ import { Channel } from "../../Types/Types";
 import ChatBox from "./ChatBox/ChatBox";
 import { useBetween } from "use-between";
 
-
 const ChatState = (): {
 	channel: Channel;
 	setChannel: React.Dispatch<React.SetStateAction<Channel>>;

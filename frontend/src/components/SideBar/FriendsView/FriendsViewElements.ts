@@ -40,4 +40,4 @@ export const FriendsCardButton = styled.button`
 
 export const FriendsViewContainer = styled.div`
 	height: 700px;
-`
+`;

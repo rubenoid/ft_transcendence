@@ -5,7 +5,7 @@ import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
 import { GuardedSocket } from "src/overloaded";
 import { Socket, Server } from "socket.io";
-import { ProtectorService } from '../protector/protector';
+import { ProtectorService } from "../protector/protector";
 
 @Injectable()
 export class ChatService {
@@ -42,19 +42,25 @@ export class ChatService {
 		return chats;
 	}
 
-	async getMessages(id: number): Promise<ChatMessageEntity[]> {
-		const data = await this.chatRepository.findOne({
-			where: { id: id },
-			relations: ["messages"],
-		});
-		if (data === undefined) return [];
-		return data.messages;
-	}
-
-	async getChatData(id: number): Promise<ChatEntity> {
+	async getMessages(id: number, userId: number): Promise<ChatMessageEntity[]> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
 			relations: ["users", "messages"],
+		});
+		if (data === undefined) return [];
+
+		if (
+			data.password != "" &&
+			data.users.find((x) => x.id == userId) == undefined
+		)
+			throw "protected";
+		return data.messages;
+	}
+
+	async getChatData(id: number, userId: number): Promise<ChatEntity> {
+		const data = await this.chatRepository.findOne({
+			where: { id: id },
+			relations: ["users"],
 		});
 
 		return data;
@@ -92,21 +98,31 @@ export class ChatService {
 		return -1;
 	}
 
-	async returnPublicChannels() : Promise<ChatEntity[]> {
-		console.log("HAHAHAHAHAHAHAHAHHAHAHAH");
-		
-		const data = await this.chatRepository.find({ where: {isPublic: true}});
+	async returnPublicChannels(): Promise<ChatEntity[]> {
+		const data = await this.chatRepository.find({ where: { isPublic: true } });
+
+		for (let i = 0; i < data.length; i++) {
+			const element = data[i];
+			if (element.password) element["isProtected"] = true;
+			delete element.password;
+		}
 		return data;
 	}
 
-	async createChannel(name: string, userIds: number[], isPublic: number, password: string): Promise<number> {
+	async createChannel(
+		name: string,
+		userIds: number[],
+		isPublic: number,
+		password: string,
+	): Promise<number> {
 		const toadd = new ChatEntity();
 
 		toadd.isPublic = isPublic == 0 ? false : true;
 		toadd.name = name;
 		toadd.users = [];
-		toadd.password = await this.protectorService.hash(password);
-
+		if (password != "") {
+			toadd.password = await this.protectorService.hash(password);
+		} else toadd.password = "";
 		console.log("IDS:", userIds);
 		for (let i = 0; i < userIds.length; i++) {
 			const usertmp = await this.userService.getUserQueryOne({
@@ -125,7 +141,7 @@ export class ChatService {
 		if (found != -1) return found;
 		const toadd = new ChatEntity();
 
-		toadd.name = '';
+		toadd.name = "";
 		toadd.password = "";
 		toadd.isPublic = false;
 
@@ -138,8 +154,7 @@ export class ChatService {
 			if (!usertmp) throw "user not found???";
 			users.push(usertmp);
 			toadd.name += usertmp.userName;
-			if (i + 1 != ids.length)
-				toadd.name += ', ';
+			if (i + 1 != ids.length) toadd.name += ", ";
 		}
 
 		if (users.length < 2) throw "kkr weinig users";
@@ -196,5 +211,42 @@ export class ChatService {
 		await this.chatMessageRepository.remove(messages);
 		const chats = await this.chatRepository.find({ relations: ["messages"] });
 		await this.chatRepository.remove(chats);
+	}
+
+	async isProtected(id: number): Promise<boolean> {
+		const data = await this.chatRepository.findOne({
+			where: { id: id },
+			relations: ["users", "messages"],
+		});
+		if (data.password == "") {
+			return false;
+		}
+		return true;
+	}
+
+	async enterProtected(
+		password: string,
+		chatId: number,
+		userId: number,
+	): Promise<boolean> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["users"],
+		});
+
+		const ret: boolean = await this.protectorService.compare(
+			password,
+			chat.password,
+		);
+		if (ret == true) {
+			const user = await this.userService.getUserQueryOne({
+				where: { id: userId },
+			});
+			if (!user) throw "exception no user to enter protected";
+			chat.users.push(user);
+			await this.chatRepository.save(chat);
+			return true;
+		}
+		return false;
 	}
 }

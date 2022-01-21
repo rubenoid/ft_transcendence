@@ -13,11 +13,20 @@ export const TopContainer = styled.div`
 	background-color: #393b4c;
 	min-height: 40px;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+`;
+
+export const TopText = styled.div`
+	font-size: 30px;
+	padding-left: 10px;
+	padding-right: 10px;
+	color: white;
 `;
 
 export const ChatContainer = styled.div`
-	background-color: lightblue;
-	height: 300px;
+	background-color: white;
+	height: 500px;
 	width: 100%;
 	overflow-y: scroll;
 `;
