@@ -102,9 +102,19 @@ export class MatchService {
 			players[1].wins++;
 			players[0].losses++;
 		}
-		
-		players[0].rating = this.ratingService.newRating(players[0].rating, players[1].rating, game.score[0], game.score[1]);
-		players[1].rating = this.ratingService.newRating(players[1].rating, players[0].rating, game.score[1], game.score[0]);
+
+		players[0].rating = this.ratingService.newRating(
+			players[0].rating,
+			players[1].rating,
+			game.score[0],
+			game.score[1],
+		);
+		players[1].rating = this.ratingService.newRating(
+			players[1].rating,
+			players[0].rating,
+			game.score[1],
+			game.score[0],
+		);
 
 		toAdd.players = [
 			players[0],
