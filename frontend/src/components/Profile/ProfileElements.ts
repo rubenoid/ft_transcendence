@@ -20,3 +20,10 @@ export const TopContainer = styled.div`
 	margin: 10;
 	flexdirection: row;
 `;
+
+export const FriendsWrapper = styled.div`
+	border-radius: 7px;
+	background-color: #af2222;
+	padding: 20px;
+	width: 500px;
+`;

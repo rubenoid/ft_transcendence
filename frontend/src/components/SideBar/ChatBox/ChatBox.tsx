@@ -64,23 +64,25 @@ const ChatBox = (): JSX.Element => {
 
 	const history = msgHistory.map((msg: Message, key: number) => {
 		return (
-			<>
+			<div key={key}>
 				{msg.senderId != user.id ? (
-					<MsgContainerOther key={key}>
+					<MsgContainerOther>
 						<MsgText color="black">{msg.data}</MsgText>
 					</MsgContainerOther>
 				) : (
-					<MsgContainer key={key}>
+					<MsgContainer>
 						<MsgText color="black">{msg.data}</MsgText>
 					</MsgContainer>
 				)}
-			</>
+			</div>
 		);
 	});
 
 	const addToHistory = async (): Promise<void> => {
-		socket.emit("addChatMessage", { data: msgToSend, chatId: channel.id });
-		setMsgToSend("");
+		if (msgToSend) {
+			socket.emit("addChatMessage", { data: msgToSend, chatId: channel.id });
+			setMsgToSend("");
+		}
 	};
 
 	const outputChatName = (): string => {
@@ -102,6 +104,10 @@ const ChatBox = (): JSX.Element => {
 			setChannel(channel);
 		}
 		setPassword("");
+	}
+
+	function enterCheck(keyCode: string): void {
+		if (keyCode == "Enter") addToHistory();
 	}
 
 	return (
@@ -145,6 +151,7 @@ const ChatBox = (): JSX.Element => {
 						<TextInput
 							type="text"
 							value={msgToSend}
+							onKeyDown={(e) => enterCheck(e.key)}
 							onChange={(e) => {
 								setMsgToSend(e.target.value);
 							}}

@@ -86,12 +86,10 @@ const FriendsView = (): JSX.Element => {
 
 	return (
 		<FriendsViewContainer>
-			<List>
-				<Item>
-					<Text>Friends:</Text>
-				</Item>
-				{friends.length ? listFriends : <Item>No Friends Yet, Add one !</Item>}
-			</List>
+			<Item>
+				<Text>Friends:</Text>
+			</Item>
+			{friends.length ? listFriends : <Item>No Friends Yet, Add one !</Item>}
 		</FriendsViewContainer>
 	);
 };

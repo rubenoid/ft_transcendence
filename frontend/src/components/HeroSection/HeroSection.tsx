@@ -9,6 +9,7 @@ import { fetchData, updateHeaders } from "../../API/API";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useBetween } from "use-between";
 import { User } from "../../Types/Types";
+import { SharedUserState } from "../Profile/Profile";
 
 type UserProps = {
 	isConnected: boolean;
@@ -28,14 +29,17 @@ export const SharedHeroSection = (): {
 } => useBetween(ConnectionStatus);
 
 const HeroSection = (): JSX.Element => {
+	const { user, setUser } = SharedUserState();
 	const { isConnected, setIsConnected } = SharedHeroSection();
 	useEffect(() => {
 		async function getUser(): Promise<void> {
 			updateHeaders();
-			const user: User = await fetchData("/user/me");
-			if (user) {
+			let user: User;
+			try {
+				user = await fetchData("/user/me");
+				setUser(user);
 				setIsConnected(true);
-			} else {
+			} catch (e) {
 				setIsConnected(false);
 			}
 			console.log(" useEffect isConnected", isConnected, document.cookie);

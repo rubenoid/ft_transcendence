@@ -83,11 +83,11 @@ export class ChatService {
 
 		for (let i = 0; i < allChannels.length; i++) {
 			const channel: ChatEntity = await this.chatRepository.findOne({
-				where: { id: allChannels[i] },
+				where: { id: allChannels[i], isPublic: false },
 				relations: ["users"],
 			});
 
-			if (channel.users.length == ids.length) {
+			if (channel && channel.users.length == ids.length) {
 				let k = 0;
 				for (; k < ids.length; k++) {
 					if (channel.users.findIndex((x) => x.id == ids[k]) == -1) break;
