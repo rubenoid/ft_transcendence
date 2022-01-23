@@ -112,7 +112,9 @@ const ChatSettings = (): JSX.Element => {
 		navigate("/", { replace: false });
 	}
 
-	// function updatePrivacy(e: number): void {}
+	function updatePrivacy(e: number): void {
+		return;
+	}
 
 	const displaySettings = (): JSX.Element => {
 		return (
