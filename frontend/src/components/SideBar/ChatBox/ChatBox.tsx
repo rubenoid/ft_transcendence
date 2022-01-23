@@ -8,6 +8,7 @@ import {
 	MsgContainerOther,
 	MsgText,
 	TopText,
+	TopButtonsContainer,
 } from "./ChatBoxElements";
 import { ChatContainer } from "./ChatBoxElements";
 // import { ChatContainer } from "../ChatElements";
@@ -20,6 +21,8 @@ import { Text } from "../../Utils/Text/Text";
 import socket from "../../socket";
 import { SharedChatState } from "../SideBar";
 import { SharedUserState } from "../../Profile/Profile";
+import { Link } from "react-router-dom";
+import { outputChatName } from "../SideBar";
 // type ChatBoxProps = {
 // 	// chatWith: React.Dispatch<React.SetStateAction<Channel>>;
 // };
@@ -85,13 +88,6 @@ const ChatBox = (): JSX.Element => {
 		}
 	};
 
-	const outputChatName = (): string => {
-		let ret: string;
-		ret = channel.name.replace(user.userName + ",", "");
-		ret = ret.replace(", " + user.userName, "");
-		return ret;
-	};
-
 	async function checkProtected(): Promise<void> {
 		const res: boolean = await postData("/chat/enterProtected", {
 			chatId: channel.id,
@@ -117,8 +113,13 @@ const ChatBox = (): JSX.Element => {
 			) : (
 				<ChatBoxContainer>
 					<TopContainer>
-						<TopText>{outputChatName()}</TopText>
-						<TopText onClick={() => setChannel(undefined)}>✕</TopText>
+						<TopText>{outputChatName(channel, user, channel.name)}</TopText>
+						<TopButtonsContainer>
+							<Link to={`/chat/${channel.id}`}>
+								<TopText>⚙</TopText>
+							</Link>
+							<TopText onClick={() => setChannel(undefined)}>✕</TopText>
+						</TopButtonsContainer>
 					</TopContainer>
 					{passwordNeeded ? (
 						<>

@@ -36,7 +36,7 @@ export class ChatService {
 
 	async getAllChats(): Promise<ChatEntity[]> {
 		const chats = await this.chatRepository.find({
-			relations: ["users", "messages"],
+			relations: ["users", "messages", "admins"],
 		});
 
 		return chats;
@@ -60,7 +60,7 @@ export class ChatService {
 	async getChatData(id: number, userId: number): Promise<ChatEntity> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
-			relations: ["users"],
+			relations: ["users", "admins"],
 		});
 
 		return data;
@@ -117,22 +117,25 @@ export class ChatService {
 	): Promise<number> {
 		const toadd = new ChatEntity();
 
-		toadd.isPublic = isPublic == 0 ? false : true;
+		toadd.isPublic = isPublic == 1 ? false : true;
 		toadd.name = name;
 		toadd.users = [];
 		if (password != "") {
 			toadd.password = await this.protectorService.hash(password);
 		} else toadd.password = "";
 		console.log("IDS:", userIds);
+		let usertmp: UserEntity;
 		for (let i = 0; i < userIds.length; i++) {
-			const usertmp = await this.userService.getUserQueryOne({
+			usertmp = await this.userService.getUserQueryOne({
 				where: { id: userIds[i] },
 			});
 			if (!usertmp) throw "user not found???";
 			toadd.users.push(usertmp);
 		}
+		toadd.owner = userIds[userIds.length - 1];
+		toadd.admins = [];
+		toadd.admins.push(usertmp);
 		const res = await this.chatRepository.save(toadd);
-
 		return res.id;
 	}
 
@@ -144,6 +147,7 @@ export class ChatService {
 		toadd.name = "";
 		toadd.password = "";
 		toadd.isPublic = false;
+		toadd.owner = -1;
 
 		const users: UserEntity[] = [];
 
@@ -213,6 +217,16 @@ export class ChatService {
 		await this.chatRepository.remove(chats);
 	}
 
+	async clearbyId(id: number): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: id },
+			relations: ["messages"],
+		});
+		const messages: ChatMessageEntity[] = chat.messages;
+		await this.chatMessageRepository.remove(messages);
+		await this.chatRepository.remove(chat);
+	}
+
 	async isProtected(id: number): Promise<boolean> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
@@ -248,5 +262,119 @@ export class ChatService {
 			return true;
 		}
 		return false;
+	}
+
+	async changepw(
+		password: string,
+		chatId: number,
+		userId: number,
+	): Promise<boolean> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+		});
+		if (chat.owner != userId) {
+			return false;
+		}
+		if (password == "") {
+			chat.password == "";
+			await this.chatRepository.save(chat);
+			return true;
+		}
+		chat.password = await this.protectorService.hash(password);
+		await this.chatRepository.save(chat);
+		return true;
+	}
+
+	async leave(
+		chatId: number,
+		idToRemove: number,
+		executer: number,
+	): Promise<boolean> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["users", "admins"],
+		});
+		if (!chat) {
+			throw "no chat to remove";
+		}
+		if (chat.isPublic == false) {
+			return false;
+		}
+		if (
+			executer == idToRemove ||
+			executer == chat.owner ||
+			chat.admins.findIndex((e) => e.id == executer) != -1
+		) {
+			let indexToRemove = chat.users.findIndex((e) => e.id == idToRemove); // returns -1 if not found
+			if (indexToRemove < 0)
+				throw "Can not remove user from chat, because user is not in chat";
+			chat.users.splice(indexToRemove, 1);
+			if (!chat.users.length) {
+				this.clearbyId(chatId);
+			}
+			if (
+				(indexToRemove = chat.admins.findIndex((e) => e.id == idToRemove)) != -1
+			) {
+				chat.admins.splice(indexToRemove, 1);
+			}
+			if (idToRemove == chat.owner) {
+				if (chat.admins.length) {
+					chat.owner = chat.admins[0].id;
+				} else {
+					chat.owner = chat.users[0].id;
+				}
+			}
+			await this.chatRepository.save(chat);
+			return true;
+		}
+		console.log("no permissions to remove user from chat");
+		return false;
+	}
+
+	async changeVis(
+		chatId: number,
+		userId: number,
+		newVis: string,
+		newpw: string,
+	): Promise<boolean> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+		});
+		if (chat.owner != userId) {
+			return false;
+		}
+		if (newVis == "private") {
+			chat.isPublic == false;
+			await this.chatRepository.save(chat);
+			return true;
+		} else if (newVis == "public" || newVis == "protected") {
+			chat.isPublic == true;
+			await this.chatRepository.save(chat);
+			if (newVis == "protected") {
+				this.changepw(newpw, chatId, userId);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	async addAdmin(
+		chatId: number,
+		userId: number,
+		newAdminId: number,
+	): Promise<boolean> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins"],
+		});
+		if (chat.owner != userId) {
+			return false;
+		}
+		const newAdmin = await this.userService.getUserQueryOne({
+			where: { id: newAdminId },
+		});
+		chat.admins.push(newAdmin);
+		await this.chatRepository.save(chat);
+		return true;
 	}
 }

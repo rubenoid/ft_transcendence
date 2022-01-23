@@ -32,6 +32,17 @@ export class ChatEntity {
 		cascade: true,
 	})
 	messages: ChatMessageEntity[];
+
+	@Column()
+	owner: number;
+
+	@ManyToMany(() => UserEntity, {
+		onDelete: "SET NULL",
+		cascade: true,
+		nullable: true,
+	})
+	@JoinTable()
+	admins: UserEntity[];
 }
 
 @Entity()

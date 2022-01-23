@@ -4,7 +4,7 @@ import { fetchData, postData } from "../../../API/API";
 import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
-import { SharedChatState } from "../SideBar";
+import { SharedChatState, outputChatName } from "../SideBar";
 import {
 	ChannelTitleContainer,
 	ChannelCreateContainer,
@@ -13,6 +13,7 @@ import {
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
 import { Form } from "../../ConnectionForm/ConnectionFormElements";
+import { SharedUserState } from "../../Profile/Profile";
 
 class CreateChannelsForm {
 	name = "";
@@ -30,6 +31,8 @@ const ChannelsView = (): JSX.Element => {
 	const [userSearched, setUserSearched] = useState<User>(undefined);
 	const [usersAdded, setUsersAdded] = useState<User[]>([]);
 	const { channel, setChannel } = SharedChatState();
+	const { user, setUser } = SharedUserState();
+
 	const [userToAddText, setUserToAddText] = useState<string>("");
 
 	useEffect(() => {
@@ -71,7 +74,9 @@ const ChannelsView = (): JSX.Element => {
 					}}
 				>
 					<Text color="black" fontSize="20px">
-						{channel.name}
+						{channel.isPublic
+							? channel.name
+							: outputChatName(channel, user, channel.name)}
 					</Text>
 					<Text>{channel.isProtected ? "🔑" : ""}</Text>
 				</ChannelCard>

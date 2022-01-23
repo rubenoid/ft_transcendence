@@ -77,4 +77,41 @@ export class ChatController {
 	async clear(): Promise<void> {
 		return await this.chatService.clear();
 	}
+
+	@Post("changepw")
+	async changepw(
+		@Req() req: GuardedRequest,
+		@Body("password") password: string,
+		@Body("chatId") chatId: number,
+	): Promise<boolean> {
+		return this.chatService.changepw(password, chatId, req.user.id);
+	}
+
+	@Post("leave")
+	async leave(
+		@Req() req: GuardedRequest,
+		@Body("chatId") chatId: number,
+		@Body("idToRemove") idToRemove: number,
+	): Promise<boolean> {
+		return await this.chatService.leave(chatId, idToRemove, req.user.id);
+	}
+
+	@Post("changeVis")
+	async changeVis(
+		@Req() req: GuardedRequest,
+		@Body("chatId") chatId: number,
+		@Body("newVis") newVis: string,
+		@Body("newpw") newpw: string,
+	): Promise<boolean> {
+		return await this.chatService.changeVis(chatId, req.user.id, newVis, newpw);
+	}
+
+	@Post("addAdmin")
+	async addAdmin(
+		@Req() req: GuardedRequest,
+		@Body("newAdminId") newAdminId: number,
+		@Body("chatId") chatId: number,
+	): Promise<boolean> {
+		return await this.chatService.addAdmin(chatId, req.user.id, newAdminId);
+	}
 }

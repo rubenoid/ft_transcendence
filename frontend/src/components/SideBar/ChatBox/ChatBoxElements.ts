@@ -17,7 +17,7 @@ export const TopContainer = styled.div`
 	justify-content: space-between;
 `;
 
-export const TopText = styled.div`
+export const TopText = styled.p`
 	font-size: 30px;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -82,4 +82,8 @@ export const SendIconContainer = styled.div`
 		color: #393b4c;
 		transition: all ease-in-out;
 	}
+`;
+
+export const TopButtonsContainer = styled.div`
+	display: flex;
 `;
