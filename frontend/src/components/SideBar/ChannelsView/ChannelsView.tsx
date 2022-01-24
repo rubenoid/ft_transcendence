@@ -14,6 +14,7 @@ import { TextInput } from "../../Utils/TextInput/TextInput";
 import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
 import { Form } from "../../ConnectionForm/ConnectionFormElements";
 import { SharedUserState } from "../../Profile/Profile";
+import AddUserInput from "../../AddUserInput/AddUserInput";
 
 class CreateChannelsForm {
 	name = "";
@@ -96,7 +97,6 @@ const ChannelsView = (): JSX.Element => {
 			const endpoint = `/user/getByUserName/${e}`;
 			const user: User = await fetchData(endpoint);
 			if (user) {
-				setUserSearched(user);
 			}
 			return user;
 		}
@@ -183,19 +183,18 @@ const ChannelsView = (): JSX.Element => {
 					{channelForm && channelForm.isPublic == 2 ? (
 						<TextInput
 							type="text"
-							placeholder="Type to search..."
+							placeholder="Enter new password here"
 							onChange={(e) => (channelForm.password = e.target.value)}
 						></TextInput>
 					) : (
 						""
 					)}
 					<Text color="black">Search for users to add</Text>
-					<TextInput
-						type="text"
+					<AddUserInput
 						placeholder="Type to search..."
-						value={userToAddText}
-						onChange={(e) => handleChangeSearch(e.target.value)}
-					></TextInput>
+						removeOnEnter={true}
+						onValidUser={(e: User) => setUserSearched(e)}
+					></AddUserInput>
 					{userSearched ? SearchResult(userSearched, "") : ""}
 					{usersAdded ? listUsersAdded : ""}
 					<Button

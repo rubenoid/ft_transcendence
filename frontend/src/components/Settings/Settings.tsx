@@ -17,6 +17,7 @@ import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { User } from "../../Types/Types";
+import AddUserInput from "../AddUserInput/AddUserInput";
 
 interface detailedUser extends User {
 	twoFactorSecret: string;
@@ -366,11 +367,10 @@ const SettingsForm = (): JSX.Element => {
 					</tbody>
 				</Table>
 				<Text>Search for users to block</Text>
-				<TextInput
-					type="text"
+				<AddUserInput
 					placeholder="Type to search..."
-					onChange={(e) => handleChangeSearch(e.target.value, "blocked")}
-				></TextInput>
+					onValidUser={(e: User) => handleChangeSearch(e.userName, "blocked")}
+				></AddUserInput>
 				{user2block ? SearchResult(user2block, "blocked") : ""}
 				<Label>
 					{" "}
@@ -392,11 +392,12 @@ const SettingsForm = (): JSX.Element => {
 				<Item>
 					<Text>Search for friends to add</Text>
 				</Item>
-				<TextInput
-					type="text"
+				<AddUserInput
 					placeholder="Type to search..."
-					onChange={(e) => handleChangeSearch(e.target.value, "friends")}
-				></TextInput>
+					onValidUser={(e: User) =>
+						handleChangeSearch(user.userName, "friends")
+					}
+				></AddUserInput>
 				{user2friend ? SearchResult(user2friend, "friends") : ""}
 				<Item>
 					<Label>

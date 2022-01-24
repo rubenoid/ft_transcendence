@@ -6,6 +6,7 @@ import { fetchData, postData } from "../../API/API";
 import { Text } from "../Utils/Text/Text";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { TextInput } from "../Utils/TextInput/TextInput";
+import AddUserInput from "../AddUserInput/AddUserInput";
 import {
 	UserWrapper,
 	UserRow,
@@ -36,7 +37,6 @@ enum roleLevel {
 }
 
 class ChatSettingsForm {
-
 	constructor(id: number, name: string, priv: number) {
 		this.name = name;
 		this.privacyLevel = priv;
@@ -76,7 +76,13 @@ const ChatSettings = (): JSX.Element => {
 		} else {
 			setMyRole(roleLevel.user);
 		}
-		setSettingsForm(new ChatSettingsForm(chatData.id, chatData.name, Number(!chatData.isPublic) + Number(chatData.hasPassword)))
+		setSettingsForm(
+			new ChatSettingsForm(
+				chatData.id,
+				chatData.name,
+				Number(!chatData.isPublic) + Number(chatData.hasPassword),
+			),
+		);
 	}, [chatData]);
 
 	const listUsers = (): JSX.Element[] => {
@@ -86,9 +92,11 @@ const ChatSettings = (): JSX.Element => {
 					<Link to={`/profile/${mapUser.id}`}>
 						<Text>{mapUser.userName}</Text>
 					</Link>
-					{ chatData.owner == mapUser.id ? "OWNER" : (
-						chatData.admins.find((x) => x.id == mapUser.id) ? "ADMIN" : ""
-					)}
+					{chatData.owner == mapUser.id
+						? "OWNER"
+						: chatData.admins.find((x) => x.id == mapUser.id)
+						? "ADMIN"
+						: ""}
 					{myRole != roleLevel.user && mapUser.id != user.id ? (
 						<UserRow>
 							{chatData.admins.find((x) => x.id != mapUser.id) ? (
@@ -126,7 +134,11 @@ const ChatSettings = (): JSX.Element => {
 	};
 
 	function saveChatSettings(): void {
-		if (settingsForm.name != chatData.name || settingsForm.privacyLevel != Number(!chatData.isPublic) + Number(chatData.hasPassword))
+		if (
+			settingsForm.name != chatData.name ||
+			settingsForm.privacyLevel !=
+				Number(!chatData.isPublic) + Number(chatData.hasPassword)
+		)
 			postData("/chat/updateChat", settingsForm);
 		for (const e of endpoints) {
 			postData(e.endpoint, e.data);
@@ -135,7 +147,7 @@ const ChatSettings = (): JSX.Element => {
 	}
 
 	function updatePrivacy(e: number): void {
-		setSettingsForm({...settingsForm, privacyLevel: e});
+		setSettingsForm({ ...settingsForm, privacyLevel: e });
 	}
 
 	const displaySettings = (): JSX.Element => {
@@ -143,7 +155,13 @@ const ChatSettings = (): JSX.Element => {
 			<>
 				<Text fontSize="20px">Settings</Text>
 				<Text>Change Name</Text>
-				<TextInput type={"text"} placeholder={settingsForm.name} onChange={(e) => setSettingsForm({...settingsForm, name: e.target.value})}></TextInput>
+				<TextInput
+					type={"text"}
+					placeholder={settingsForm.name}
+					onChange={(e) =>
+						setSettingsForm({ ...settingsForm, name: e.target.value })
+					}
+				></TextInput>
 				<Text>Change Visibility</Text>
 				<input
 					type="radio"
@@ -172,11 +190,16 @@ const ChatSettings = (): JSX.Element => {
 				/>
 				Protected
 				<br />
-				{ settingsForm.privacyLevel == 2 ? (
-					<TextInput placeholder="Enter new password" onChange={(e) => setSettingsForm({...settingsForm, password: e.target.value}) } />
-				) : ""
-
-				}
+				{settingsForm.privacyLevel == 2 ? (
+					<TextInput
+						placeholder="Enter new password"
+						onChange={(e) =>
+							setSettingsForm({ ...settingsForm, password: e.target.value })
+						}
+					/>
+				) : (
+					""
+				)}
 			</>
 		);
 	};
@@ -193,29 +216,42 @@ const ChatSettings = (): JSX.Element => {
 				<Text color="black">Users</Text>
 				<UserWrapper>{listUsers()}</UserWrapper>
 
-				{ myRole != roleLevel.user ? (
+				{myRole != roleLevel.user ? (
 					<>
 						<Text color="black">Add Users</Text>
 						<UserWrapper>
-							<TextInput placeholder="enter username" onChange={
-								() => {}
-							}>
-
-							</TextInput>
+							<AddUserInput
+								removeOnEnter={true}
+								placeholder={"Enter username"}
+								onValidUser={(e: User) => {
+									console.log(e);
+								}}
+							/>
 						</UserWrapper>
 					</>
-					) : ""
-				}
+				) : (
+					""
+				)}
 				<br />
 
 				<UserWrapper>{settingsForm ? displaySettings() : ""}</UserWrapper>
 
 				<Button onClick={() => saveChatSettings()}>Save</Button>
-				<Button onClick={() => {navigate("/", {replace: true})}}>Back</Button>
-				<Button onClick={() => {
-					postData("/chat/leave", {chatId: chatId, idToRemove: user.id});
-					navigate("/", {replace: true});
-				}}>Leave</Button>
+				<Button
+					onClick={() => {
+						navigate("/", { replace: true });
+					}}
+				>
+					Back
+				</Button>
+				<Button
+					onClick={() => {
+						postData("/chat/leave", { chatId: chatId, idToRemove: user.id });
+						navigate("/", { replace: true });
+					}}
+				>
+					Leave
+				</Button>
 			</>
 		);
 	};
