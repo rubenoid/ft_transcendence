@@ -57,12 +57,34 @@ export class ChatService {
 		return data.messages;
 	}
 
-	async getChatData(id: number, userId: number): Promise<ChatEntity> {
+	async getChatData(id: number): Promise<ChatEntity> {
+		const data = await this.chatRepository.findOne({
+			where: { id: id },
+		});
+
+		if (data.password)
+		{
+			data["hasPassword"] = true;
+		}
+		else data["hasPassword"] = false;
+			
+		delete data.password;
+		return data;
+	}
+
+	async getChatDataDetailed(id: number): Promise<ChatEntity> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
 			relations: ["users", "admins"],
 		});
 
+		if (data.password)
+		{
+			data["hasPassword"] = true;
+		}
+		else data["hasPassword"] = false;
+			
+		delete data.password;
 		return data;
 	}
 
@@ -227,17 +249,6 @@ export class ChatService {
 		await this.chatRepository.remove(chat);
 	}
 
-	async isProtected(id: number): Promise<boolean> {
-		const data = await this.chatRepository.findOne({
-			where: { id: id },
-			relations: ["users", "messages"],
-		});
-		if (data.password == "") {
-			return false;
-		}
-		return true;
-	}
-
 	async enterProtected(
 		password: string,
 		chatId: number,
@@ -262,27 +273,6 @@ export class ChatService {
 			return true;
 		}
 		return false;
-	}
-
-	async changepw(
-		password: string,
-		chatId: number,
-		userId: number,
-	): Promise<boolean> {
-		const chat = await this.chatRepository.findOne({
-			where: { id: chatId },
-		});
-		if (chat.owner != userId) {
-			return false;
-		}
-		if (password == "") {
-			chat.password == "";
-			await this.chatRepository.save(chat);
-			return true;
-		}
-		chat.password = await this.protectorService.hash(password);
-		await this.chatRepository.save(chat);
-		return true;
 	}
 
 	async leave(
@@ -311,6 +301,7 @@ export class ChatService {
 			chat.users.splice(indexToRemove, 1);
 			if (!chat.users.length) {
 				this.clearbyId(chatId);
+				return true;
 			}
 			if (
 				(indexToRemove = chat.admins.findIndex((e) => e.id == idToRemove)) != -1
@@ -331,30 +322,31 @@ export class ChatService {
 		return false;
 	}
 
-	async changeVis(
+	async updateChat(
 		chatId: number,
 		userId: number,
-		newVis: string,
-		newpw: string,
+		name: string,
+		privacyLevel: number,
+		password: string,
 	): Promise<boolean> {
 		const chat = await this.chatRepository.findOne({
 			where: { id: chatId },
 		});
+		chat.name = name;
 		if (chat.owner != userId) {
 			return false;
 		}
-		if (newVis == "private") {
-			chat.isPublic == false;
-			await this.chatRepository.save(chat);
-			return true;
-		} else if (newVis == "public" || newVis == "protected") {
-			chat.isPublic == true;
-			await this.chatRepository.save(chat);
-			if (newVis == "protected") {
-				this.changepw(newpw, chatId, userId);
-			}
-			return true;
+		if (privacyLevel == 2)
+		{
+			chat.isPublic = true;
+			chat.password = await this.protectorService.hash(password);
 		}
+		else
+		{
+			chat.isPublic = !Boolean(privacyLevel);
+			chat.password = "";
+		}
+		await this.chatRepository.save(chat);
 		return false;
 	}
 

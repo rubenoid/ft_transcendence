@@ -25,7 +25,15 @@ export class ChatController {
 		@Req() req: GuardedRequest,
 		@Param("id") id: string,
 	): Promise<ChatEntity> {
-		return await this.chatService.getChatData(parseInt(id), req.user.id);
+		return await this.chatService.getChatData(parseInt(id));
+	}
+
+	@Get("getDetailed/:id")
+	async getDetailed(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<ChatEntity> {
+		return await this.chatService.getChatDataDetailed(parseInt(id));
 	}
 
 	@Post("enterProtected")
@@ -59,11 +67,6 @@ export class ChatController {
 		return await this.chatService.returnPublicChannels();
 	}
 
-	@Get("isProtected/:id")
-	async isProtected(@Param("id") id: string): Promise<boolean> {
-		return await this.chatService.isProtected(parseInt(id));
-	}
-
 	@Post("createNewChat")
 	async createNewChat(
 		@Req() req: GuardedRequest,
@@ -78,15 +81,6 @@ export class ChatController {
 		return await this.chatService.clear();
 	}
 
-	@Post("changepw")
-	async changepw(
-		@Req() req: GuardedRequest,
-		@Body("password") password: string,
-		@Body("chatId") chatId: number,
-	): Promise<boolean> {
-		return this.chatService.changepw(password, chatId, req.user.id);
-	}
-
 	@Post("leave")
 	async leave(
 		@Req() req: GuardedRequest,
@@ -96,14 +90,15 @@ export class ChatController {
 		return await this.chatService.leave(chatId, idToRemove, req.user.id);
 	}
 
-	@Post("changeVis")
-	async changeVis(
+	@Post("updateChat")
+	async updateChat(
 		@Req() req: GuardedRequest,
 		@Body("chatId") chatId: number,
-		@Body("newVis") newVis: string,
-		@Body("newpw") newpw: string,
+		@Body("name") name: string,
+		@Body("privacyLevel") privacyLevel: number,
+		@Body("password") password: string,
 	): Promise<boolean> {
-		return await this.chatService.changeVis(chatId, req.user.id, newVis, newpw);
+		return await this.chatService.updateChat(chatId, req.user.id, name, privacyLevel, password);
 	}
 
 	@Post("addAdmin")
