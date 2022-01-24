@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
-import { SettingsContainer } from "../Settings/SettingsElements";
+import { AdminContainer } from "./AdminViewElements";
 import {
 	TableRow,
-	TableCell,
+	AdminTableCell,
 	TableHeader,
-	TableHeaderCell,
-	Table,
+	AdminTableHeader,
+	AdminTable,
 } from "../Utils/Table/Table";
 import { Text } from "../Utils/Text/Text";
 import { detailedUser, Match, Channel } from "../../Types/Types";
@@ -59,31 +59,53 @@ const AdminView = (): JSX.Element => {
 	const channellist = channels.map((channels: Channel, key: number) => {
 		return (
 			<TableRow key={key}>
-				<TableCell>
-					<Text fontSize="10">{channels.id}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{channels.name}</Text>
-				</TableCell>
-				<TableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{channels.id}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{channels.name}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
 					{channels.isProtected ? <Text>Protected</Text> : ""}
 					{channels.isPublic && !channels.isProtected ? (
-						<Text>public</Text>
+						<Text color="black">public</Text>
 					) : (
 						""
 					)}
-					{!channels.isPublic ? <Text>private</Text> : ""}
-				</TableCell>
-				<TableCell>
-					{!channels.isPublic ? <Text>Na</Text> : <Text>{channels.owner}</Text>}
-				</TableCell>
-				<TableCell>
 					{!channels.isPublic ? (
-						<Text>Na</Text>
+						<Text fontSize="10" color="black">
+							private
+						</Text>
 					) : (
-						<Text>{channels.adminbyUsername}</Text>
+						""
 					)}
-				</TableCell>
+				</AdminTableCell>
+				<AdminTableCell>
+					{!channels.isPublic ? (
+						<Text fontSize="10" color="black">
+							Na
+						</Text>
+					) : (
+						<Text fontSize="10" color="black">
+							{channels.owner}
+						</Text>
+					)}
+				</AdminTableCell>
+				<AdminTableCell>
+					{!channels.isPublic ? (
+						<Text fontSize="10" color="black">
+							Na
+						</Text>
+					) : (
+						<Text fontSize="10" color="black">
+							{channels.adminbyUsername}
+						</Text>
+					)}
+				</AdminTableCell>
 			</TableRow>
 		);
 	});
@@ -91,25 +113,35 @@ const AdminView = (): JSX.Element => {
 	const matchlist = matches.map((matches: Match, key: number) => {
 		return (
 			<TableRow key={key}>
-				<TableCell>
-					<Text fontSize="10">{matches.id}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{matches.players[0].userName}</Text>
-				</TableCell>
-				<TableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{matches.id}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{matches.players[0].userName}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
 					{matches.players[1] ? (
-						<Text fontSize="10">{matches.players[1].userName}</Text>
+						<Text fontSize="10" color="black">
+							{matches.players[1].userName}
+						</Text>
 					) : (
-						<Text>NA</Text>
+						<Text color="black">NA</Text>
 					)}
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{matches.scorePlayer1}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{matches.scorePlayer2}</Text>
-				</TableCell>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{matches.scorePlayer1}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{matches.scorePlayer2}
+					</Text>
+				</AdminTableCell>
 			</TableRow>
 		);
 	});
@@ -117,19 +149,27 @@ const AdminView = (): JSX.Element => {
 	const userlist = users.map((users: detailedUser, key: number) => {
 		return (
 			<TableRow key={key}>
-				<TableCell>
-					<Text fontSize="10">{users.id}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.userName}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.firstName}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.lastName}</Text>
-				</TableCell>
-				<TableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.id}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.userName}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.firstName}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.lastName}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
 					<ImgContainer>
 						<Img
 							src={"http://localhost:5000/" + users.avatar}
@@ -138,85 +178,109 @@ const AdminView = (): JSX.Element => {
 							height="300"
 						/>
 					</ImgContainer>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.wins}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.losses}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.rating}</Text>
-				</TableCell>
-				<TableCell>
-					{users.twoFactorSecret == "" ? <Text>No</Text> : <Text>Yes</Text>}
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.friendsbyUsername}</Text>
-				</TableCell>
-				<TableCell>
-					<Text fontSize="10">{users.blockedUsersbyUsername}</Text>
-				</TableCell>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.wins}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.losses}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.rating}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					{users.twoFactorSecret == "" ? (
+						<Text fontSize="10" color="black">
+							No
+						</Text>
+					) : (
+						<Text fontSize="10" color="black">
+							Yes
+						</Text>
+					)}
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.friendsbyUsername}
+					</Text>
+				</AdminTableCell>
+				<AdminTableCell>
+					<Text fontSize="10" color="black">
+						{users.blockedUsersbyUsername}
+					</Text>
+				</AdminTableCell>
 			</TableRow>
 		);
 	});
 
 	return (
-		<SettingsContainer>
+		<AdminContainer>
 			<h1>Admin View</h1>
 			<Label>
-				<Text fontSize="20px">Users</Text>
+				<Text fontSize="20px" color="black">
+					Users
+				</Text>
 			</Label>
-			<Table>
+			<AdminTable>
 				<TableHeader>
 					<TableRow>
-						<TableHeaderCell>id</TableHeaderCell>
-						<TableHeaderCell>Username</TableHeaderCell>
-						<TableHeaderCell>First Name</TableHeaderCell>
-						<TableHeaderCell>Last Name</TableHeaderCell>
-						<TableHeaderCell>avatar</TableHeaderCell>
-						<TableHeaderCell>wins</TableHeaderCell>
-						<TableHeaderCell>losses</TableHeaderCell>
-						<TableHeaderCell>rating</TableHeaderCell>
-						<TableHeaderCell>2FA Enabled</TableHeaderCell>
-						<TableHeaderCell>friends</TableHeaderCell>
-						<TableHeaderCell>blockedUsers</TableHeaderCell>
+						<AdminTableHeader>id</AdminTableHeader>
+						<AdminTableHeader>Username</AdminTableHeader>
+						<AdminTableHeader>First Name</AdminTableHeader>
+						<AdminTableHeader>Last Name</AdminTableHeader>
+						<AdminTableHeader>avatar</AdminTableHeader>
+						<AdminTableHeader>wins</AdminTableHeader>
+						<AdminTableHeader>losses</AdminTableHeader>
+						<AdminTableHeader>rating</AdminTableHeader>
+						<AdminTableHeader>2FA Enabled</AdminTableHeader>
+						<AdminTableHeader>friends</AdminTableHeader>
+						<AdminTableHeader>blockedUsers</AdminTableHeader>
 					</TableRow>
 				</TableHeader>
 				<tbody>{users ? userlist : null}</tbody>
-			</Table>
+			</AdminTable>
 			<Label>
-				<Text fontSize="20px">Matches</Text>
+				<Text fontSize="20px" color="black">
+					Matches
+				</Text>
 			</Label>
-			<Table>
+			<AdminTable>
 				<TableHeader>
 					<TableRow>
-						<TableHeaderCell>id</TableHeaderCell>
-						<TableHeaderCell>Player 1</TableHeaderCell>
-						<TableHeaderCell>Player 2</TableHeaderCell>
-						<TableHeaderCell>Score P1</TableHeaderCell>
-						<TableHeaderCell>Score P2</TableHeaderCell>
+						<AdminTableHeader>id</AdminTableHeader>
+						<AdminTableHeader>Player 1</AdminTableHeader>
+						<AdminTableHeader>Player 2</AdminTableHeader>
+						<AdminTableHeader>Score P1</AdminTableHeader>
+						<AdminTableHeader>Score P2</AdminTableHeader>
 					</TableRow>
 				</TableHeader>
 				<tbody>{matches ? matchlist : null}</tbody>
-			</Table>
+			</AdminTable>
 
 			<Label>
-				<Text fontSize="20px">Channels and chats</Text>
+				<Text fontSize="20px" color="black">
+					Channels and chats
+				</Text>
 			</Label>
-			<Table>
+			<AdminTable>
 				<TableHeader>
 					<TableRow>
-						<TableHeaderCell>id</TableHeaderCell>
-						<TableHeaderCell>name</TableHeaderCell>
-						<TableHeaderCell>privacy level</TableHeaderCell>
-						<TableHeaderCell>owner</TableHeaderCell>
-						<TableHeaderCell>admins</TableHeaderCell>
+						<AdminTableHeader>id</AdminTableHeader>
+						<AdminTableHeader>name</AdminTableHeader>
+						<AdminTableHeader>privacy level</AdminTableHeader>
+						<AdminTableHeader>owner</AdminTableHeader>
+						<AdminTableHeader>admins</AdminTableHeader>
 					</TableRow>
 				</TableHeader>
 				<tbody>{channels ? channellist : null}</tbody>
-			</Table>
-		</SettingsContainer>
+			</AdminTable>
+		</AdminContainer>
 	);
 };
 export default AdminView;
