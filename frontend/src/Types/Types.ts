@@ -34,7 +34,7 @@ export interface Channel {
 
 export interface detailedUser extends User {
 	twoFactorSecret: string;
-	blockedUsers: number[];
-	blockedUsersAsUsers: detailedUser[];
+	blockedUsers: User[];
+	blockedBy: User[];
 	initial2FAEnabled: boolean;
 }

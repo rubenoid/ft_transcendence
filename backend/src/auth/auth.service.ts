@@ -10,12 +10,11 @@ export class AuthService {
 	constructor(
 		private readonly protectorService: ProtectorService,
 		private readonly userService: UserService,
-		private jwtService: JwtService, // private readonly protector: Protector,
+		private jwtService: JwtService,
 	) {}
 
 	async login(user: { id: number }): Promise<string> {
 		const payload = { id: user.id };
-		// console.log("payload", payload);
 		return this.jwtService.sign(payload);
 	}
 
@@ -54,17 +53,13 @@ export class AuthService {
 		return await twofa.check2faInput(input, secret);
 	}
 
-	async testProtector(): Promise<void> {
-		console.log("hahahha");
-		const h = await this.protectorService.hash("i like react kidding");
-
-		console.log("hahahha1");
-		this.protectorService
-			.compare("i love angular", h)
-			.then((res) => console.log(res));
-		console.log("hahahha2");
-		this.protectorService
-			.compare("i like react kidding", h)
-			.then((res) => console.log(res));
-	}
+	// async testProtector(): Promise<void> {
+	// 	const h = await this.protectorService.hash("i like react kidding");
+	// 	this.protectorService
+	// 		.compare("i love angular", h)
+	// 		.then((res) => console.log(res));
+	// 	this.protectorService
+	// 		.compare("i like react kidding", h)
+	// 		.then((res) => console.log(res));
+	// }
 }

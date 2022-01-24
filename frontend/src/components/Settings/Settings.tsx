@@ -16,13 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
-import { User } from "../../Types/Types";
-
-interface detailedUser extends User {
-	twoFactorSecret: string;
-	blockedUsers: number[];
-	blockedUsersAsUsers: detailedUser[];
-}
+import { User, detailedUser } from "../../Types/Types";
 
 interface newQrData {
 	qrcode: string;
@@ -53,7 +47,8 @@ const SettingsForm = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getUser(): Promise<User> {
-			const user: detailedUser = await fetchData("/user/meAndFriends");
+			const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
+			console.log("user got", user);
 			if (user.twoFactorSecret.length == 0) {
 				console.log("TWO FA DISABLED");
 				setIsChecked(false);
@@ -62,11 +57,6 @@ const SettingsForm = (): JSX.Element => {
 				console.log("TWO FA ENABLED");
 				setIsChecked(true);
 				setinitial2FAEnabled(true);
-			}
-			user.blockedUsersAsUsers = [];
-			for (const blockeduser of user.blockedUsers) {
-				const endpoint = `/user/get/${blockeduser}`;
-				user.blockedUsersAsUsers.push(await fetchData(endpoint));
 			}
 			setUser(user);
 			return user;
@@ -219,7 +209,7 @@ const SettingsForm = (): JSX.Element => {
 		};
 
 		const friendz = user.friends;
-		const blocked = user.blockedUsersAsUsers;
+		const blocked = user.blockedUsers;
 
 		const listfriends = friendz.map((friendz, key: number) => {
 			return (

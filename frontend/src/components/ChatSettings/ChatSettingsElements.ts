@@ -18,10 +18,10 @@ export const UserRow = styled.div`
 
 export const RowButton = styled.button`
 	padding: 5px;
-	margin: 0 5px;
+    margin: 0 5px;
 	background-color: #04aa6d;
-	color: white;
+    color: white;
 	border: none;
-	border-radius: 4px;
-	cursor: pointer;
+    border-radius: 4px;
+    cursor: pointer;
 `;
