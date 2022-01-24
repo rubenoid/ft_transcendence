@@ -62,12 +62,10 @@ export class ChatService {
 			where: { id: id },
 		});
 
-		if (data.password)
-		{
+		if (data.password) {
 			data["hasPassword"] = true;
-		}
-		else data["hasPassword"] = false;
-			
+		} else data["hasPassword"] = false;
+
 		delete data.password;
 		return data;
 	}
@@ -75,15 +73,13 @@ export class ChatService {
 	async getChatDataDetailed(id: number): Promise<ChatEntity> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
-			relations: ["users", "admins"],
+			relations: ["users", "admins", "bannedUsers"],
 		});
 
-		if (data.password)
-		{
+		if (data.password) {
 			data["hasPassword"] = true;
-		}
-		else data["hasPassword"] = false;
-			
+		} else data["hasPassword"] = false;
+
 		delete data.password;
 		return data;
 	}
@@ -336,13 +332,10 @@ export class ChatService {
 		if (chat.owner != userId) {
 			return false;
 		}
-		if (privacyLevel == 2)
-		{
+		if (privacyLevel == 2) {
 			chat.isPublic = true;
 			chat.password = await this.protectorService.hash(password);
-		}
-		else
-		{
+		} else {
 			chat.isPublic = !Boolean(privacyLevel);
 			chat.password = "";
 		}
@@ -370,20 +363,74 @@ export class ChatService {
 		return true;
 	}
 
-	async addUser(executerId: number, chatId: number, userId: number): Promise<void>
-	{
+	async addUser(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
 		const chat = await this.chatRepository.findOne({
 			where: { id: chatId },
 			relations: ["admins", "users"],
 		});
-		if (!chat || chat.admins.find(x => x.id == executerId) == undefined)
+		if (!chat || chat.admins.find((x) => x.id == executerId) == undefined)
 			throw "Error in request";
-		const user = await this.userService.getUserQueryOne({where: {id: userId}});
-		
-		if (!user || chat.users.find(x => x.id == user.id))
+		const user = await this.userService.getUserQueryOne({
+			where: { id: userId },
+		});
+
+		if (!user || chat.users.find((x) => x.id == user.id))
 			throw "User add error";
-		
+
 		chat.users.push(user);
+		this.chatRepository.save(chat);
+	}
+
+	async banUser(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users", "bannedUsers"],
+		});
+
+		if (!chat || chat.admins.find((x) => x.id == executerId) == undefined)
+			throw "Error in request";
+		if (userId == chat.owner) throw "cant ban owner";
+		let idx = chat.admins.findIndex((x) => x.id == userId);
+		if (idx != -1) chat.admins.splice(idx, 1);
+
+		idx = chat.users.findIndex((x) => x.id == userId);
+		if (idx != -1) chat.users.splice(idx, 1);
+
+		chat.bannedUsers.push(
+			await this.userService.getUserQueryOne({ where: { id: userId } }),
+		);
+
+		this.chatRepository.save(chat);
+	}
+
+	async unbanUser(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users", "bannedUsers"],
+		});
+
+		if (!chat || chat.admins.find((x) => x.id == executerId) == undefined)
+			throw "Error in request";
+		const idx = chat.bannedUsers.findIndex((x) => x.id == userId);
+
+		if (idx == -1) throw "no user found";
+		chat.bannedUsers.splice(idx, 1);
+		chat.users.push(
+			await this.userService.getUserQueryOne({ where: { id: userId } }),
+		);
+
 		this.chatRepository.save(chat);
 	}
 }

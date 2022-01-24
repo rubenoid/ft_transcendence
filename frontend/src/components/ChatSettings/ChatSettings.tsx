@@ -7,6 +7,7 @@ import { Text } from "../Utils/Text/Text";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import AddUserInput from "../AddUserInput/AddUserInput";
+import EndpointButton from "../EndpointButton/EndpointButton";
 import {
 	UserWrapper,
 	UserRow,
@@ -22,6 +23,8 @@ interface ChatData {
 	name: string;
 	users: User[];
 	admins: User[];
+	bannedUsers: User[];
+	mutedUsers: User[];
 	owner: number;
 }
 
@@ -101,30 +104,40 @@ const ChatSettings = (): JSX.Element => {
 					{myRole != roleLevel.user && mapUser.id != user.id ? (
 						<UserRow>
 							{chatData.admins.find((x) => x.id != mapUser.id) ? (
-								<RowButton
-									onClick={() => {
-										endpoints.push({
-											endpoint: "/chat/addAdmin/",
-											data: { newAdminId: mapUser.id, chatId: chatId },
-										});
+								<EndpointButton
+									useSmall={true}
+									toSet={{
+										endpoint: "/chat/addAdmin",
+										data: { newAdminId: mapUser.id, chatId: chatId },
 									}}
+									endpointRef={setEndpoints}
 								>
-									Promote
-								</RowButton>
+									<Text>Promote</Text>
+								</EndpointButton>
 							) : (
 								""
 							)}
-							<RowButton
-								onClick={() => {
-									endpoints.push({
-										endpoint: "/chat/leave",
-										data: { chatId: chatId, idToRemove: mapUser.id },
-									});
+							<EndpointButton
+								useSmall={true}
+								toSet={{
+									endpoint: "/chat/banUser",
+									data: { chatId: chatId, userId: mapUser.id },
 								}}
+								endpointRef={setEndpoints}
 							>
-								Ban
-							</RowButton>
-							<RowButton>Mute</RowButton>
+								<Text>Ban</Text>
+							</EndpointButton>
+
+							<EndpointButton
+								useSmall={true}
+								toSet={{
+									endpoint: "/chat/muteUser",
+									data: { chatId: chatId, userId: mapUser.id },
+								}}
+								endpointRef={setEndpoints}
+							>
+								<Text>Mute</Text>
+							</EndpointButton>
 						</UserRow>
 					) : (
 						""
@@ -139,9 +152,39 @@ const ChatSettings = (): JSX.Element => {
 			<UserRowContainer key={key}>
 				<Text>{user.userName}</Text>
 			</UserRowContainer>
-		)
-	})
+		);
+	});
 
+	const listBannedUsers = (): JSX.Element[] => {
+		return chatData.bannedUsers.map((user: User, key: number) => {
+			return (
+				<UserRowContainer key={key}>
+					<Text>{user.userName}</Text>
+					<Button
+						onClick={() => {
+							endpoints.push({
+								endpoint: "/chat/unbanUser",
+								data: { chatId: chatId, userId: user.id },
+							});
+						}}
+					>
+						Unban
+					</Button>
+				</UserRowContainer>
+			);
+		});
+	};
+
+	const listMutedUsers = (): JSX.Element[] => {
+		return usersToAdd.map((user: User, key: number) => {
+			return (
+				<UserRowContainer key={key}>
+					<Text>{user.userName}</Text>
+					<Button>Unmute</Button>
+				</UserRowContainer>
+			);
+		});
+	};
 
 	function saveChatSettings(): void {
 		if (
@@ -154,7 +197,7 @@ const ChatSettings = (): JSX.Element => {
 			postData(e.endpoint, e.data);
 		}
 		for (const e of usersToAdd) {
-			postData("/chat/addUser", {userId: e.id, chatId: chatId});
+			postData("/chat/addUser", { userId: e.id, chatId: chatId });
 		}
 		navigate("/", { replace: false });
 	}
@@ -249,12 +292,23 @@ const ChatSettings = (): JSX.Element => {
 					""
 				)}
 				<br />
+				<UserWrapper>
+					<Text color="black">Banned Users</Text>
+					{listBannedUsers()}
+				</UserWrapper>
+				<UserWrapper>
+					<Text color="black">Muted Users</Text>
+					{/* {listMutedUsers} */}
+				</UserWrapper>
 
-				<UserWrapper>{settingsForm ? displaySettings() : ""}</UserWrapper>
+				<UserWrapper>
+					{settingsForm && myRole == roleLevel.owner ? displaySettings() : ""}
+				</UserWrapper>
 
 				<Button onClick={() => saveChatSettings()}>Save</Button>
 				<Button
 					onClick={() => {
+						console.log(endpoints);
 						navigate("/", { replace: true });
 					}}
 				>
@@ -274,7 +328,17 @@ const ChatSettings = (): JSX.Element => {
 
 	return (
 		<SettingsContainer>
+			<EndpointButton
+				endpointRef={setEndpoints}
+				toSet={{
+					endpoint: "/chat/addAdmin/",
+					data: { newAdminId: 1, chatId: chatId },
+				}}
+			>
+				<Text>Ja dit is text</Text>
+			</EndpointButton>
 			{chatData ? displayChat() : "loading"}
+			{JSON.stringify(endpoints)}
 		</SettingsContainer>
 	);
 };

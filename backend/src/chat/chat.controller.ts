@@ -98,7 +98,13 @@ export class ChatController {
 		@Body("privacyLevel") privacyLevel: number,
 		@Body("password") password: string,
 	): Promise<boolean> {
-		return await this.chatService.updateChat(chatId, req.user.id, name, privacyLevel, password);
+		return await this.chatService.updateChat(
+			chatId,
+			req.user.id,
+			name,
+			privacyLevel,
+			password,
+		);
 	}
 
 	@Post("addAdmin")
@@ -118,5 +124,22 @@ export class ChatController {
 	): Promise<void> {
 		return await this.chatService.addUser(req.user.id, chatId, userId);
 	}
-	
+
+	@Post("banUser")
+	async banUser(
+		@Req() req: GuardedRequest,
+		@Body("userId") userId: number,
+		@Body("chatId") chatId: number,
+	): Promise<void> {
+		return await this.chatService.banUser(req.user.id, chatId, userId);
+	}
+
+	@Post("unbanUser")
+	async unbanUser(
+		@Req() req: GuardedRequest,
+		@Body("userId") userId: number,
+		@Body("chatId") chatId: number,
+	): Promise<void> {
+		return await this.chatService.unbanUser(req.user.id, chatId, userId);
+	}
 }

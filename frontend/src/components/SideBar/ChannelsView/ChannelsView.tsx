@@ -34,7 +34,6 @@ const ChannelsView = (): JSX.Element => {
 	const { channel, setChannel } = SharedChatState();
 	const { user, setUser } = SharedUserState();
 
-
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
 			let channels: Channel[] = await fetchData("/chat/public");
