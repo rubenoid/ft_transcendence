@@ -346,27 +346,25 @@ const SettingsForm = (): JSX.Element => {
 						onChange={handleFileUpload}
 					/>
 				</Item>
-				<Item>
-					<Label>
-						{" "}
-						<Text fontSize="20px">Blocked users</Text>
-					</Label>
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHeaderCell>Username</TableHeaderCell>
-								<TableHeaderCell>First Name</TableHeaderCell>
-								<TableHeaderCell>Last Name</TableHeaderCell>
-								<TableHeaderCell>Edit</TableHeaderCell>
-							</TableRow>
-						</TableHeader>
-						<tbody>
-							{listblockedusers && listblockedusers.length
-								? listblockedusers
-								: null}
-						</tbody>
-					</Table>
-				</Item>
+				<Label>
+					{" "}
+					<Text fontSize="20px">Blocked users</Text>
+				</Label>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHeaderCell>Username</TableHeaderCell>
+							<TableHeaderCell>First Name</TableHeaderCell>
+							<TableHeaderCell>Last Name</TableHeaderCell>
+							<TableHeaderCell>Edit</TableHeaderCell>
+						</TableRow>
+					</TableHeader>
+					<tbody>
+						{listblockedusers && listblockedusers.length
+							? listblockedusers
+							: null}
+					</tbody>
+				</Table>
 				<Text>Search for users to block</Text>
 				<TextInput
 					type="text"
@@ -374,34 +372,32 @@ const SettingsForm = (): JSX.Element => {
 					onChange={(e) => handleChangeSearch(e.target.value, "blocked")}
 				></TextInput>
 				{user2block ? SearchResult(user2block, "blocked") : ""}
+				<Label>
+					{" "}
+					<Text fontSize="20px">Friends</Text>
+				</Label>
+				<Table>
+					<TableHeader>
+						<TableRow>
+							<TableHeaderCell>Username</TableHeaderCell>
+							<TableHeaderCell>First Name</TableHeaderCell>
+							<TableHeaderCell>Last Name</TableHeaderCell>
+							<TableHeaderCell>Edit</TableHeaderCell>
+						</TableRow>
+					</TableHeader>
+					<tbody>
+						{user.friends && user.friends.length ? listfriends : null}
+					</tbody>
+				</Table>
 				<Item>
-					<Label>
-						{" "}
-						<Text fontSize="20px">Friends</Text>
-					</Label>
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHeaderCell>Username</TableHeaderCell>
-								<TableHeaderCell>First Name</TableHeaderCell>
-								<TableHeaderCell>Last Name</TableHeaderCell>
-								<TableHeaderCell>Edit</TableHeaderCell>
-							</TableRow>
-						</TableHeader>
-						<tbody>
-							{user.friends && user.friends.length ? listfriends : null}
-						</tbody>
-					</Table>
-					<Item>
-						<Text>Search for friends to add</Text>
-					</Item>
-					<TextInput
-						type="text"
-						placeholder="Type to search..."
-						onChange={(e) => handleChangeSearch(e.target.value, "friends")}
-					></TextInput>
-					{user2friend ? SearchResult(user2friend, "friends") : ""}
+					<Text>Search for friends to add</Text>
 				</Item>
+				<TextInput
+					type="text"
+					placeholder="Type to search..."
+					onChange={(e) => handleChangeSearch(e.target.value, "friends")}
+				></TextInput>
+				{user2friend ? SearchResult(user2friend, "friends") : ""}
 				<Item>
 					<Label>
 						{" "}

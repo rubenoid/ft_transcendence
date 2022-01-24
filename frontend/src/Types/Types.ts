@@ -20,12 +20,15 @@ export type Match = {
 export interface Message {
 	data: string;
 	senderId: number;
+	channelId: number;
 }
 
 export interface Channel {
 	id: number;
 	name: string;
 	users: User[];
+	isPublic: boolean;
+	isProtected: boolean;
 	messages: Message[];
 }
 

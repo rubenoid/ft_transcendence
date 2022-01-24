@@ -10,7 +10,12 @@ import { fetchData } from "../../API/API";
 import { User, Match } from "../../Types/Types";
 import { SettingsContainer } from "../Settings/SettingsElements";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
-import { Img, ImgContainer, TopContainer } from "../Profile/ProfileElements";
+import {
+	Img,
+	ImgContainer,
+	TopContainer,
+	FriendsWrapper,
+} from "../Profile/ProfileElements";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
@@ -30,21 +35,46 @@ const ProfileExtended = (): JSX.Element => {
 	const { profileId } = useParams();
 
 	useEffect(() => {
-		async function getUser(): Promise<User> {
+		async function getUser(): Promise<detailedUser> {
 			const user: detailedUser = await fetchData(`/user/get/${profileId}`);
-			user.friends = await fetchData(`/friends/get/${profileId}`);
-			user.matches = await fetchData(`/match/getUserHistory/${profileId}`);
-			user.status = await fetchData(`/user/userStatus/${profileId}`);
-			setUser(user);
+
+			user.friends = [];
+			user.matches = [];
+			user.status = "";
+			fetchData(`/friends/get/${profileId}`)
+				.then((friends: User[]) => {
+					user.friends = friends;
+					setUser({ ...user });
+				})
+				.catch((er) => {
+					console.log("1", er);
+				});
+			fetchData(`/match/getUserHistory/${profileId}`)
+				.then((match: Match[]) => {
+					user.matches = match;
+					setUser({ ...user });
+				})
+				.catch((er) => {
+					console.log("2", er);
+				});
+
+			fetchData(`/user/userStatus/${profileId}`)
+				.then((status: string) => {
+					user.status = status;
+					setUser({ ...user });
+				})
+				.catch((er) => {
+					console.log("3", er);
+				});
 			return user;
 		}
 		getUser();
 	}, [profileId]);
 
-	const settingsData = (): JSX.Element => {
+	const friendsData = (): JSX.Element => {
 		const listfriends = user.friends.map((value: User, key: number) => {
 			return (
-				<Link key={key} to={`/profile/${value.id}`}>
+				<Link to={`/profile/${value.id}`} key={key}>
 					<Text>{value.userName}</Text>
 				</Link>
 			);
@@ -143,47 +173,35 @@ const ProfileExtended = (): JSX.Element => {
 					<Label>
 						<Text fontSize="20px">Friends</Text>
 					</Label>
-					<Table>
-						{user.friends.length ? (
-							<TableHeader>
-								<TableRow>
-									<TableHeaderCell>Username</TableHeaderCell>
-									<TableHeaderCell>First Name</TableHeaderCell>
-									<TableHeaderCell>Last Name</TableHeaderCell>
-								</TableRow>
-							</TableHeader>
-						) : (
-							""
-						)}
-						<tbody>
-							{user.friends.length ? listfriends : <Item>No friends</Item>}
-						</tbody>
-					</Table>
+					<FriendsWrapper>
+						{user.friends.length ? listfriends : <Text>No friends</Text>}
+					</FriendsWrapper>
 				</Item>
 				<Label>
-					<Text fontSize="20px">Macthes</Text>
+					<Text fontSize="20px">Matches</Text>
 				</Label>
-				<Table>
-					{user.matches.length ? (
+				{user.matches.length ? (
+					<Table>
 						<TableHeader>
 							<TableRow>
 								<TableHeaderCell>Played Against</TableHeaderCell>
-								<TableHeaderCell>score P1</TableHeaderCell>
-								<TableHeaderCell>score P2</TableHeaderCell>
+								<TableHeaderCell>
+									{user.userName}
+									{"'"}s score
+								</TableHeaderCell>
+								<TableHeaderCell>Other player Score</TableHeaderCell>
 							</TableRow>
 						</TableHeader>
-					) : (
-						""
-					)}
-					<tbody>
-						{user.matches.length ? listmatches : <Item>No matches</Item>}
-					</tbody>
-				</Table>
+						<tbody>{listmatches}</tbody>
+					</Table>
+				) : (
+					<Text>No matches yet</Text>
+				)}
 			</>
 		);
 	};
 	return (
-		<SettingsContainer>{user ? settingsData() : "loading"}</SettingsContainer>
+		<SettingsContainer>{user ? friendsData() : "loading"}</SettingsContainer>
 	);
 };
 

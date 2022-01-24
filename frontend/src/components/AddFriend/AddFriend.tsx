@@ -13,10 +13,11 @@ const AddFriend = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getUsers(): Promise<User> {
-			const endpoint = `/user/getByUserName/${userName}`;
-			const user: User = await fetchData(endpoint);
-			if (user) setUser(user);
-			return user;
+			if (userName) {
+				const user: User = await fetchData(`/user/getByUserName/${userName}`);
+				if (user) setUser(user);
+				return user;
+			}
 		}
 		getUsers();
 	}, [userName]);

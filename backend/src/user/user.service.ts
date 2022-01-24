@@ -171,10 +171,9 @@ export class UserService {
 	}
 
 	async userStatusById(toFind: number): Promise<string> {
-		const User = await this.UserRepository.findOne({ where: { id: toFind } });
-		if (User === undefined) throw "User not found";
-		if (User.logedin == false) return "offline";
-		return "online"; // add in in game
+		const user = userStatus.get(toFind);
+		if (!user) return "offline";
+		return user.status;
 	}
 
 	async updateUserStatus(

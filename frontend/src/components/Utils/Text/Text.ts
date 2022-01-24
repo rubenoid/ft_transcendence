@@ -6,7 +6,7 @@ type TextProps = {
 };
 
 export const Text = styled.p<TextProps>`
-	color: #fff;
+	color: ${(props: TextProps) => (props.color ? props.color : "#fff")};
 	font-size: ${(props: TextProps) =>
 		props.fontSize ? props.fontSize : "1rem"};
 

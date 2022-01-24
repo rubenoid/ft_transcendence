@@ -18,6 +18,9 @@ export class ChatEntity {
 	password: string;
 
 	@Column()
+	isPublic: boolean;
+
+	@Column()
 	name: string;
 
 	@ManyToMany(() => UserEntity, (user) => user.channels, { cascade: true })
@@ -29,6 +32,17 @@ export class ChatEntity {
 		cascade: true,
 	})
 	messages: ChatMessageEntity[];
+
+	@Column()
+	owner: number;
+
+	@ManyToMany(() => UserEntity, {
+		onDelete: "SET NULL",
+		cascade: true,
+		nullable: true,
+	})
+	@JoinTable()
+	admins: UserEntity[];
 }
 
 @Entity()

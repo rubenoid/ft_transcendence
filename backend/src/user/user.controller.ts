@@ -21,6 +21,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { RegisteringGuard } from "src/auth/registering.guard";
 import { MatchEntity } from "src/match/match.entity";
 import { ChatEntity } from "src/chat/chat.entity";
+import { ChatService } from "src/chat/chat.service";
 
 @Controller("user")
 export class UserController {
@@ -51,12 +52,19 @@ export class UserController {
 
 	@Get("me/chats")
 	async getMyChats(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
-		return (
+		const data: ChatEntity[] = (
 			await this.userService.getUserQueryOne({
 				where: { id: req.user.id },
 				relations: ["channels"],
 			})
 		).channels;
+
+		for (let i = 0; i < data.length; i++) {
+			const element = data[i];
+			if (element.password) element["isProtected"] = true;
+			delete element.password;
+		}
+		return data;
 	}
 
 	@Public()
