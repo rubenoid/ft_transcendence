@@ -30,6 +30,8 @@ export interface Channel {
 	isPublic: boolean;
 	isProtected: boolean;
 	messages: Message[];
+	owner: number;
+	admins: User[];
 }
 
 export interface detailedUser extends User {

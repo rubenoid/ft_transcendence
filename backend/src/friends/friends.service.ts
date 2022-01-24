@@ -6,9 +6,9 @@ import { UserEntity } from "../user/user.entity";
 export class FriendsService {
 	constructor(private readonly userService: UserService) {}
 
-	async findUserWithrelations(id: number) : Promise<UserEntity> {
-		const user : UserEntity =  await this.userService.getUserQueryOne(
-			{ where: { id: id },
+	async findUserWithrelations(id: number): Promise<UserEntity> {
+		const user: UserEntity = await this.userService.getUserQueryOne({
+			where: { id: id },
 			relations: ["friends", "blockedUsers", "blockedBy"],
 		});
 		if (!user) {
@@ -22,8 +22,10 @@ export class FriendsService {
 		if (id == id2) throw "Cannot add yourself";
 		const user = await this.findUserWithrelations(id);
 		const friend = await this.findUserWithrelations(id2);
-		if ((user.blockedUsers.find((e) => e.id == id2)) 
-			|| (user.blockedBy.find((e) => e.id == id2))) {
+		if (
+			user.blockedUsers.find((e) => e.id == id2) ||
+			user.blockedBy.find((e) => e.id == id2)
+		) {
 			return;
 		}
 		if (!user.friends) user.friends = [];

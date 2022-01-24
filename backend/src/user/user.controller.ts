@@ -33,6 +33,11 @@ export class UserController {
 	async getAll(): Promise<UserEntity[]> {
 		return await this.userService.getAll();
 	}
+
+	@Get("getAllUsersNRelations")
+	async getAllUsersNRelations(): Promise<UserEntity[]> {
+		return await this.userService.getAllUsersNRelations();
+	}
 	@Get("get/:id")
 	async getUserById(@Param("id") id: string): Promise<UserEntity> {
 		return await this.userService.getUser(parseInt(id));

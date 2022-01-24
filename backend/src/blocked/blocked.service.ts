@@ -12,10 +12,10 @@ export class BlockedService {
 		private readonly userService: UserService,
 		private readonly friendService: FriendsService,
 	) {}
-	
-	async findUserWithBlocked(id: number) : Promise<UserEntity> {
-		const user : UserEntity =  await this.userService.getUserQueryOne(
-			{ where: { id: id },
+
+	async findUserWithBlocked(id: number): Promise<UserEntity> {
+		const user: UserEntity = await this.userService.getUserQueryOne({
+			where: { id: id },
 			relations: ["blockedUsers", "blockedBy"],
 		});
 		if (!user) {
@@ -51,12 +51,14 @@ export class BlockedService {
 		const user = await this.findUserWithBlocked(id);
 		const userBlocked = await this.findUserWithBlocked(idToUnblock);
 
-		const indexBlocked = user.blockedUsers.findIndex((e) => e.id == idToUnblock); // returns -1 if not found
+		const indexBlocked = user.blockedUsers.findIndex(
+			(e) => e.id == idToUnblock,
+		); // returns -1 if not found
 		if (indexBlocked < 0) {
 			throw "Can not unblock, because user is not blocked";
 		}
 		const indexBlockedBy = userBlocked.blockedBy.findIndex((e) => e.id == id);
-		if (indexBlockedBy < 0)	{
+		if (indexBlockedBy < 0) {
 			throw "Can not find index of blockedBy. Serieus issue because this should not be able happen";
 		}
 		user.blockedUsers.splice(indexBlocked, 1);

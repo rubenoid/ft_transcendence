@@ -113,7 +113,6 @@ export class AuthController {
 		if (ret == true) {
 			user.twoFactorvalid = true;
 			this.userService.saveUser(user);
-			// console.log("user.twofactorvalid", user.twoFactorvalid);
 		}
 		return ret;
 	}
@@ -145,11 +144,10 @@ export class AuthController {
 		user.twoFactorvalid = false;
 		this.userService.saveUser(user);
 	}
-	
+
 	// @Public()
 	// @Get("protect")
 	// async functions(): Promise<void> {
 	// 	return await this.authService.testProtector();
 	// }
-
 }

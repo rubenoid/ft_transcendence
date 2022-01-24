@@ -110,6 +110,20 @@ export class UserService {
 		return User;
 	}
 
+	async getAllUsersNRelations(): Promise<UserEntity[]> {
+		const User = await this.UserRepository.find({
+			relations: [
+				"friends",
+				"matches",
+				"blockedUsers",
+				"blockedBy",
+				"channels",
+			],
+		});
+		if (User.length === 0) throw "user not found";
+		return User;
+	}
+
 	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
 	}
