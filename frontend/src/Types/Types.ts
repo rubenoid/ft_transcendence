@@ -32,6 +32,7 @@ export interface Channel {
 	messages: Message[];
 	owner: number;
 	admins: User[];
+	adminbyUsername: string[];
 }
 
 export interface detailedUser extends User {
@@ -39,4 +40,6 @@ export interface detailedUser extends User {
 	blockedUsers: User[];
 	blockedBy: User[];
 	initial2FAEnabled: boolean;
+	friendsbyUsername: string[];
+	blockedUsersbyUsername: string[];
 }

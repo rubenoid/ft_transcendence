@@ -38,7 +38,11 @@ export class ChatService {
 		const chats = await this.chatRepository.find({
 			relations: ["users", "messages", "admins"],
 		});
-
+		for (let i = 0; i < chats.length; i++) {
+			const element = chats[i];
+			if (element.password) element["isProtected"] = true;
+			delete element.password;
+		}
 		return chats;
 	}
 

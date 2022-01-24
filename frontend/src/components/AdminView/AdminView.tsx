@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
-import {
-	SettingsContainer,
-	UsersContainer,
-} from "../Settings/SettingsElements";
+import { SettingsContainer } from "../Settings/SettingsElements";
 import {
 	TableRow,
 	TableCell,
@@ -27,8 +24,29 @@ const AdminView = (): JSX.Element => {
 			const users: detailedUser[] = await fetchData(
 				"/user/getAllUsersNRelations",
 			);
+			for (let i = 0; i < users.length; i++) {
+				users[i].friendsbyUsername = [];
+				users[i].blockedUsersbyUsername = [];
+				for (let k = 0; k < users[i].friends.length; k++) {
+					users[i].friendsbyUsername.push(users[i].friends[k].userName);
+					users[i].friendsbyUsername.push(" ");
+				}
+				for (let k = 0; k < users[i].blockedUsers.length; k++) {
+					users[i].blockedUsersbyUsername.push(
+						users[i].blockedUsers[k].userName,
+					);
+					users[i].blockedUsersbyUsername.push(" ");
+				}
+			}
 			const matches: Match[] = await fetchData("/match/getAllMatches");
 			const channels: Channel[] = await fetchData("/chat/all");
+			for (let i = 0; i < channels.length; i++) {
+				channels[i].adminbyUsername = [];
+				for (let k = 0; k < channels[i].admins.length; k++) {
+					channels[i].adminbyUsername.push(channels[i].admins[k].userName);
+					channels[i].adminbyUsername.push(" ");
+				}
+			}
 			setUsers(users);
 			setMatches(matches);
 			setChannels(channels);
@@ -59,10 +77,13 @@ const AdminView = (): JSX.Element => {
 				<TableCell>
 					{!channels.isPublic ? <Text>Na</Text> : <Text>{channels.owner}</Text>}
 				</TableCell>
-				{/* <TableCell>
-					{!channels.isPublic ? <Text>Na</Text> : 
-					<Text>{channels.admin[0].username}</Text>}
-				</TableCell> */}
+				<TableCell>
+					{!channels.isPublic ? (
+						<Text>Na</Text>
+					) : (
+						<Text>{channels.adminbyUsername}</Text>
+					)}
+				</TableCell>
 			</TableRow>
 		);
 	});
@@ -130,19 +151,19 @@ const AdminView = (): JSX.Element => {
 				<TableCell>
 					{users.twoFactorSecret == "" ? <Text>No</Text> : <Text>Yes</Text>}
 				</TableCell>
-				{/* <TableCell>
-					<Text fontSize="10">{userz.friends}</Text>
+				<TableCell>
+					<Text fontSize="10">{users.friendsbyUsername}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{userz.blockedUsers}</Text>
-				</TableCell> */}
+					<Text fontSize="10">{users.blockedUsersbyUsername}</Text>
+				</TableCell>
 			</TableRow>
 		);
 	});
 
 	return (
 		<SettingsContainer>
-			<h1>AdminView</h1>
+			<h1>Admin View</h1>
 			<Label>
 				<Text fontSize="20px">Users</Text>
 			</Label>
@@ -157,7 +178,7 @@ const AdminView = (): JSX.Element => {
 						<TableHeaderCell>wins</TableHeaderCell>
 						<TableHeaderCell>losses</TableHeaderCell>
 						<TableHeaderCell>rating</TableHeaderCell>
-						<TableHeaderCell>twoFactorSecret</TableHeaderCell>
+						<TableHeaderCell>2FA Enabled</TableHeaderCell>
 						<TableHeaderCell>friends</TableHeaderCell>
 						<TableHeaderCell>blockedUsers</TableHeaderCell>
 					</TableRow>
@@ -190,7 +211,7 @@ const AdminView = (): JSX.Element => {
 						<TableHeaderCell>name</TableHeaderCell>
 						<TableHeaderCell>privacy level</TableHeaderCell>
 						<TableHeaderCell>owner</TableHeaderCell>
-						<TableHeaderCell>admin</TableHeaderCell>
+						<TableHeaderCell>admins</TableHeaderCell>
 					</TableRow>
 				</TableHeader>
 				<tbody>{channels ? channellist : null}</tbody>
