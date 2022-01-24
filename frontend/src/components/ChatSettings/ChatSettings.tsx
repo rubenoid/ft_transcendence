@@ -56,6 +56,7 @@ const ChatSettings = (): JSX.Element => {
 	const [myRole, setMyRole] = useState<roleLevel>(0);
 	const { user, setUser } = SharedUserState();
 	const [endpoints, setEndpoints] = useState<toSend[]>([]);
+	const [usersToAdd, setUsersToAdd] = useState<User[]>([]);
 	const [settingsForm, setSettingsForm] = useState<ChatSettingsForm>(undefined);
 	/*
 
@@ -133,6 +134,15 @@ const ChatSettings = (): JSX.Element => {
 		});
 	};
 
+	const listAddedUsers = usersToAdd.map((user: User, key: number) => {
+		return (
+			<UserRowContainer key={key}>
+				<Text>{user.userName}</Text>
+			</UserRowContainer>
+		)
+	})
+
+
 	function saveChatSettings(): void {
 		if (
 			settingsForm.name != chatData.name ||
@@ -142,6 +152,9 @@ const ChatSettings = (): JSX.Element => {
 			postData("/chat/updateChat", settingsForm);
 		for (const e of endpoints) {
 			postData(e.endpoint, e.data);
+		}
+		for (const e of usersToAdd) {
+			postData("/chat/addUser", {userId: e.id, chatId: chatId});
 		}
 		navigate("/", { replace: false });
 	}
@@ -224,9 +237,12 @@ const ChatSettings = (): JSX.Element => {
 								removeOnEnter={true}
 								placeholder={"Enter username"}
 								onValidUser={(e: User) => {
-									console.log(e);
+									setUsersToAdd([...usersToAdd, e]);
 								}}
 							/>
+							<br />
+							<hr />
+							{usersToAdd ? listAddedUsers : ""}
 						</UserWrapper>
 					</>
 				) : (

@@ -34,7 +34,6 @@ const ChannelsView = (): JSX.Element => {
 	const { channel, setChannel } = SharedChatState();
 	const { user, setUser } = SharedUserState();
 
-	const [userToAddText, setUserToAddText] = useState<string>("");
 
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
@@ -85,14 +84,7 @@ const ChannelsView = (): JSX.Element => {
 		);
 	});
 
-	/*
-		- add users,
-		- public, private, protected (password)
-		- name
-		- create button
-	*/
 	const handleChangeSearch = (e: string): void => {
-		setUserToAddText(e);
 		async function getUser4Change(): Promise<User> {
 			const endpoint = `/user/getByUserName/${e}`;
 			const user: User = await fetchData(endpoint);
@@ -113,7 +105,6 @@ const ChannelsView = (): JSX.Element => {
 						usersAdded.push(user2add);
 						setUsersAdded([...usersAdded]);
 						setUserSearched(undefined);
-						setUserToAddText("");
 					}}
 				>
 					Add

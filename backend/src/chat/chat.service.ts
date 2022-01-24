@@ -369,4 +369,21 @@ export class ChatService {
 		await this.chatRepository.save(chat);
 		return true;
 	}
+
+	async addUser(executerId: number, chatId: number, userId: number): Promise<void>
+	{
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users"],
+		});
+		if (!chat || chat.admins.find(x => x.id == executerId) == undefined)
+			throw "Error in request";
+		const user = await this.userService.getUserQueryOne({where: {id: userId}});
+		
+		if (!user || chat.users.find(x => x.id == user.id))
+			throw "User add error";
+		
+		chat.users.push(user);
+		this.chatRepository.save(chat);
+	}
 }

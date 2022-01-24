@@ -109,4 +109,14 @@ export class ChatController {
 	): Promise<boolean> {
 		return await this.chatService.addAdmin(chatId, req.user.id, newAdminId);
 	}
+
+	@Post("addUser")
+	async addUser(
+		@Req() req: GuardedRequest,
+		@Body("userId") userId: number,
+		@Body("chatId") chatId: number,
+	): Promise<void> {
+		return await this.chatService.addUser(req.user.id, chatId, userId);
+	}
+	
 }
