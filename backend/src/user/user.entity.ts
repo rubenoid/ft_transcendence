@@ -59,7 +59,7 @@ export class UserEntity {
 	matches: MatchEntity[];
 
 	@Column("int", { array: true, nullable: true })
-	blockedUsers: number[];
+	blockedUsers: UserEntity[];
 
 	@Column("int", { array: true, nullable: true })
 	blockedBy: number[];
