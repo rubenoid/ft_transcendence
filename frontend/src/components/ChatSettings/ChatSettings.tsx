@@ -160,16 +160,16 @@ const ChatSettings = (): JSX.Element => {
 			return (
 				<UserRowContainer key={key}>
 					<Text>{user.userName}</Text>
-					<Button
-						onClick={() => {
-							endpoints.push({
-								endpoint: "/chat/unbanUser",
-								data: { chatId: chatId, userId: user.id },
-							});
+					<EndpointButton
+						useSmall={true}
+						endpointRef={setEndpoints}
+						toSet={{
+							endpoint: "/chat/unbanUser",
+							data: { chatId: chatId, userId: user.id },
 						}}
 					>
-						Unban
-					</Button>
+						<Text>Unban</Text>
+					</EndpointButton>
 				</UserRowContainer>
 			);
 		});
@@ -296,11 +296,12 @@ const ChatSettings = (): JSX.Element => {
 					<Text color="black">Banned Users</Text>
 					{listBannedUsers()}
 				</UserWrapper>
+				<br />
 				<UserWrapper>
 					<Text color="black">Muted Users</Text>
 					{/* {listMutedUsers} */}
 				</UserWrapper>
-
+				<br />
 				<UserWrapper>
 					{settingsForm && myRole == roleLevel.owner ? displaySettings() : ""}
 				</UserWrapper>
@@ -328,15 +329,6 @@ const ChatSettings = (): JSX.Element => {
 
 	return (
 		<SettingsContainer>
-			<EndpointButton
-				endpointRef={setEndpoints}
-				toSet={{
-					endpoint: "/chat/addAdmin/",
-					data: { newAdminId: 1, chatId: chatId },
-				}}
-			>
-				<Text>Ja dit is text</Text>
-			</EndpointButton>
 			{chatData ? displayChat() : "loading"}
 			{JSON.stringify(endpoints)}
 		</SettingsContainer>

@@ -29,7 +29,6 @@ const ChannelsView = (): JSX.Element => {
 		new CreateChannelsForm(),
 	);
 	const [showForm, setShowForm] = useState<boolean>(false);
-	const [userSearched, setUserSearched] = useState<User>(undefined);
 	const [usersAdded, setUsersAdded] = useState<User[]>([]);
 	const { channel, setChannel } = SharedChatState();
 	const { user, setUser } = SharedUserState();
@@ -92,24 +91,6 @@ const ChannelsView = (): JSX.Element => {
 			return user;
 		}
 		getUser4Change();
-	};
-
-	const SearchResult = (user2add: User, whatToChange: string): JSX.Element => {
-		return (
-			<SearchResultContainer>
-				<Text>{user2add.userName}</Text>
-				<Button
-					onClick={() => {
-						channelForm.userIds.push(user2add.id);
-						usersAdded.push(user2add);
-						setUsersAdded([...usersAdded]);
-						setUserSearched(undefined);
-					}}
-				>
-					Add
-				</Button>
-			</SearchResultContainer>
-		);
 	};
 
 	function updatePrivacy(e: number): void {
@@ -183,10 +164,16 @@ const ChannelsView = (): JSX.Element => {
 					<AddUserInput
 						placeholder="Type to search..."
 						removeOnEnter={true}
-						onValidUser={(e: User) => setUserSearched(e)}
+						onValidUser={(e: User) => setUsersAdded([...usersAdded, e])}
 					></AddUserInput>
-					{userSearched ? SearchResult(userSearched, "") : ""}
-					{usersAdded ? listUsersAdded : ""}
+					{usersAdded ? (
+						<div>
+							<Text color="black">Users to add</Text>
+							{listUsersAdded}
+						</div>
+					) : (
+						""
+					)}
 					<Button
 						onClick={() => {
 							uploadCreateChannel();
@@ -197,6 +184,7 @@ const ChannelsView = (): JSX.Element => {
 					<Button
 						onClick={() => {
 							setShowForm(false);
+							setUsersAdded([]);
 						}}
 					>
 						Cancel

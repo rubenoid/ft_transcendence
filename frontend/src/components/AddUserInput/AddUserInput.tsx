@@ -33,7 +33,10 @@ const AddUserInput = (props: InputParams): JSX.Element => {
 	function enterCheck(keyCode: string): void {
 		if (keyCode == "Enter" && isValidUser != undefined) {
 			props.onValidUser(isValidUser);
-			if (props.removeOnEnter == true) setText("");
+			if (props.removeOnEnter != false) {
+				setText("");
+				setIsValidUser(undefined);
+			}
 		}
 	}
 

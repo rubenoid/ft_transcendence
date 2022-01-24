@@ -11,13 +11,13 @@ import { fetchData, postData } from "../../API/API";
 import { SettingsContainer } from "./SettingsElements";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
 import { Img, ImgContainer } from "../Profile/ProfileElements";
-import { SearchResultContainer } from "../AddFriend/AddFriendElements";
 import { Link, useNavigate } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { User } from "../../Types/Types";
 import AddUserInput from "../AddUserInput/AddUserInput";
+import EndpointButton from "../EndpointButton/EndpointButton";
 
 interface detailedUser extends User {
 	twoFactorSecret: string;
@@ -45,11 +45,8 @@ const SettingsForm = (): JSX.Element => {
 		useState<boolean>(undefined);
 
 	const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
-	const [user2friend, setuser2friend] = useState<detailedUser>();
-	const [user2block, setuser2block] = useState<detailedUser>();
-
-	const [saved, setsaved] = useState<boolean>(undefined);
-
+	const [friendsToAdd, setFriendsToAdd] = useState<User[]>([]);
+	const [blockedToAdd, setBlockedToAdd] = useState<User[]>([]);
 	const [endpoints, setEndpoints] = useState([]);
 
 	useEffect(() => {
@@ -81,8 +78,14 @@ const SettingsForm = (): JSX.Element => {
 		e.preventDefault();
 		console.log(endpoints);
 		for (const endpoint of endpoints) {
-			await fetchData(endpoint);
+			if (typeof endpoint == "string") fetchData(endpoint);
+			else fetchData(endpoint.endpoint);
 		}
+
+		for (const user of friendsToAdd) {
+			fetchData(`/friends/add/${user.id}`);
+		}
+
 		const formData = new FormData();
 		formData.append("user", JSON.stringify(user));
 		formData.append("file", file);
@@ -119,14 +122,6 @@ const SettingsForm = (): JSX.Element => {
 				setqrcode(data);
 			});
 		}
-		// if (isChecked == false) {
-		//     setIsChecked(true);
-		// }
-		// else
-		// {
-		//     setIsChecked(false);
-		// }
-		console.log("2CHECKED?", isChecked);
 	};
 
 	useEffect(() => {
@@ -160,6 +155,21 @@ const SettingsForm = (): JSX.Element => {
 		inputAccessCode();
 	}, [inputtedTwoFA]);
 
+	const displayToAdd = (users: User[], name: string): JSX.Element => {
+		return (
+			<div>
+				<Text>{name}</Text>
+				{users.map((user: User, key: number) => {
+					return (
+						<div key={key}>
+							<Text>{user.userName}</Text>
+						</div>
+					);
+				})}
+			</div>
+		);
+	};
+
 	/* upload avatar */
 	const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		if (e.target.files && e.target.files.length) {
@@ -168,109 +178,58 @@ const SettingsForm = (): JSX.Element => {
 		}
 	};
 
-	/* blocked and friends editing */
-	const handleChangeSearch = (e: string, whatToChange: string): void => {
-		async function getUser4Change(): Promise<User> {
-			const endpoint = `/user/getByUserName/${e}`;
-			const user: detailedUser = await fetchData(endpoint);
-			if (user && whatToChange == "friends") {
-				setuser2friend(user);
-			}
-			if (user && whatToChange == "blocked") {
-				setuser2block(user);
-			}
-			return user;
-		}
-		getUser4Change();
-	};
-
 	const settingsData = (): JSX.Element => {
-		const addChange = async (
-			id: number,
-			whatToChange: string,
-		): Promise<void> => {
-			const endpoint = `/${whatToChange}/add/${id}`;
-			endpoints.push(endpoint);
-		};
-
-		const removeChange = async (
-			id: number,
-			whatToChange: string,
-		): Promise<void> => {
-			const endpoint = `/${whatToChange}/remove/${id}`;
-			endpoints.push(endpoint);
-		};
-
-		const SearchResult = (
-			user2add: detailedUser,
-			whatToChange: string,
-		): JSX.Element => {
-			return (
-				<SearchResultContainer>
-					<Text>{user2add.userName}</Text>
-					<Button
-						onClick={(e) => {
-							addChange(user2add.id, whatToChange);
-						}}
-					>
-						Add
-					</Button>
-				</SearchResultContainer>
-			);
-		};
-
-		const friendz = user.friends;
-		const blocked = user.blockedUsersAsUsers;
-
-		const listfriends = friendz.map((friendz, key: number) => {
+		const listfriends = user.friends.map((friend: User, key: number) => {
 			return (
 				<TableRow key={key}>
 					<TableCell>
-						<Text fontSize="10">{friendz.userName}</Text>
+						<Text fontSize="10">{friend.userName}</Text>
 					</TableCell>
 					<TableCell>
-						<Text fontSize="10">{friendz.firstName}</Text>
+						<Text fontSize="10">{friend.firstName}</Text>
 					</TableCell>
 					<TableCell>
-						<Text fontSize="10">{friendz.lastName}</Text>
+						<Text fontSize="10">{friend.lastName}</Text>
 					</TableCell>
 					<TableCell>
-						<Button
-							onClick={(e) => {
-								removeChange(friendz.id, "friends");
-							}}
+						<EndpointButton
+							useSmall={true}
+							endpointRef={setEndpoints}
+							toSet={{ endpoint: `/friends/remove/${friend.id}`, data: {} }}
 						>
 							<Text>Remove</Text>
-						</Button>
+						</EndpointButton>
 					</TableCell>
 				</TableRow>
 			);
 		});
 
-		const listblockedusers = blocked.map((blocked, key: number) => {
-			return (
-				<TableRow key={key}>
-					<TableCell>
-						<Text fontSize="10">{blocked.userName}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{blocked.firstName}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{blocked.lastName}</Text>
-					</TableCell>
-					<TableCell>
-						<Button
-							onClick={(e) => {
-								removeChange(blocked.id, "blocked");
-							}}
-						>
-							<Text>Remove</Text>
-						</Button>
-					</TableCell>
-				</TableRow>
-			);
-		});
+		const listblockedusers = user.blockedUsersAsUsers.map(
+			(blocked: User, key: number) => {
+				return (
+					<TableRow key={key}>
+						<TableCell>
+							<Text fontSize="10">{blocked.userName}</Text>
+						</TableCell>
+						<TableCell>
+							<Text fontSize="10">{blocked.firstName}</Text>
+						</TableCell>
+						<TableCell>
+							<Text fontSize="10">{blocked.lastName}</Text>
+						</TableCell>
+						<TableCell>
+							<EndpointButton
+								useSmall={true}
+								endpointRef={setEndpoints}
+								toSet={{ endpoint: `/blocked/remove/${blocked.id}`, data: {} }}
+							>
+								<Text>Remove</Text>
+							</EndpointButton>
+						</TableCell>
+					</TableRow>
+				);
+			},
+		);
 
 		return (
 			<>
@@ -369,9 +328,11 @@ const SettingsForm = (): JSX.Element => {
 				<Text>Search for users to block</Text>
 				<AddUserInput
 					placeholder="Type to search..."
-					onValidUser={(e: User) => handleChangeSearch(e.userName, "blocked")}
+					onValidUser={(e: User) => setBlockedToAdd([...blockedToAdd, e])}
 				></AddUserInput>
-				{user2block ? SearchResult(user2block, "blocked") : ""}
+				{blockedToAdd.length
+					? displayToAdd(blockedToAdd, "Blocked staged to add")
+					: ""}
 				<Label>
 					{" "}
 					<Text fontSize="20px">Friends</Text>
@@ -394,11 +355,11 @@ const SettingsForm = (): JSX.Element => {
 				</Item>
 				<AddUserInput
 					placeholder="Type to search..."
-					onValidUser={(e: User) =>
-						handleChangeSearch(user.userName, "friends")
-					}
-				></AddUserInput>
-				{user2friend ? SearchResult(user2friend, "friends") : ""}
+					onValidUser={(e: User) => setFriendsToAdd([...friendsToAdd, e])}
+				/>
+				{friendsToAdd.length
+					? displayToAdd(friendsToAdd, "Friends staged to add")
+					: ""}
 				<Item>
 					<Label>
 						{" "}
