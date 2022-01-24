@@ -8,7 +8,7 @@ export const DashBoardContainer = styled.div`
 	grid-template-areas:
 		"profile game chat"
 		"info1 game chat"
-		"info2 game chat";
+		"info2 chatBox chat";
 	grid-gap: 10px;
 	background-color: #8ec5fc;
 	background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%);

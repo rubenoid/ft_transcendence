@@ -8,6 +8,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { SharedHeroSection } from "../HeroSection/HeroSection";
 import { RoundButton } from "../Utils/Buttons/Round/RoundButton";
 import { Text } from "../Utils/Text/Text";
+import { useSelector } from 'react-redux';
+import { RootState } from "../..";
 
 function deleteCookie(
 	name: string,
@@ -92,6 +94,11 @@ const Profile = (): JSX.Element => {
 			</>
 		);
 	};
+
+	const getUser = () => {
+		const usr = useSelector((state: RootState) => state.value);
+	};
+
 	return <WidgetContainer>{user ? userInfo() : "loading"}</WidgetContainer>;
 };
 

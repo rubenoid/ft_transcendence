@@ -4,6 +4,8 @@ import { fetchData } from "../../../API/API";
 import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { User } from "../../../Types/Types";
+import { useDispatch } from 'react-redux';
+import { openChatBox } from "../../../features/user";
 
 const FriendsView = (): JSX.Element => {
 	const [friends, setFriends] = useState<User[]>([]);
@@ -18,10 +20,12 @@ const FriendsView = (): JSX.Element => {
 		getFriends();
 	}, [fetchData]);
 
+	const dispatch = useDispatch();
+
 	const listFriends = friends.map((user: User, key: number) => {
 		return (
 			<Item key={user.id}>
-				<Button>{user.userName}</Button>
+				<Button onClick={()=>{dispatch(openChatBox(user))}}>{user.userName}</Button>
 			</Item>
 		);
 	});
