@@ -2,9 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { FriendsService } from "../friends/friends.service";
 import { UserEntity } from "src/user/user.entity";
-import { relative } from "path/posix";
-// import { FriendsController } from 'src/friends/friends.controller';
-// import { FriendsModule } from 'src/friends/friends.module';
 
 @Injectable()
 export class BlockedService {
@@ -53,7 +50,7 @@ export class BlockedService {
 
 		const indexBlocked = user.blockedUsers.findIndex(
 			(e) => e.id == idToUnblock,
-		); // returns -1 if not found
+		);
 		if (indexBlocked < 0) {
 			throw "Can not unblock, because user is not blocked";
 		}
