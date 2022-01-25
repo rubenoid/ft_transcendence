@@ -6,6 +6,7 @@ import { SearchResultContainer } from "./AddFriendElements";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { Text } from "../Utils/Text/Text";
 import { User } from "../../Types/Types";
+import AddUserInput from "../AddUserInput/AddUserInput";
 
 const AddFriend = (): JSX.Element => {
 	const [user, setUser] = useState<User>();
@@ -47,11 +48,10 @@ const AddFriend = (): JSX.Element => {
 	return (
 		<WidgetContainer>
 			<Text>Search for User</Text>
-			<TextInput
-				type="text"
+			<AddUserInput
 				placeholder="Type to search..."
-				onChange={(e) => setUserName(e.target.value)}
-			></TextInput>
+				onValidUser={(e: User) => setUserName(e.userName)}
+			></AddUserInput>
 			{user && user.userName == userName ? SearchResult() : ""}
 		</WidgetContainer>
 	);

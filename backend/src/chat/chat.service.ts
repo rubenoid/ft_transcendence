@@ -57,12 +57,30 @@ export class ChatService {
 		return data.messages;
 	}
 
-	async getChatData(id: number, userId: number): Promise<ChatEntity> {
+	async getChatData(id: number): Promise<ChatEntity> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
-			relations: ["users", "admins"],
 		});
 
+		if (data.password) {
+			data["hasPassword"] = true;
+		} else data["hasPassword"] = false;
+
+		delete data.password;
+		return data;
+	}
+
+	async getChatDataDetailed(id: number): Promise<ChatEntity> {
+		const data = await this.chatRepository.findOne({
+			where: { id: id },
+			relations: ["users", "admins", "bannedUsers"],
+		});
+
+		if (data.password) {
+			data["hasPassword"] = true;
+		} else data["hasPassword"] = false;
+
+		delete data.password;
 		return data;
 	}
 
@@ -227,17 +245,6 @@ export class ChatService {
 		await this.chatRepository.remove(chat);
 	}
 
-	async isProtected(id: number): Promise<boolean> {
-		const data = await this.chatRepository.findOne({
-			where: { id: id },
-			relations: ["users", "messages"],
-		});
-		if (data.password == "") {
-			return false;
-		}
-		return true;
-	}
-
 	async enterProtected(
 		password: string,
 		chatId: number,
@@ -264,27 +271,6 @@ export class ChatService {
 		return false;
 	}
 
-	async changepw(
-		password: string,
-		chatId: number,
-		userId: number,
-	): Promise<boolean> {
-		const chat = await this.chatRepository.findOne({
-			where: { id: chatId },
-		});
-		if (chat.owner != userId) {
-			return false;
-		}
-		if (password == "") {
-			chat.password == "";
-			await this.chatRepository.save(chat);
-			return true;
-		}
-		chat.password = await this.protectorService.hash(password);
-		await this.chatRepository.save(chat);
-		return true;
-	}
-
 	async leave(
 		chatId: number,
 		idToRemove: number,
@@ -294,12 +280,10 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["users", "admins"],
 		});
-		if (!chat) {
+		if (!chat || chat.owner == -1) {
 			throw "no chat to remove";
 		}
-		if (chat.isPublic == false) {
-			return false;
-		}
+
 		if (
 			executer == idToRemove ||
 			executer == chat.owner ||
@@ -311,6 +295,7 @@ export class ChatService {
 			chat.users.splice(indexToRemove, 1);
 			if (!chat.users.length) {
 				this.clearbyId(chatId);
+				return true;
 			}
 			if (
 				(indexToRemove = chat.admins.findIndex((e) => e.id == idToRemove)) != -1
@@ -331,30 +316,28 @@ export class ChatService {
 		return false;
 	}
 
-	async changeVis(
+	async updateChat(
 		chatId: number,
 		userId: number,
-		newVis: string,
-		newpw: string,
+		name: string,
+		privacyLevel: number,
+		password: string,
 	): Promise<boolean> {
 		const chat = await this.chatRepository.findOne({
 			where: { id: chatId },
 		});
-		if (chat.owner != userId) {
+		chat.name = name;
+		if (chat.owner != userId || chat.owner == -1) {
 			return false;
 		}
-		if (newVis == "private") {
-			chat.isPublic == false;
-			await this.chatRepository.save(chat);
-			return true;
-		} else if (newVis == "public" || newVis == "protected") {
-			chat.isPublic == true;
-			await this.chatRepository.save(chat);
-			if (newVis == "protected") {
-				this.changepw(newpw, chatId, userId);
-			}
-			return true;
+		if (privacyLevel == 2) {
+			chat.isPublic = true;
+			chat.password = await this.protectorService.hash(password);
+		} else {
+			chat.isPublic = !Boolean(privacyLevel);
+			chat.password = "";
 		}
+		await this.chatRepository.save(chat);
 		return false;
 	}
 
@@ -367,7 +350,7 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins"],
 		});
-		if (chat.owner != userId) {
+		if (chat.owner != userId || chat.owner == -1) {
 			return false;
 		}
 		const newAdmin = await this.userService.getUserQueryOne({
@@ -376,5 +359,88 @@ export class ChatService {
 		chat.admins.push(newAdmin);
 		await this.chatRepository.save(chat);
 		return true;
+	}
+
+	async addUser(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users"],
+		});
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		)
+			throw "Error in request";
+		const user = await this.userService.getUserQueryOne({
+			where: { id: userId },
+		});
+
+		if (!user || chat.users.find((x) => x.id == user.id))
+			throw "User add error";
+
+		chat.users.push(user);
+		this.chatRepository.save(chat);
+	}
+
+	async banUser(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users", "bannedUsers"],
+		});
+
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		)
+			throw "Error in request";
+		if (userId == chat.owner) throw "cant ban owner";
+		let idx = chat.admins.findIndex((x) => x.id == userId);
+		if (idx != -1) chat.admins.splice(idx, 1);
+
+		idx = chat.users.findIndex((x) => x.id == userId);
+		if (idx != -1) chat.users.splice(idx, 1);
+
+		chat.bannedUsers.push(
+			await this.userService.getUserQueryOne({ where: { id: userId } }),
+		);
+
+		this.chatRepository.save(chat);
+	}
+
+	async unbanUser(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users", "bannedUsers"],
+		});
+
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		)
+			throw "Error in request";
+		const idx = chat.bannedUsers.findIndex((x) => x.id == userId);
+
+		if (idx == -1) throw "no user found";
+		chat.bannedUsers.splice(idx, 1);
+		chat.users.push(
+			await this.userService.getUserQueryOne({ where: { id: userId } }),
+		);
+
+		this.chatRepository.save(chat);
 	}
 }

@@ -14,6 +14,7 @@ import { TextInput } from "../../Utils/TextInput/TextInput";
 import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
 import { Form } from "../../ConnectionForm/ConnectionFormElements";
 import { SharedUserState } from "../../Profile/Profile";
+import AddUserInput from "../../AddUserInput/AddUserInput";
 
 class CreateChannelsForm {
 	name = "";
@@ -28,12 +29,9 @@ const ChannelsView = (): JSX.Element => {
 		new CreateChannelsForm(),
 	);
 	const [showForm, setShowForm] = useState<boolean>(false);
-	const [userSearched, setUserSearched] = useState<User>(undefined);
 	const [usersAdded, setUsersAdded] = useState<User[]>([]);
 	const { channel, setChannel } = SharedChatState();
 	const { user, setUser } = SharedUserState();
-
-	const [userToAddText, setUserToAddText] = useState<string>("");
 
 	useEffect(() => {
 		async function getChannels(): Promise<Channel[]> {
@@ -84,42 +82,15 @@ const ChannelsView = (): JSX.Element => {
 		);
 	});
 
-	/*
-		- add users,
-		- public, private, protected (password)
-		- name
-		- create button
-	*/
 	const handleChangeSearch = (e: string): void => {
-		setUserToAddText(e);
 		async function getUser4Change(): Promise<User> {
 			const endpoint = `/user/getByUserName/${e}`;
 			const user: User = await fetchData(endpoint);
 			if (user) {
-				setUserSearched(user);
 			}
 			return user;
 		}
 		getUser4Change();
-	};
-
-	const SearchResult = (user2add: User, whatToChange: string): JSX.Element => {
-		return (
-			<SearchResultContainer>
-				<Text>{user2add.userName}</Text>
-				<Button
-					onClick={() => {
-						channelForm.userIds.push(user2add.id);
-						usersAdded.push(user2add);
-						setUsersAdded([...usersAdded]);
-						setUserSearched(undefined);
-						setUserToAddText("");
-					}}
-				>
-					Add
-				</Button>
-			</SearchResultContainer>
-		);
 	};
 
 	function updatePrivacy(e: number): void {
@@ -183,21 +154,26 @@ const ChannelsView = (): JSX.Element => {
 					{channelForm && channelForm.isPublic == 2 ? (
 						<TextInput
 							type="text"
-							placeholder="Type to search..."
+							placeholder="Enter new password here"
 							onChange={(e) => (channelForm.password = e.target.value)}
 						></TextInput>
 					) : (
 						""
 					)}
 					<Text color="black">Search for users to add</Text>
-					<TextInput
-						type="text"
+					<AddUserInput
 						placeholder="Type to search..."
-						value={userToAddText}
-						onChange={(e) => handleChangeSearch(e.target.value)}
-					></TextInput>
-					{userSearched ? SearchResult(userSearched, "") : ""}
-					{usersAdded ? listUsersAdded : ""}
+						removeOnEnter={true}
+						onValidUser={(e: User) => setUsersAdded([...usersAdded, e])}
+					></AddUserInput>
+					{usersAdded ? (
+						<div>
+							<Text color="black">Users to add</Text>
+							{listUsersAdded}
+						</div>
+					) : (
+						""
+					)}
 					<Button
 						onClick={() => {
 							uploadCreateChannel();
@@ -208,6 +184,7 @@ const ChannelsView = (): JSX.Element => {
 					<Button
 						onClick={() => {
 							setShowForm(false);
+							setUsersAdded([]);
 						}}
 					>
 						Cancel
