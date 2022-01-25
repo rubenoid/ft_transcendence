@@ -155,12 +155,16 @@ export class UserService {
 		userName: string,
 		firstName: string,
 		lastName: string,
+		twoFASecret?: string
 	): Promise<number> {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
 		user.userName = userName;
 		user.registered = true;
+		if (twoFASecret && twoFASecret != "")
+			user.twoFactorSecret = twoFASecret;
+			
 		await this.UserRepository.save(user);
 		console.log("finished update with id:", id, "userName", userName);
 		return user.id;

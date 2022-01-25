@@ -103,7 +103,7 @@ export class UserController {
 	}
 
 	@Public()
-	@UseGuards(RegisteringGuard) // take this out for testing
+	// @UseGuards(RegisteringGuard) // take this out for testing
 	@Get("deleteAll")
 	async deleteAll(): Promise<void> {
 		return await this.userService.deleteAll();
