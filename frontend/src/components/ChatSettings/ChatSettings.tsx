@@ -264,19 +264,17 @@ const ChatSettings = (): JSX.Element => {
 		return (
 			<>
 				<h1>{chatData.name} details</h1>
-				{
-					chatData.owner == -1 ? (
-						<Text color="pink">Direct channel</Text>
-					) : ( chatData.isPublic ? (
-						<Text color={"green"}> Public Channel</Text>
-					) : (
-						<Text color={"blue"}> Private Channel</Text>
-					)
+				{chatData.owner == -1 ? (
+					<Text color="pink">Direct channel</Text>
+				) : chatData.isPublic ? (
+					<Text color={"green"}> Public Channel</Text>
+				) : (
+					<Text color={"blue"}> Private Channel</Text>
 				)}
 				<Text color="black">Users</Text>
 				<UserWrapper>{listUsers()}</UserWrapper>
 
-				{ myRole != roleLevel.user ? (
+				{myRole != roleLevel.user ? (
 					<>
 						<Text color="black">Add Users</Text>
 						<UserWrapper>
@@ -292,10 +290,13 @@ const ChatSettings = (): JSX.Element => {
 							{usersToAdd ? listAddedUsers : ""}
 						</UserWrapper>
 					</>
-				) : ""
-				}
+				) : (
+					""
+				)}
 				<br />
-				{ chatData.owner == -1 ? "" : (
+				{chatData.owner == -1 ? (
+					""
+				) : (
 					<>
 						<UserWrapper>
 							<Text color="black">Banned Users</Text>
@@ -308,7 +309,9 @@ const ChatSettings = (): JSX.Element => {
 						</UserWrapper>
 						<br />
 						<UserWrapper>
-							{settingsForm && myRole == roleLevel.owner ? displaySettings() : ""}
+							{settingsForm && myRole == roleLevel.owner
+								? displaySettings()
+								: ""}
 						</UserWrapper>
 					</>
 				)}
@@ -321,21 +324,24 @@ const ChatSettings = (): JSX.Element => {
 				>
 					Back
 				</Button>
-				{ chatData.owner != -1 ? (
-						<>
-							<Button onClick={() => saveChatSettings()}>Save</Button>
-							<Button
+				{chatData.owner != -1 ? (
+					<>
+						<Button onClick={() => saveChatSettings()}>Save</Button>
+						<Button
 							onClick={() => {
-								postData("/chat/leave", { chatId: chatId, idToRemove: user.id });
+								postData("/chat/leave", {
+									chatId: chatId,
+									idToRemove: user.id,
+								});
 								navigate("/", { replace: true });
 							}}
-							>
+						>
 							Leave
-							</Button>
-						</>
-					) : ""
-				}
-
+						</Button>
+					</>
+				) : (
+					""
+				)}
 			</>
 		);
 	};

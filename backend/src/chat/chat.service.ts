@@ -370,7 +370,11 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins", "users"],
 		});
-		if (!chat || chat.owner == -1 || chat.admins.find((x) => x.id == executerId) == undefined)
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		)
 			throw "Error in request";
 		const user = await this.userService.getUserQueryOne({
 			where: { id: userId },
@@ -393,7 +397,11 @@ export class ChatService {
 			relations: ["admins", "users", "bannedUsers"],
 		});
 
-		if (!chat || chat.owner == -1 || chat.admins.find((x) => x.id == executerId) == undefined)
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		)
 			throw "Error in request";
 		if (userId == chat.owner) throw "cant ban owner";
 		let idx = chat.admins.findIndex((x) => x.id == userId);
@@ -419,7 +427,11 @@ export class ChatService {
 			relations: ["admins", "users", "bannedUsers"],
 		});
 
-		if (!chat || chat.owner == -1 || chat.admins.find((x) => x.id == executerId) == undefined)
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		)
 			throw "Error in request";
 		const idx = chat.bannedUsers.findIndex((x) => x.id == userId);
 
