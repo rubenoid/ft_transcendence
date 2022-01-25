@@ -26,11 +26,11 @@ interface QrData {
 
 const RegistrationForm = (): JSX.Element => {
 	const navigate = useNavigate();
+	const { setIsConnected } = SharedConnectionStatus();
 	const [registration, setRegistration] = useState<RegistrationItems>(
 		new RegistrationItems(),
 	);
 	const [qrcode, setQrcode] = useState<QrData>(undefined);
-	const { isConnected, setIsConnected } = SharedConnectionStatus();
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
@@ -94,7 +94,6 @@ const RegistrationForm = (): JSX.Element => {
 				registration.inputtedTwoFA.length != 6
 			)
 				return;
-			console.log("this in in input access");
 			const validated: boolean = await postData(`/auth/testQrCode`, {
 				usertoken: registration.inputtedTwoFA,
 				secret: qrcode.secret,
@@ -110,53 +109,45 @@ const RegistrationForm = (): JSX.Element => {
 	return (
 		<FormContainer>
 			<Form>
-				<Item>
-					<Label>
-						<Text fontSize="20px">Username</Text>
-					</Label>
-					<TextInput
-						type="text"
-						onChange={(e) => {
-							setRegistration((prevState) => ({
-								...prevState,
-								userName: e.target.value,
-							}));
-						}}
-					/>
-					{!registration.userNameValid ? (
-						<Text>username is not valid</Text>
-					) : (
-						""
-					)}
-				</Item>
-				<Item>
-					<Label>
-						<Text fontSize="20px">FirstName</Text>
-					</Label>
-					<TextInput
-						type="text"
-						onChange={(e) => {
-							setRegistration((prevState) => ({
-								...prevState,
-								firstName: e.target.value,
-							}));
-						}}
-					/>
-				</Item>
-				<Item>
-					<Label>
-						<Text fontSize="20px">Lastname</Text>
-					</Label>
-					<TextInput
-						type="text"
-						onChange={(e) => {
-							setRegistration((prevState) => ({
-								...prevState,
-								lastName: e.target.value,
-							}));
-						}}
-					/>
-				</Item>
+				<Label>
+					<Text fontSize="20px">Username</Text>
+				</Label>
+				<TextInput
+					type="text"
+					onChange={(e) => {
+						setRegistration((prevState) => ({
+							...prevState,
+							userName: e.target.value,
+						}));
+					}}
+				/>
+				{!registration.userNameValid ? <Text>username is not valid</Text> : ""}
+				<Label>
+					<Text fontSize="20px">FirstName</Text>
+				</Label>
+				<TextInput
+					type="text"
+					onChange={(e) => {
+						setRegistration((prevState) => ({
+							...prevState,
+							firstName: e.target.value,
+						}));
+					}}
+				/>
+
+				<Label>
+					<Text fontSize="20px">Lastname</Text>
+				</Label>
+				<TextInput
+					type="text"
+					onChange={(e) => {
+						setRegistration((prevState) => ({
+							...prevState,
+							lastName: e.target.value,
+						}));
+					}}
+				/>
+
 				<Text>Enable Two factor Authenication</Text>
 				<Button
 					onClick={(e) => {
@@ -173,8 +164,9 @@ const RegistrationForm = (): JSX.Element => {
 						<Text fontSize="20px">Enable</Text>
 					)}
 				</Button>
+				<br />
 				{registration.twoFAEnabled ? (
-					<Item>
+					<>
 						<img src={qrcode.qrcode} alt="" />
 						<Label>
 							<Text fontSize="20px">Input2FA code pls</Text>
@@ -188,20 +180,18 @@ const RegistrationForm = (): JSX.Element => {
 								}));
 							}}
 						/>
-					</Item>
+					</>
 				) : (
 					""
 				)}
-				<Item>
-					<Button
-						onClick={(e) => {
-							e.preventDefault();
-							registerNewUser(e);
-						}}
-					>
-						<Text fontSize="20px">Register</Text>
-					</Button>
-				</Item>
+				<Button
+					onClick={(e) => {
+						e.preventDefault();
+						registerNewUser(e);
+					}}
+				>
+					<Text fontSize="20px">Register</Text>
+				</Button>
 			</Form>
 		</FormContainer>
 	);
