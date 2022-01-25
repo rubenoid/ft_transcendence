@@ -122,7 +122,7 @@ const Pong = (): JSX.Element => {
 		const context = canvas.getContext("2d");
 		const renderer: PongRenderer | undefined = new PongRenderer(context, []);
 
-		document.addEventListener("keydown", function (event) {
+		function handleKeyDown(event: KeyboardEvent): void {
 			if (
 				event.key.toLocaleLowerCase() == "a" ||
 				event.key.toLocaleLowerCase() == "arrowleft"
@@ -133,9 +133,9 @@ const Pong = (): JSX.Element => {
 				event.key.toLocaleLowerCase() == "arrowright"
 			)
 				keys[1] = true;
-		});
+		}
 
-		document.addEventListener("keyup", function (event) {
+		function handleKeyUp(event: KeyboardEvent): void {
 			if (
 				event.key.toLocaleLowerCase() == "a" ||
 				event.key.toLocaleLowerCase() == "arrowleft"
@@ -146,7 +146,11 @@ const Pong = (): JSX.Element => {
 				event.key.toLocaleLowerCase() == "arrowright"
 			)
 				keys[1] = false;
-		});
+		}
+
+		document.addEventListener("keydown", handleKeyDown, true);
+
+		document.addEventListener("keyup", handleKeyUp, true);
 
 		socket.on("gameUpdate", (Data: { positions: Point[]; ballpos: Point }) => {
 			renderer.players = Data.positions;
@@ -189,6 +193,11 @@ const Pong = (): JSX.Element => {
 		socket.on("scoreUpdate", (scores: number[]) => {
 			setScores(scores);
 		});
+
+		return () => {
+			document.removeEventListener("keydown", handleKeyDown, true);
+			document.removeEventListener("keyup", handleKeyUp, true);
+		};
 	}, []);
 
 	useEffect(() => {
