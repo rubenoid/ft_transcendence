@@ -53,13 +53,10 @@ const RegistrationForm = (): JSX.Element => {
 
 	useEffect(() => {
 		if (registration.twoFAEnabled == true) return;
-		fetchData("auth/getQrRetSecret")
-			.then((data: QrData) => {
-				console.log("DATA", data.qrcode);
-				setQrcode(data);
-			})
-			.catch((err) => {
-			});
+		fetchData("auth/getQrRetSecret").then((data: QrData) => {
+			console.log("DATA", data.qrcode);
+			setQrcode(data);
+		});
 	}, [registration.twoFAEnabled]);
 
 	const registerNewUser = async (
