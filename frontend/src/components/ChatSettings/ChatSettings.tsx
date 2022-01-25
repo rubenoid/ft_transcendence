@@ -264,15 +264,19 @@ const ChatSettings = (): JSX.Element => {
 		return (
 			<>
 				<h1>{chatData.name} details</h1>
-				{chatData.isPublic ? (
-					<Text color={"green"}> Public Channel</Text>
-				) : (
-					<Text color={"blue"}> Private Channel</Text>
+				{
+					chatData.owner == -1 ? (
+						<Text color="pink">Direct channel</Text>
+					) : ( chatData.isPublic ? (
+						<Text color={"green"}> Public Channel</Text>
+					) : (
+						<Text color={"blue"}> Private Channel</Text>
+					)
 				)}
 				<Text color="black">Users</Text>
 				<UserWrapper>{listUsers()}</UserWrapper>
 
-				{myRole != roleLevel.user ? (
+				{ myRole != roleLevel.user ? (
 					<>
 						<Text color="black">Add Users</Text>
 						<UserWrapper>
@@ -288,25 +292,27 @@ const ChatSettings = (): JSX.Element => {
 							{usersToAdd ? listAddedUsers : ""}
 						</UserWrapper>
 					</>
-				) : (
-					""
+				) : ""
+				}
+				<br />
+				{ chatData.owner == -1 ? "" : (
+					<>
+						<UserWrapper>
+							<Text color="black">Banned Users</Text>
+							{listBannedUsers()}
+						</UserWrapper>
+						<br />
+						<UserWrapper>
+							<Text color="black">Muted Users</Text>
+							{/* {listMutedUsers} */}
+						</UserWrapper>
+						<br />
+						<UserWrapper>
+							{settingsForm && myRole == roleLevel.owner ? displaySettings() : ""}
+						</UserWrapper>
+					</>
 				)}
-				<br />
-				<UserWrapper>
-					<Text color="black">Banned Users</Text>
-					{listBannedUsers()}
-				</UserWrapper>
-				<br />
-				<UserWrapper>
-					<Text color="black">Muted Users</Text>
-					{/* {listMutedUsers} */}
-				</UserWrapper>
-				<br />
-				<UserWrapper>
-					{settingsForm && myRole == roleLevel.owner ? displaySettings() : ""}
-				</UserWrapper>
 
-				<Button onClick={() => saveChatSettings()}>Save</Button>
 				<Button
 					onClick={() => {
 						console.log(endpoints);
@@ -315,14 +321,21 @@ const ChatSettings = (): JSX.Element => {
 				>
 					Back
 				</Button>
-				<Button
-					onClick={() => {
-						postData("/chat/leave", { chatId: chatId, idToRemove: user.id });
-						navigate("/", { replace: true });
-					}}
-				>
-					Leave
-				</Button>
+				{ chatData.owner != -1 ? (
+						<>
+							<Button onClick={() => saveChatSettings()}>Save</Button>
+							<Button
+							onClick={() => {
+								postData("/chat/leave", { chatId: chatId, idToRemove: user.id });
+								navigate("/", { replace: true });
+							}}
+							>
+							Leave
+							</Button>
+						</>
+					) : ""
+				}
+
 			</>
 		);
 	};

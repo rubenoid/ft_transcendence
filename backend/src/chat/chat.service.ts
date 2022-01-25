@@ -280,12 +280,10 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["users", "admins"],
 		});
-		if (!chat) {
+		if (!chat || chat.owner == -1) {
 			throw "no chat to remove";
 		}
-		if (chat.isPublic == false) {
-			return false;
-		}
+
 		if (
 			executer == idToRemove ||
 			executer == chat.owner ||
@@ -329,7 +327,7 @@ export class ChatService {
 			where: { id: chatId },
 		});
 		chat.name = name;
-		if (chat.owner != userId) {
+		if (chat.owner != userId || chat.owner == -1) {
 			return false;
 		}
 		if (privacyLevel == 2) {
@@ -352,7 +350,7 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins"],
 		});
-		if (chat.owner != userId) {
+		if (chat.owner != userId || chat.owner == -1) {
 			return false;
 		}
 		const newAdmin = await this.userService.getUserQueryOne({
@@ -372,7 +370,7 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins", "users"],
 		});
-		if (!chat || chat.admins.find((x) => x.id == executerId) == undefined)
+		if (!chat || chat.owner == -1 || chat.admins.find((x) => x.id == executerId) == undefined)
 			throw "Error in request";
 		const user = await this.userService.getUserQueryOne({
 			where: { id: userId },
@@ -395,7 +393,7 @@ export class ChatService {
 			relations: ["admins", "users", "bannedUsers"],
 		});
 
-		if (!chat || chat.admins.find((x) => x.id == executerId) == undefined)
+		if (!chat || chat.owner == -1 || chat.admins.find((x) => x.id == executerId) == undefined)
 			throw "Error in request";
 		if (userId == chat.owner) throw "cant ban owner";
 		let idx = chat.admins.findIndex((x) => x.id == userId);
@@ -421,7 +419,7 @@ export class ChatService {
 			relations: ["admins", "users", "bannedUsers"],
 		});
 
-		if (!chat || chat.admins.find((x) => x.id == executerId) == undefined)
+		if (!chat || chat.owner == -1 || chat.admins.find((x) => x.id == executerId) == undefined)
 			throw "Error in request";
 		const idx = chat.bannedUsers.findIndex((x) => x.id == userId);
 
