@@ -9,7 +9,7 @@ import {
 	AdminTable,
 } from "../Utils/Table/Table";
 import { Text } from "../Utils/Text/Text";
-import { detailedUser, Match, Channel } from "../../Types/Types";
+import { detailedUser, Match, Channel, User } from "../../Types/Types";
 import { fetchData } from "../../API/API";
 import { Img, ImgContainer } from "../Profile/ProfileElements";
 
@@ -19,41 +19,19 @@ const AdminView = (): JSX.Element => {
 	const [channels, setChannels] = useState<Channel[]>([]);
 
 	useEffect(() => {
-		async function getUsers(): Promise<detailedUser[]> {
+		async function getData(): Promise<void> {
 			console.log("gettin all users n relations");
 			const users: detailedUser[] = await fetchData(
 				"/user/getAllUsersNRelations",
 			);
-			for (let i = 0; i < users.length; i++) {
-				users[i].friendsbyUsername = [];
-				users[i].blockedUsersbyUsername = [];
-				for (let k = 0; k < users[i].friends.length; k++) {
-					users[i].friendsbyUsername.push(users[i].friends[k].userName);
-					users[i].friendsbyUsername.push(" ");
-				}
-				for (let k = 0; k < users[i].blockedUsers.length; k++) {
-					users[i].blockedUsersbyUsername.push(
-						users[i].blockedUsers[k].userName,
-					);
-					users[i].blockedUsersbyUsername.push(" ");
-				}
-			}
 			const matches: Match[] = await fetchData("/match/getAllMatches");
 			const channels: Channel[] = await fetchData("/chat/all");
-			for (let i = 0; i < channels.length; i++) {
-				channels[i].adminbyUsername = [];
-				for (let k = 0; k < channels[i].admins.length; k++) {
-					channels[i].adminbyUsername.push(channels[i].admins[k].userName);
-					channels[i].adminbyUsername.push(" ");
-				}
-			}
 			setUsers(users);
 			setMatches(matches);
 			setChannels(channels);
 			console.log(channels);
-			return users;
 		}
-		getUsers();
+		getData();
 	}, []);
 
 	const channellist = channels.map((channels: Channel, key: number) => {
@@ -101,9 +79,11 @@ const AdminView = (): JSX.Element => {
 							Na
 						</Text>
 					) : (
-						<Text fontSize="10" color="black">
-							{channels.adminbyUsername}
-						</Text>
+						<>
+							{channels.admins.map((user: User, key: number) => {
+								return <p key={key}>{user.userName}</p>;
+							})}
+						</>
 					)}
 				</AdminTableCell>
 			</TableRow>
@@ -206,14 +186,14 @@ const AdminView = (): JSX.Element => {
 					)}
 				</AdminTableCell>
 				<AdminTableCell>
-					<Text fontSize="10" color="black">
-						{users.friendsbyUsername}
-					</Text>
+					{users.friends.map((user: User, key: number) => {
+						return <p key={key}>{user.userName}</p>;
+					})}
 				</AdminTableCell>
 				<AdminTableCell>
-					<Text fontSize="10" color="black">
-						{users.blockedUsersbyUsername}
-					</Text>
+					{users.blockedUsers.map((user: User, key: number) => {
+						return <p key={key}>{user.userName}</p>;
+					})}
 				</AdminTableCell>
 			</TableRow>
 		);
