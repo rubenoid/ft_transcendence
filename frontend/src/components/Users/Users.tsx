@@ -9,7 +9,7 @@ import {
 	TableHeader,
 	TableCell,
 } from "../Utils/Table/Table";
-import socket from "../socket";
+import socket from "../../API/Socket";
 import { Text } from "../Utils/Text/Text";
 import { User } from "../../Types/Types";
 

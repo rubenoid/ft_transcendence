@@ -52,3 +52,11 @@ export const Btn = styled(LinkR)`
 		background-color: #abc;
 	}
 `;
+
+export const RegistrationContainer = styled.div`
+	min-height: 100vh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;

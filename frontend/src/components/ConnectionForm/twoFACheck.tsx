@@ -4,7 +4,7 @@ import { FormContainer, Form, Label, Button } from "./ConnectionFormElements";
 import { postData, fetchData } from "../../API/API";
 import QRCode from "qrcode.react";
 import { useNavigate, Link } from "react-router-dom";
-import { SharedHeroSection } from "../HeroSection/HeroSection";
+import { SharedConnectionStatus } from "../../App/ConnectionStatus";
 import { Item } from "../Utils/List/List";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { Text } from "../Utils/Text/Text";
@@ -13,7 +13,7 @@ const TwoFACheck = (): JSX.Element => {
 	const navigate = useNavigate();
 	const [twoFA, settwoFA] = useState<boolean>(undefined);
 	const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
-	const { isConnected, setIsConnected } = SharedHeroSection();
+	const { isConnected, setIsConnected } = SharedConnectionStatus();
 
 	useEffect(() => {
 		async function inputAccessCode(): Promise<boolean> {

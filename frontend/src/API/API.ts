@@ -39,7 +39,6 @@ export const postData = async <T>(
 		headers: Object.assign(headers.headers, extraHeaders),
 	};
 
-	console.log(headersToSend);
 	return await instance
 		.post(url, data, headersToSend)
 		.then((response) => {

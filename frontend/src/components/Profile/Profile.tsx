@@ -5,10 +5,11 @@ import { fetchData } from "../../API/API";
 import { User } from "../../Types/Types";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { useNavigate, Link } from "react-router-dom";
-import { SharedHeroSection } from "../HeroSection/HeroSection";
+import { SharedConnectionStatus } from "../../App/ConnectionStatus";
 import { RoundButton } from "../Utils/Buttons/Round/RoundButton";
 import { Text } from "../Utils/Text/Text";
 import { useBetween } from "use-between";
+import { SharedUserState } from "../../App/UserStatus";
 
 function deleteCookie(
 	name: string,
@@ -31,32 +32,11 @@ function getCookie(name: string): boolean {
 	});
 }
 
-const UserState = (): {
-	user: User;
-	setUser: React.Dispatch<React.SetStateAction<User>>;
-} => {
-	const [user, setUser] = useState<User>(undefined);
-	return { user, setUser };
-};
-
-export const SharedUserState = (): {
-	user: User;
-	setUser: React.Dispatch<React.SetStateAction<User>>;
-} => useBetween(UserState);
-
 const Profile = (): JSX.Element => {
 	const navigate = useNavigate();
 
 	const { user, setUser } = SharedUserState();
-	const { isConnected, setIsConnected } = SharedHeroSection();
-	useEffect(() => {
-		async function getUser(): Promise<User> {
-			const user: User = await fetchData("/user/me");
-			setUser(user);
-			return user;
-		}
-		getUser();
-	}, []);
+	const { isConnected, setIsConnected } = SharedConnectionStatus();
 
 	async function logout(): Promise<void> {
 		const endpoint = "/auth/logout";

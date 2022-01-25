@@ -75,9 +75,10 @@ export class AuthController {
 		return await this.authService.create2fadiv(req.user.id);
 	}
 
+	@Public()
 	@Get("getQrRetSecret")
-	async getQrRetSecret(@Req() req: GuardedRequest): Promise<object> {
-		return await this.authService.getQrRetSecret(req.user.id);
+	async getQrRetSecret(): Promise<object> {
+		return await this.authService.getQrRetSecret();
 	}
 
 	@Get("saveSecret/:secret")

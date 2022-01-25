@@ -15,7 +15,7 @@ import {
 import PongImgUrl from "../../../public/pong.png";
 import { fetchData } from "../../API/API";
 import { Text } from "../Utils/Text/Text";
-import socket from "../socket";
+import socket from "../../API/Socket";
 import { useParams } from "react-router-dom";
 import { User } from "../../Types/Types";
 

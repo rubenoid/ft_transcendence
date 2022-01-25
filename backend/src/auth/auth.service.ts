@@ -35,7 +35,7 @@ export class AuthService {
 		return qrcode;
 	}
 
-	async getQrRetSecret(id: number): Promise<object> {
+	async getQrRetSecret(): Promise<object> {
 		const codedata = twofa.getTwoFactorAuthenticationCode();
 		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
 		return { qrcode: qrcode, secret: codedata.base32 };

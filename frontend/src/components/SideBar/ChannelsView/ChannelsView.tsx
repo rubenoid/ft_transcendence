@@ -13,7 +13,7 @@ import {
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
 import { Form } from "../../ConnectionForm/ConnectionFormElements";
-import { SharedUserState } from "../../Profile/Profile";
+import { SharedUserState } from "../../../App/UserStatus";
 import AddUserInput from "../../AddUserInput/AddUserInput";
 
 class CreateChannelsForm {

@@ -18,9 +18,9 @@ import { Channel, Message } from "../../../Types/Types";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { Text } from "../../Utils/Text/Text";
-import socket from "../../socket";
+import socket from "../../../API/Socket";
 import { SharedChatState } from "../SideBar";
-import { SharedUserState } from "../../Profile/Profile";
+import { SharedUserState } from "../../../App/UserStatus";
 import { Link } from "react-router-dom";
 import { outputChatName } from "../SideBar";
 

@@ -14,7 +14,7 @@ import {
 	RowButton,
 	UserRowContainer,
 } from "./ChatSettingsElements";
-import { SharedUserState } from "../Profile/Profile";
+import { SharedUserState } from "../../App/UserStatus";
 
 interface ChatData {
 	id: number;
