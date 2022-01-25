@@ -82,6 +82,7 @@ export class UserService {
 		newUser.rating = 10000;
 		newUser.wins = 0;
 		newUser.losses = 0;
+		newUser.friends = [];
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.registered = registered;
@@ -141,6 +142,7 @@ export class UserService {
 		newUser.rating = 1500;
 		newUser.wins = 0;
 		newUser.losses = 0;
+		newUser.friends = [];
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.logedin = false; //?
