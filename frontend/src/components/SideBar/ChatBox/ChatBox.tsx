@@ -23,9 +23,6 @@ import { SharedChatState } from "../SideBar";
 import { SharedUserState } from "../../Profile/Profile";
 import { Link } from "react-router-dom";
 import { outputChatName } from "../SideBar";
-// type ChatBoxProps = {
-// 	// chatWith: React.Dispatch<React.SetStateAction<Channel>>;
-// };
 
 const ChatBox = (): JSX.Element => {
 	const [msgToSend, setMsgToSend] = useState<string>("");

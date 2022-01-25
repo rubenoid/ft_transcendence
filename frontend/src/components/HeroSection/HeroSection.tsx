@@ -10,6 +10,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { useBetween } from "use-between";
 import { User } from "../../Types/Types";
 import { SharedUserState } from "../Profile/Profile";
+import AdminView from "../AdminView/AdminView";
 
 type UserProps = {
 	isConnected: boolean;
@@ -67,8 +68,10 @@ const HeroSection = (): JSX.Element => {
 						}
 					/>
 					<Route path="/checkTwoFA" element={<TwoFACheck />} />
-					{/* <Route path='/reLogin'    element={<ConnectionForm/>}/> */}
-					{/* <Route path="/logedin" element={<DashBoard />} /> */}
+					<Route
+						path="/admin"
+						element={isConnected ? <AdminView /> : <Navigate to="/login" />}
+					/>
 				</Routes>
 			</BrowserRouter>
 		);

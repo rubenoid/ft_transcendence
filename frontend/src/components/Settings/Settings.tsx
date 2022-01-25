@@ -51,7 +51,8 @@ const SettingsForm = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getUser(): Promise<User> {
-			const user: detailedUser = await fetchData("/user/meAndFriends");
+			const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
+			console.log("user got", user);
 			if (user.twoFactorSecret.length == 0) {
 				console.log("TWO FA DISABLED");
 				setIsChecked(false);
@@ -60,11 +61,6 @@ const SettingsForm = (): JSX.Element => {
 				console.log("TWO FA ENABLED");
 				setIsChecked(true);
 				setinitial2FAEnabled(true);
-			}
-			user.blockedUsersAsUsers = [];
-			for (const blockeduser of user.blockedUsers) {
-				const endpoint = `/user/get/${blockeduser}`;
-				user.blockedUsersAsUsers.push(await fetchData(endpoint));
 			}
 			setUser(user);
 			return user;

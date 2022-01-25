@@ -82,6 +82,7 @@ export class UserService {
 		newUser.rating = 10000;
 		newUser.wins = 0;
 		newUser.losses = 0;
+		newUser.friends = [];
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.registered = registered;
@@ -110,6 +111,20 @@ export class UserService {
 		return User;
 	}
 
+	async getAllUsersNRelations(): Promise<UserEntity[]> {
+		const User = await this.UserRepository.find({
+			relations: [
+				"friends",
+				"matches",
+				"blockedUsers",
+				"blockedBy",
+				"channels",
+			],
+		});
+		if (User.length === 0) throw "user not found";
+		return User;
+	}
+
 	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
 	}
@@ -127,6 +142,7 @@ export class UserService {
 		newUser.rating = 1500;
 		newUser.wins = 0;
 		newUser.losses = 0;
+		newUser.friends = [];
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
 		newUser.logedin = false; //?

@@ -33,6 +33,11 @@ export class UserController {
 	async getAll(): Promise<UserEntity[]> {
 		return await this.userService.getAll();
 	}
+
+	@Get("getAllUsersNRelations")
+	async getAllUsersNRelations(): Promise<UserEntity[]> {
+		return await this.userService.getAllUsersNRelations();
+	}
 	@Get("get/:id")
 	async getUserById(@Param("id") id: string): Promise<UserEntity> {
 		return await this.userService.getUser(parseInt(id));
@@ -42,11 +47,12 @@ export class UserController {
 		return await this.userService.getUser(req.user.id as number);
 	}
 
-	@Get("meAndFriends")
+	@Get("menFriendsnBlocked")
 	async meAndFriends(@Req() req: GuardedRequest): Promise<UserEntity> {
+		console.log("we iz here");
 		return await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
-			relations: ["friends"],
+			relations: ["friends", "blockedUsers", "blockedBy"],
 		});
 	}
 

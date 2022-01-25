@@ -41,9 +41,6 @@ export class AuthController {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
-		// console.log("login controller user.registered", user.registered);
-		// console.log("user.twoFactorSecret.length", user.twoFactorSecret.length);
-		// console.log("user.logedin", user.logedin);
 		const token: string = await this.authService.login(req.user);
 		await response.cookie("AuthToken", token, { httpOnly: false });
 		if (!user.registered) {
@@ -64,11 +61,9 @@ export class AuthController {
 		@Req() req: GuardedRequest,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<void> {
-		console.log("I in logedin AM HERE");
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
-		console.log("I AM HERE");
 		user.logedin = true;
 		this.userService.saveUser(user);
 	}
@@ -118,7 +113,6 @@ export class AuthController {
 		if (ret == true) {
 			user.twoFactorvalid = true;
 			this.userService.saveUser(user);
-			// console.log("user.twofactorvalid", user.twoFactorvalid);
 		}
 		return ret;
 	}
@@ -136,19 +130,12 @@ export class AuthController {
 		return;
 	}
 
-	@Public()
-	@Get("protect")
-	async functions(): Promise<void> {
-		return await this.authService.testProtector();
-	}
-
 	@UseGuards(localAuthGaurd)
 	@Get("logout")
 	async logout(
 		@Req() req: GuardedRequest,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<void> {
-		console.log("in the log out shiz");
 		response.clearCookie("AuthToken");
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
@@ -156,7 +143,11 @@ export class AuthController {
 		user.logedin == false;
 		user.twoFactorvalid = false;
 		this.userService.saveUser(user);
-		console.log("user.logedin", user.logedin);
-		// return response.redirect("http://localhost:8080/");
 	}
+
+	// @Public()
+	// @Get("protect")
+	// async functions(): Promise<void> {
+	// 	return await this.authService.testProtector();
+	// }
 }

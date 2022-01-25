@@ -48,9 +48,7 @@ export class UserEntity {
 	twoFactorvalid: boolean;
 
 	@ManyToMany(() => UserEntity, {
-		onDelete: "SET NULL",
 		cascade: true,
-		nullable: true,
 	})
 	@JoinTable()
 	friends: UserEntity[];
@@ -58,11 +56,17 @@ export class UserEntity {
 	@ManyToMany(() => MatchEntity, (match) => match.players)
 	matches: MatchEntity[];
 
-	@Column("int", { array: true, nullable: true })
-	blockedUsers: number[];
+	@ManyToMany(() => UserEntity, {
+		cascade: true,
+	})
+	@JoinTable()
+	blockedUsers: UserEntity[];
 
-	@Column("int", { array: true, nullable: true })
-	blockedBy: number[];
+	@ManyToMany(() => UserEntity, {
+		cascade: true,
+	})
+	@JoinTable()
+	blockedBy: UserEntity[];
 
 	@ManyToMany(() => ChatEntity, (chat) => chat.users) //, UserEntity => UserEntity.Friends)
 	channels: ChatEntity[];

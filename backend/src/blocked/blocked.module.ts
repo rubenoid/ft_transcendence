@@ -8,7 +8,6 @@ import { FriendsService } from "src/friends/friends.service"; //??
 @Module({
 	imports: [UserModule, FriendsModule],
 	providers: [BlockedService, FriendsService],
-	// providers: [BlockedService],
 	controllers: [BlockedController],
 })
 export class BlockedModule {}

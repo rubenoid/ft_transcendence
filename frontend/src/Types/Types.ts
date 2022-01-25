@@ -30,11 +30,13 @@ export interface Channel {
 	isPublic: boolean;
 	isProtected: boolean;
 	messages: Message[];
+	owner: number;
+	admins: User[];
 }
 
 export interface detailedUser extends User {
 	twoFactorSecret: string;
-	blockedUsers: number[];
-	blockedUsersAsUsers: detailedUser[];
+	blockedUsers: User[];
+	blockedBy: User[];
 	initial2FAEnabled: boolean;
 }
