@@ -1,10 +1,12 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions } from "typeorm";
 import { writeFile } from "fs";
 import { MatchEntity } from "src/match/match.entity";
 import { GuardedSocket } from "src/overloaded";
 import { Server } from "socket.io";
+import { ChatEntity } from "src/chat/chat.entity"
+import { ChatService } from "src/chat/chat.service"
 
 let currentId = 0;
 
@@ -15,6 +17,9 @@ export class UserService {
 	constructor(
 		@Inject("USER_REPOSITORY")
 		private UserRepository: Repository<UserEntity>,
+
+		@Inject(forwardRef(() => ChatService))
+		private chatService: ChatService,
 	) {}
 	async getUser(toFind: number): Promise<UserEntity> {
 		const User = await this.UserRepository.findOne({ where: { id: toFind } });
@@ -221,5 +226,27 @@ export class UserService {
 			},
 		);
 		return tosend;
+	}
+
+	async getMyChats(userId: number): Promise<ChatEntity[]> {
+		const data: ChatEntity[] = (
+			await this.getUserQueryOne({
+				where: { id: userId },
+				relations: ["channels"],
+			})
+		).channels;
+
+		for (let i = 0; i < data.length; i++) {
+			const chat: ChatEntity = await this.chatService.getChatDataDetailed(data[i].id);
+			const element = data[i];
+			if (chat.bannedUsers.find(x => x.id == userId))
+			{
+				data.splice(i, 1);
+				continue;
+			}
+			if (element.password) element["isProtected"] = true;
+			delete element.password;
+		}
+		return data;
 	}
 }

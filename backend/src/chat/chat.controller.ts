@@ -63,8 +63,8 @@ export class ChatController {
 	}
 
 	@Get("public")
-	async getPublicChannels(): Promise<ChatEntity[]> {
-		return await this.chatService.returnPublicChannels();
+	async getPublicChannels(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
+		return await this.chatService.returnPublicChannels(req.user.id);
 	}
 
 	@Post("createNewChat")

@@ -32,7 +32,6 @@ export class ChatEntity {
 	bannedUsers: UserEntity[];
 
 	@OneToMany(() => ChatMessageEntity, (message) => message.chat, {
-		eager: true,
 		cascade: true,
 	})
 	messages: ChatMessageEntity[];

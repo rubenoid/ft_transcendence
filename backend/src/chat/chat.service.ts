@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 import { Repository, FindOneOptions } from "typeorm";
 import { ChatEntity, ChatMessageEntity } from "./chat.entity";
 import { UserService } from "src/user/user.service";
@@ -16,9 +16,11 @@ export class ChatService {
 		@Inject("CHAT_MESSAGE_REPOSITORY")
 		private chatMessageRepository: Repository<ChatMessageEntity>,
 
-		private userService: UserService,
-
+		
 		private protectorService: ProtectorService,
+		
+		@Inject(forwardRef(() => UserService))
+		private userService: UserService,
 	) {}
 
 	clients: GuardedSocket[] = [];
@@ -49,9 +51,9 @@ export class ChatService {
 	async getMessages(id: number, userId: number): Promise<ChatMessageEntity[]> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
-			relations: ["users", "messages"],
+			relations: ["users", "messages", "bannedUsers"],
 		});
-		if (data === undefined) return [];
+		if (data === undefined || data.bannedUsers.find(x => x.id == userId)) return [];
 
 		if (
 			data.password != "" &&
@@ -66,6 +68,7 @@ export class ChatService {
 			where: { id: id },
 		});
 
+		
 		if (data.password) {
 			data["hasPassword"] = true;
 		} else data["hasPassword"] = false;
@@ -120,11 +123,18 @@ export class ChatService {
 		return -1;
 	}
 
-	async returnPublicChannels(): Promise<ChatEntity[]> {
-		const data = await this.chatRepository.find({ where: { isPublic: true } });
+	async returnPublicChannels(userId: number): Promise<ChatEntity[]> {
+		const data = await this.chatRepository.find({ where: { isPublic: true }, relations: ["bannedUsers"] });
 
 		for (let i = 0; i < data.length; i++) {
 			const element = data[i];
+			console.log("element.bannedUsers,", element.bannedUsers);
+			console.log("userid", userId);
+			if (element.bannedUsers.find(x => x.id == userId))
+			{
+				console.log("found it!", data.splice(i, 1));
+				continue;
+			}
 			if (element.password) element["isProtected"] = true;
 			delete element.password;
 		}
@@ -372,12 +382,13 @@ export class ChatService {
 	): Promise<void> {
 		const chat = await this.chatRepository.findOne({
 			where: { id: chatId },
-			relations: ["admins", "users"],
+			relations: ["admins", "users", "bannedUsers"],
 		});
 		if (
 			!chat ||
 			chat.owner == -1 ||
-			chat.admins.find((x) => x.id == executerId) == undefined
+			chat.admins.find((x) => x.id == executerId) == undefined ||
+			chat.bannedUsers.find(x => x.id == userId)
 		)
 			throw "Error in request";
 		const user = await this.userService.getUserQueryOne({

@@ -6,7 +6,6 @@ import { SharedConnectionStatus } from "../../App/ConnectionStatus";
 import { postData, fetchData } from "../../API/API";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
-import { Item } from "../Utils/List/List";
 import { User } from "../../Types/Types";
 
 class RegistrationItems {

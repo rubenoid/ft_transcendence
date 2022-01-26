@@ -58,19 +58,7 @@ export class UserController {
 
 	@Get("me/chats")
 	async getMyChats(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
-		const data: ChatEntity[] = (
-			await this.userService.getUserQueryOne({
-				where: { id: req.user.id },
-				relations: ["channels"],
-			})
-		).channels;
-
-		for (let i = 0; i < data.length; i++) {
-			const element = data[i];
-			if (element.password) element["isProtected"] = true;
-			delete element.password;
-		}
-		return data;
+		return await this.userService.getMyChats(req.user.id);
 	}
 
 	@Public()
