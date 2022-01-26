@@ -132,7 +132,13 @@ export class AuthController {
 		@Body("twoFASecret") twoFASecret: string,
 	): Promise<void> {
 		console.log("TWOFA", twoFASecret);
-		this.userService.update(req.user.id, userName, firstName, lastName, twoFASecret);
+		this.userService.update(
+			req.user.id,
+			userName,
+			firstName,
+			lastName,
+			twoFASecret,
+		);
 		return;
 	}
 

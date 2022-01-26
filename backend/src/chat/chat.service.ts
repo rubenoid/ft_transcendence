@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { Repository, FindOneOptions } from "typeorm";
-import { ChatEntity, ChatMessageEntity } from "./chat.entity";
+import { Repository } from "typeorm";
+import { ChatEntity, ChatMessageEntity, MutedUserEntity } from "./chat.entity";
 import { UserService } from "src/user/user.service";
 import { UserEntity } from "src/user/user.entity";
 import { GuardedSocket } from "src/overloaded";
@@ -16,9 +16,8 @@ export class ChatService {
 		@Inject("CHAT_MESSAGE_REPOSITORY")
 		private chatMessageRepository: Repository<ChatMessageEntity>,
 
-		
 		private protectorService: ProtectorService,
-		
+
 		@Inject(forwardRef(() => UserService))
 		private userService: UserService,
 	) {}
@@ -53,7 +52,8 @@ export class ChatService {
 			where: { id: id },
 			relations: ["users", "messages", "bannedUsers"],
 		});
-		if (data === undefined || data.bannedUsers.find(x => x.id == userId)) return [];
+		if (data === undefined || data.bannedUsers.find((x) => x.id == userId))
+			return [];
 
 		if (
 			data.password != "" &&
@@ -63,12 +63,20 @@ export class ChatService {
 		return data.messages;
 	}
 
-	async getChatData(id: number): Promise<ChatEntity> {
+	async getChatData(id: number, userId: number): Promise<ChatEntity> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
+			relations: ["users"],
 		});
 
-		
+		if (data.users.find((x) => x.id == userId) == undefined) {
+			const user = await this.userService.getUserQueryOne({
+				where: { id: userId },
+			});
+			data.users.push(user);
+			await this.chatRepository.save(data);
+		}
+
 		if (data.password) {
 			data["hasPassword"] = true;
 		} else data["hasPassword"] = false;
@@ -80,7 +88,7 @@ export class ChatService {
 	async getChatDataDetailed(id: number): Promise<ChatEntity> {
 		const data = await this.chatRepository.findOne({
 			where: { id: id },
-			relations: ["users", "admins", "bannedUsers"],
+			relations: ["users", "admins", "bannedUsers", "muted"],
 		});
 
 		if (data.password) {
@@ -124,15 +132,15 @@ export class ChatService {
 	}
 
 	async returnPublicChannels(userId: number): Promise<ChatEntity[]> {
-		const data = await this.chatRepository.find({ where: { isPublic: true }, relations: ["bannedUsers"] });
+		const data = await this.chatRepository.find({
+			where: { isPublic: true },
+			relations: ["bannedUsers"],
+		});
 
 		for (let i = 0; i < data.length; i++) {
 			const element = data[i];
-			console.log("element.bannedUsers,", element.bannedUsers);
-			console.log("userid", userId);
-			if (element.bannedUsers.find(x => x.id == userId))
-			{
-				console.log("found it!", data.splice(i, 1));
+			if (element.bannedUsers.find((x) => x.id == userId)) {
+				data.splice(i, 1);
 				continue;
 			}
 			if (element.password) element["isProtected"] = true;
@@ -151,6 +159,7 @@ export class ChatService {
 
 		toadd.isPublic = isPublic == 1 ? false : true;
 		toadd.name = name;
+		toadd.muted = [];
 		toadd.users = [];
 		if (password != "") {
 			toadd.password = await this.protectorService.hash(password);
@@ -180,6 +189,7 @@ export class ChatService {
 		toadd.password = "";
 		toadd.isPublic = false;
 		toadd.owner = -1;
+		toadd.muted = [];
 
 		const users: UserEntity[] = [];
 
@@ -210,11 +220,20 @@ export class ChatService {
 	): Promise<void> {
 		const chat = await this.chatRepository.findOne({
 			where: { id: chatId },
-			relations: ["messages", "users"],
+			relations: ["messages", "users", "muted"],
 		});
 
 		if (!chat) throw "no chat";
 
+		const found = chat.muted.findIndex((x) => x.userTargetId == client.user.id);
+		if (found != -1) {
+			const foundEnt = chat.muted[found];
+			if (Date.now() > foundEnt.endDate * 1000) {
+				chat.muted.splice(found, 1);
+			} else {
+				return;
+			}
+		}
 		const toadd = new ChatMessageEntity();
 
 		toadd.data = data;
@@ -388,7 +407,7 @@ export class ChatService {
 			!chat ||
 			chat.owner == -1 ||
 			chat.admins.find((x) => x.id == executerId) == undefined ||
-			chat.bannedUsers.find(x => x.id == userId)
+			chat.bannedUsers.find((x) => x.id == userId)
 		)
 			throw "Error in request";
 		const user = await this.userService.getUserQueryOne({
@@ -411,13 +430,13 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins", "users", "bannedUsers"],
 		});
-
 		if (
 			!chat ||
 			chat.owner == -1 ||
 			chat.admins.find((x) => x.id == executerId) == undefined
 		)
 			throw "Error in request";
+		await this.unmute(executerId, chatId, userId);
 		if (userId == chat.owner) throw "cant ban owner";
 		let idx = chat.admins.findIndex((x) => x.id == userId);
 		if (idx != -1) chat.admins.splice(idx, 1);
@@ -457,5 +476,56 @@ export class ChatService {
 		);
 
 		this.chatRepository.save(chat);
+	}
+
+	async muteUser(
+		executerId: number,
+		userId: number,
+		chatId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users", "bannedUsers", "muted"],
+		});
+
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined ||
+			chat.muted.find((x) => x.userTargetId == userId)
+		) {
+			console.log("Error with req");
+			return;
+		}
+		const toAdd = new MutedUserEntity();
+		toAdd.endDate = Math.floor((Date.now() + 600000) / 1000);
+		toAdd.userTargetId = userId;
+		toAdd.target = chat;
+		chat.muted.push(toAdd);
+		await this.chatRepository.save(chat);
+	}
+
+	async unmute(
+		executerId: number,
+		chatId: number,
+		userId: number,
+	): Promise<void> {
+		const chat = await this.chatRepository.findOne({
+			where: { id: chatId },
+			relations: ["admins", "users", "muted"],
+		});
+		if (
+			!chat ||
+			chat.owner == -1 ||
+			chat.admins.find((x) => x.id == executerId) == undefined
+		) {
+			console.log("Error with req");
+			return;
+		}
+		let i: number;
+		if ((i = chat.muted.findIndex((x) => x.userTargetId == userId)) != -1) {
+			chat.muted.splice(i, 1);
+			await this.chatRepository.save(chat);
+		}
 	}
 }

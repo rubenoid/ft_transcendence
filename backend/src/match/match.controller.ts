@@ -13,13 +13,18 @@ export class MatchController {
 	}
 
 	@Get("getUserHistory/:id")
-	async getUserHistory(@Param("id") id: string): Promise<MatchEntity[]> {
-		return await this.matchService.getUserMatches(parseInt(id));
+	async getUserHistory(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<MatchEntity[] | string> {
+		return await this.matchService.getUserMatches(req.user.id, parseInt(id));
 	}
 
 	@Get("getMyUserHistory")
-	async getMyUserHistory(@Req() req: GuardedRequest): Promise<MatchEntity[]> {
-		return await this.matchService.getUserMatches(req.user.id as number);
+	async getMyUserHistory(
+		@Req() req: GuardedRequest,
+	): Promise<MatchEntity[] | string> {
+		return await this.matchService.getUserMatches(-1, req.user.id as number);
 	}
 
 	@Get("getAllMatches")

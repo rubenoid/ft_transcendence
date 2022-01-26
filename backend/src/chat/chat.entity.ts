@@ -46,6 +46,9 @@ export class ChatEntity {
 	})
 	@JoinTable()
 	admins: UserEntity[];
+
+	@OneToMany(() => MutedUserEntity, (mute) => mute.target, { cascade: true })
+	muted: MutedUserEntity[];
 }
 
 @Entity()
@@ -61,4 +64,19 @@ export class ChatMessageEntity {
 
 	@ManyToOne(() => ChatEntity, (chat) => chat.messages)
 	chat: ChatEntity;
+}
+
+@Entity()
+export class MutedUserEntity {
+	@PrimaryGeneratedColumn("increment")
+	id: number;
+
+	@Column()
+	userTargetId: number;
+
+	@Column()
+	endDate: number;
+
+	@ManyToOne(() => ChatEntity, (target) => target.muted)
+	target: ChatEntity;
 }

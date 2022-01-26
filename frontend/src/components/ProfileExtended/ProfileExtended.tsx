@@ -32,12 +32,20 @@ interface userStatus {
 
 const ProfileExtended = (): JSX.Element => {
 	const [user, setUser] = useState<detailedUser>(undefined);
+	const [isBlocked, setIsBlocked] = useState<number>(0);
 	const { profileId } = useParams();
 
 	useEffect(() => {
 		async function getUser(): Promise<detailedUser> {
-			const user: detailedUser = await fetchData(`/user/get/${profileId}`);
-
+			const user: detailedUser | string = await fetchData(
+				`/user/get/${profileId}`,
+			);
+			console.log("USERTYPE", typeof user);
+			if (typeof user != "object") {
+				if (typeof user == "number") setIsBlocked(2);
+				else setIsBlocked(1);
+				return;
+			}
 			user.friends = [];
 			user.matches = [];
 			user.status = "";
@@ -201,7 +209,15 @@ const ProfileExtended = (): JSX.Element => {
 		);
 	};
 	return (
-		<SettingsContainer>{user ? friendsData() : "loading"}</SettingsContainer>
+		<SettingsContainer>
+			{isBlocked != 0
+				? isBlocked == 1
+					? "User is unavailable!"
+					: "You blocked this user! Go to settings to unblock"
+				: user
+				? friendsData()
+				: "loading"}
+		</SettingsContainer>
 	);
 };
 

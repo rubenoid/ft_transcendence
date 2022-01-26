@@ -101,11 +101,20 @@ export class MatchService {
 		return Match;
 	}
 
-	async getUserMatches(id: number): Promise<MatchEntity[]> {
+	async getUserMatches(
+		userId: number,
+		toFind: number,
+	): Promise<MatchEntity[] | string> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
-			where: { id: id },
-			relations: ["matches"],
+			where: { id: toFind },
+			relations: ["matches", "blockedUsers", "blockedBy"],
 		});
+		if (userId != -1 && user.blockedUsers.find((x) => x.id == userId)) {
+			return undefined;
+		}
+		if (userId != -1 && user.blockedBy.find((x) => x.id == userId)) {
+			return "1";
+		}
 		const matches: MatchEntity[] = [];
 		for (let i = 0; i < user.matches.length; i++) {
 			const e = user.matches[i];

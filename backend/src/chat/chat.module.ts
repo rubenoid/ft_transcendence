@@ -18,8 +18,6 @@ import { ProtectorService } from "../protector/protector";
 		ChatService,
 		ChatGateway,
 	],
-	exports: [
-		ChatService, ...ChatProvider, ...ChatMessageProvider
-	]
+	exports: [ChatService, ...ChatProvider, ...ChatMessageProvider],
 })
 export class ChatModule {}

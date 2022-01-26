@@ -2,6 +2,7 @@ import { Controller, Get, Param, Post, Req, Body } from "@nestjs/common";
 import { ChatEntity, ChatMessageEntity } from "./chat.entity";
 import { ChatService } from "./chat.service";
 import { GuardedRequest } from "../overloaded";
+import { UserEntity } from "src/user/user.entity";
 
 @Controller("chat")
 export class ChatController {
@@ -25,7 +26,7 @@ export class ChatController {
 		@Req() req: GuardedRequest,
 		@Param("id") id: string,
 	): Promise<ChatEntity> {
-		return await this.chatService.getChatData(parseInt(id));
+		return await this.chatService.getChatData(parseInt(id), req.user.id);
 	}
 
 	@Get("getDetailed/:id")
@@ -49,10 +50,15 @@ export class ChatController {
 	async createNewChannel(
 		@Req() req: GuardedRequest,
 		@Body("name") name: string,
-		@Body("userIds") userIds: number[],
+		@Body("users") users: UserEntity[],
 		@Body("isPublic") isPublic: number,
 		@Body("password") password: string,
 	): Promise<number> {
+		const userIds = [];
+		for (let i = 0; i < users.length; i++) {
+			const e = users[i];
+			userIds.push(e.id);
+		}
 		userIds.push(req.user.id);
 		return await this.chatService.createChannel(
 			name,
@@ -141,5 +147,23 @@ export class ChatController {
 		@Body("chatId") chatId: number,
 	): Promise<void> {
 		return await this.chatService.unbanUser(req.user.id, chatId, userId);
+	}
+
+	@Post("muteUser")
+	async muteUser(
+		@Req() req: GuardedRequest,
+		@Body("userId") userId: number,
+		@Body("chatId") chatId: number,
+	): Promise<void> {
+		return await this.chatService.muteUser(req.user.id, userId, chatId);
+	}
+
+	@Post("unmute")
+	async unmute(
+		@Req() req: GuardedRequest,
+		@Body("userId") userId: number,
+		@Body("chatId") chatId: number,
+	): Promise<void> {
+		return await this.chatService.unmute(req.user.id, chatId, userId);
 	}
 }

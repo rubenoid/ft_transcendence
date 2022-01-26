@@ -8,13 +8,16 @@ export class FriendsController {
 	constructor(private readonly friendsService: FriendsService) {}
 
 	@Get("get/:id")
-	async getFriends(@Param("id") id: string): Promise<UserEntity[]> {
-		return await this.friendsService.getFriends(parseInt(id));
+	async getFriends(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<UserEntity[] | string> {
+		return await this.friendsService.getFriends(req.user.id, parseInt(id));
 	}
 
 	@Get("me")
-	async myFriends(@Req() req: GuardedRequest): Promise<UserEntity[]> {
-		return await this.friendsService.getFriends(req.user.id as number);
+	async myFriends(@Req() req: GuardedRequest): Promise<UserEntity[] | string> {
+		return await this.friendsService.getFriends(-1, req.user.id as number);
 	}
 
 	@Get("add/:id")

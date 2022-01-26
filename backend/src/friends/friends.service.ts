@@ -36,11 +36,20 @@ export class FriendsService {
 		await this.userService.saveUser(friend);
 	}
 
-	async getFriends(id: number): Promise<UserEntity[]> {
+	async getFriends(
+		userId: number,
+		toFind: number,
+	): Promise<UserEntity[] | string> {
 		const user = await this.userService.getUserQueryOne({
-			where: { id: id },
-			relations: ["friends"],
+			where: { id: toFind },
+			relations: ["friends", "blockedBy", "blockedUsers"],
 		});
+		if (userId != -1 && user.blockedUsers.find((x) => x.id == userId)) {
+			return undefined;
+		}
+		if (userId != -1 && user.blockedBy.find((x) => x.id == userId)) {
+			return "1";
+		}
 		return user.friends;
 	}
 
