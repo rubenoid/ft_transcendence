@@ -1,11 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-	TableRow,
-	TableCell,
-	TableHeader,
-	TableHeaderCell,
-	Table,
-} from "../Utils/Table/Table";
 import { fetchData } from "../../API/API";
 import { User, Match } from "../../Types/Types";
 import { SettingsContainer } from "../Settings/SettingsElements";
@@ -19,11 +12,8 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
-
-interface detailedUser extends User {
-	matches: Match[];
-	status: string;
-}
+import ListMatch from "./ListMatch/ListMatch";
+import { detailedUser } from "../../Types/Types";
 
 interface userStatus {
 	id: number;
@@ -77,40 +67,6 @@ const ProfileExtended = (): JSX.Element => {
 				<Link to={`/profile/${value.id}`} key={key}>
 					<Text>{value.userName}</Text>
 				</Link>
-			);
-		});
-
-		const listmatches = user.matches.map((value: Match, key: number) => {
-			return (
-				<TableRow key={key}>
-					{value.players[0].userName == user.userName && value.players[1] ? (
-						<TableCell>
-							<Link to={`/profile/${value.players[1].id}`}>
-								<Text fontSize="10">{value.players[1].userName}</Text>
-							</Link>
-						</TableCell>
-					) : (
-						<TableCell>
-							<Link to={`/profile/${value.players[0].id}`}>
-								<Text fontSize="10">{value.players[0].userName}</Text>
-							</Link>
-						</TableCell>
-					)}
-					<TableCell>
-						{value.players[0].userName == user.userName ? (
-							<Text fontSize="10">{value.scorePlayer1}</Text>
-						) : (
-							<Text fontSize="10">{value.scorePlayer2}</Text>
-						)}
-					</TableCell>
-					<TableCell>
-						{value.players[0].userName == user.userName ? (
-							<Text fontSize="10">{value.scorePlayer2}</Text>
-						) : (
-							<Text fontSize="10">{value.scorePlayer1}</Text>
-						)}
-					</TableCell>
-				</TableRow>
 			);
 		});
 
@@ -180,23 +136,7 @@ const ProfileExtended = (): JSX.Element => {
 				<Label>
 					<Text fontSize="20px">Matches</Text>
 				</Label>
-				{user.matches.length ? (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHeaderCell>Played Against</TableHeaderCell>
-								<TableHeaderCell>
-									{user.userName}
-									{"'"}s score
-								</TableHeaderCell>
-								<TableHeaderCell>Other player Score</TableHeaderCell>
-							</TableRow>
-						</TableHeader>
-						<tbody>{listmatches}</tbody>
-					</Table>
-				) : (
-					<Text>No matches yet</Text>
-				)}
+				<ListMatch/>
 			</>
 		);
 	};

@@ -10,12 +10,18 @@ export type User = {
 	friends: User[];
 };
 
+
 export type Match = {
 	id: number;
 	players: User[];
 	scorePlayer1: number;
 	scorePlayer2: number;
 };
+
+export interface detailedUser extends User {
+	matches: Match[];
+	status: string;
+}
 
 export interface Message {
 	data: string;
