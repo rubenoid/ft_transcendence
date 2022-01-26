@@ -135,7 +135,7 @@ export class UserController {
 			user.firstName,
 			user.lastName,
 		);
-		if (file) this.userService.saveAvatar(req.user.id, file);
+		if (file) await this.userService.saveAvatar(req.user.id, file);
 		return 0;
 	}
 
@@ -170,5 +170,10 @@ export class UserController {
 	@Get("getAllStatus")
 	async getAllStatus(): Promise<object[]> {
 		return await this.userService.getAllStatus();
+	}
+
+	@Get("find/:id")
+	async find(@Param("id") name: string): Promise<UserEntity[]> {
+		return await this.userService.findUser(name);
 	}
 }

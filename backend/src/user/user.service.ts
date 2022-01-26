@@ -1,6 +1,6 @@
 import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
-import { Repository, FindOneOptions } from "typeorm";
+import { Repository, FindOneOptions, Like } from "typeorm";
 import { writeFile } from "fs";
 import { MatchEntity } from "src/match/match.entity";
 import { GuardedSocket } from "src/overloaded";
@@ -257,5 +257,9 @@ export class UserService {
 			delete element.password;
 		}
 		return data;
+	}
+
+	async findUser(name: string): Promise<UserEntity[]> {
+		return await this.UserRepository.find({ userName: Like(`%${name}%`) });
 	}
 }

@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-	TableRow,
-	TableCell,
-	TableHeader,
-	TableHeaderCell,
-	Table,
-} from "../Utils/Table/Table";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { fetchData, postData } from "../../API/API";
 import { SettingsContainer } from "./SettingsElements";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
 import { Img, ImgContainer } from "../Profile/ProfileElements";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { User } from "../../Types/Types";
-import AddUserInput from "../AddUserInput/AddUserInput";
-import EndpointButton from "../EndpointButton/EndpointButton";
+import SettingsTable from "./SettingsTable";
 
 interface detailedUser extends User {
 	twoFactorSecret: string;
@@ -29,45 +21,43 @@ interface newQrData {
 	secret: string;
 }
 
-
+export class formData {
+	image = "";
+	isChecked = false;
+	qrcode: newQrData = undefined;
+	inputtedTwoFA = "";
+	twoFAvalid = true;
+	initial2FAEnabled = false;
+	friendsToAdd: User[] = [];
+	blockedToAdd: User[] = [];
+	userNameValid = false;
+	file: File = undefined;
+}
 
 const SettingsForm = (): JSX.Element => {
-	const navigate = useNavigate();
 	const [user, setUser] = useState<detailedUser>(undefined);
+	const [toInput, setToInput] = useState(new formData());
+	const [newPicutre, setNewPicture] = useState(new Date().getTime());
 
-	const [image, setImage] = useState<string>("");
-	const [file, setfile] = useState(undefined);
-
-	const [isChecked, setIsChecked] = useState(undefined);
-	const [qrcode, setqrcode] = useState<newQrData>(undefined);
-	const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
-	const [twoFAvalid, settwoFAvalid] = useState<boolean>(true);
-	const [initial2FAEnabled, setinitial2FAEnabled] =
-		useState<boolean>(undefined);
-
-	const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
-	const [friendsToAdd, setFriendsToAdd] = useState<User[]>([]);
-	const [blockedToAdd, setBlockedToAdd] = useState<User[]>([]);
 	const [endpoints, setEndpoints] = useState([]);
 
-	async function getUser(): Promise<User> {
+	async function getUser(): Promise<boolean> {
 		const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
-		console.log("user got", user);
-		if (user.twoFactorSecret.length == 0) {
-			console.log("TWO FA DISABLED");
-			setIsChecked(false);
-			setinitial2FAEnabled(false);
-		} else {
-			console.log("TWO FA ENABLED");
-			setIsChecked(true);
-			setinitial2FAEnabled(true);
-		}
 		setUser(user);
-		return user;
+		if (user.twoFactorSecret.length == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	useEffect(() => {
-		getUser();
+		getUser().then((res) => {
+			if (res == true)
+				setToInput({ ...toInput, isChecked: true, initial2FAEnabled: true });
+			else
+				setToInput({ ...toInput, isChecked: false, initial2FAEnabled: false });
+		});
 	}, []);
 
 	const uploadDataForm = async (
@@ -80,38 +70,32 @@ const SettingsForm = (): JSX.Element => {
 			else await fetchData(endpoint.endpoint);
 		}
 
-		for (const user of friendsToAdd) {
+		for (const user of toInput.friendsToAdd) {
 			await fetchData(`/friends/add/${user.id}`);
 		}
 
-		for (const user of blockedToAdd) {
+		for (const user of toInput.blockedToAdd) {
 			await fetchData(`/blocked/add/${user.id}`);
 		}
 
-		const formData = new FormData();
-		formData.append("user", JSON.stringify(user));
-		formData.append("file", file);
-		await postData("/user/updateForm", formData, {
+		const form = new FormData();
+		form.append("user", JSON.stringify(user));
+		form.append("file", toInput.file);
+		await postData("/user/updateForm", form, {
 			"Content-Type": "multipart/form-data",
 		});
-		// setUser(undefined);
-
-		// setImage("");
-		// setfile(undefined);
-	
-		// const [isChecked, setIsChecked] = useState(undefined);
-		// const [qrcode, setqrcode] = useState<newQrData>(undefined);
-		// const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
-		// const [twoFAvalid, settwoFAvalid] = useState<boolean>(true);
-		// const [initial2FAEnabled, setinitial2FAEnabled] =
-		// 	useState<boolean>(undefined);
-	
-		// const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
-		// const [friendsToAdd, setFriendsToAdd] = useState<User[]>([]);
-		// const [blockedToAdd, setBlockedToAdd] = useState<User[]>([]);
-		// setBlockedToAdd([])
-		// const [endpoints, setEndpoints] = useState([]);
-		getUser();
+		const res = await getUser();
+		setEndpoints([]);
+		setToInput((prevstate) => {
+			const toReplace = new formData();
+			toReplace.isChecked = res;
+			toReplace.initial2FAEnabled = res;
+			toReplace.friendsToAdd = [];
+			toReplace.blockedToAdd = [];
+			console.log("toreplace: ", toReplace);
+			return toReplace;
+		});
+		setNewPicture(new Date().getTime());
 	};
 
 	/* username valid */
@@ -119,11 +103,11 @@ const SettingsForm = (): JSX.Element => {
 		async function getUsersforUsername(): Promise<void> {
 			const endpoint = `/user/getByUserName/${e}`;
 			const UserFromUserName: User = await fetchData(endpoint);
-			setUserNameValid(false);
-			console.log("UserNameValid", UserNameValid);
 			if (!UserFromUserName) {
-				setUserNameValid(true);
+				setToInput({ ...toInput, userNameValid: true });
 				setUser({ ...user, userName: e });
+			} else {
+				setToInput({ ...toInput, userNameValid: false });
 			}
 		}
 		getUsersforUsername();
@@ -131,156 +115,86 @@ const SettingsForm = (): JSX.Element => {
 
 	/* two FA change */
 	const twoFAChange = (): void => {
-		setIsChecked(!isChecked);
-		console.log("CHECKED?", isChecked);
-		if (initial2FAEnabled) settwoFAvalid(isChecked == true);
-		else settwoFAvalid(isChecked == false);
-
-		if (isChecked && !initial2FAEnabled) {
+		if (toInput.initial2FAEnabled) {
+			setToInput({ ...toInput, twoFAvalid: toInput.isChecked == true });
+		} else {
+			setToInput({ ...toInput, twoFAvalid: toInput.isChecked == false });
+		}
+		if (toInput.isChecked && !toInput.initial2FAEnabled) {
 			fetchData("auth/getQrRetSecret").then((data: newQrData) => {
-				setqrcode(data);
+				setToInput({ ...toInput, qrcode: data });
 			});
 		}
 	};
 
 	useEffect(() => {
 		async function inputAccessCode(): Promise<void> {
-			if (inputtedTwoFA == undefined || inputtedTwoFA.length != 6) return;
-			console.log("inputAccessCode:", inputtedTwoFA, inputtedTwoFA.length);
-			if (initial2FAEnabled == true) {
+			if (
+				toInput.inputtedTwoFA == undefined ||
+				toInput.inputtedTwoFA.length != 6
+			)
+				return;
+			console.log(
+				"inputAccessCode:",
+				toInput.inputtedTwoFA,
+				toInput.inputtedTwoFA.length,
+			);
+			if (toInput.initial2FAEnabled == true) {
 				const validated: boolean = await postData(`/auth/inputAccessCode`, {
-					usertoken: inputtedTwoFA,
+					usertoken: toInput.inputtedTwoFA,
 				});
 				if (validated) {
 					endpoints.push(`user/removeTwoFA`);
-					settwoFAvalid(true);
+					setToInput({ ...toInput, twoFAvalid: false });
 				} else {
-					settwoFAvalid(false);
+					setToInput({ ...toInput, twoFAvalid: false });
 				}
 			} else {
 				const validated: boolean = await postData(`/auth/testQrCode`, {
-					usertoken: inputtedTwoFA,
-					secret: qrcode.secret,
+					usertoken: toInput.inputtedTwoFA,
+					secret: toInput.qrcode.secret,
 				});
 				if (validated) {
-					const endpoint = `/auth/saveSecret/${qrcode.secret}`;
-					endpoints.push(endpoint);
-					settwoFAvalid(true);
+					endpoints.push(`/auth/saveSecret/${toInput.qrcode.secret}`);
+					setToInput({ ...toInput, twoFAvalid: true });
 				} else {
-					settwoFAvalid(false);
+					setToInput({ ...toInput, twoFAvalid: false });
 				}
 			}
 		}
 		inputAccessCode();
-	}, [inputtedTwoFA]);
-
-	const displayToAdd = (users: User[], name: string): JSX.Element => {
-		return (
-			<div>
-				<Text>{name}</Text>
-				{users.length
-					? users.map((user: User, key: number) => {
-							return (
-								<div key={key}>
-									<Text>{user.userName}</Text>
-								</div>
-							);
-					  })
-					: ""}
-			</div>
-		);
-	};
+	}, [toInput.inputtedTwoFA]);
 
 	/* upload avatar */
 	const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		if (e.target.files && e.target.files.length) {
-			setImage(URL.createObjectURL(e.target.files[0]));
-			setfile(e.target.files[0]);
+			setToInput({
+				...toInput,
+				image: URL.createObjectURL(e.target.files[0]),
+				file: e.target.files[0],
+			});
 		}
 	};
 
 	const settingsData = (): JSX.Element => {
-		console.log("user", user);
-		console.log("user.friends", user.friends);
-		const listfriends = user.friends.map((friend: User, key: number) => {
-			return (
-				<TableRow key={key}>
-					<TableCell>
-						<Text fontSize="10">{friend.userName}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{friend.firstName}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{friend.lastName}</Text>
-					</TableCell>
-					<TableCell>
-						<EndpointButton
-							useSmall={true}
-							endpointRef={setEndpoints}
-							toSet={{ endpoint: `/friends/remove/${friend.id}`, data: {} }}
-						>
-							<Text>Remove</Text>
-						</EndpointButton>
-					</TableCell>
-				</TableRow>
-			);
-		});
-
-		const listblockedusers = user.blockedUsers.map(
-			(blocked: User, key: number) => {
-				return (
-					<TableRow key={key}>
-						<TableCell>
-							<Text fontSize="10">{blocked.userName}</Text>
-						</TableCell>
-						<TableCell>
-							<Text fontSize="10">{blocked.firstName}</Text>
-						</TableCell>
-						<TableCell>
-							<Text fontSize="10">{blocked.lastName}</Text>
-						</TableCell>
-						<TableCell>
-							<EndpointButton
-								useSmall={true}
-								endpointRef={setEndpoints}
-								toSet={{ endpoint: `/blocked/remove/${blocked.id}`, data: {} }}
-							>
-								<Text>Remove</Text>
-							</EndpointButton>
-						</TableCell>
-					</TableRow>
-				);
-			},
-		);
-
 		return (
 			<>
 				<h1>Settings</h1>
-
+				<Text fontSize="20px">Username</Text>
+				<TextInput
+					type="text"
+					placeholder={user.userName}
+					onChange={(e) => {
+						handleUserName(e.target.value);
+					}}
+				/>
+				{toInput.userNameValid ? (
+					<Text>username available and unique</Text>
+				) : (
+					<Text>username already in use</Text>
+				)}
 				<Item>
-					<Label>
-						{" "}
-						<Text fontSize="20px">Username</Text>
-					</Label>
-					<TextInput
-						type="text"
-						placeholder={user.userName}
-						onChange={(e) => {
-							handleUserName(e.target.value);
-						}}
-					/>
-					{UserNameValid ? (
-						<Text>username available and unique</Text>
-					) : (
-						<Text>username already in use</Text>
-					)}
-				</Item>
-				<Item>
-					<Label>
-						{" "}
-						<Text fontSize="20px">FirstName</Text>
-					</Label>
+					<Text fontSize="20px">FirstName</Text>
 					<TextInput
 						type="text"
 						placeholder={user.firstName}
@@ -290,10 +204,7 @@ const SettingsForm = (): JSX.Element => {
 					/>
 				</Item>
 				<Item>
-					<Label>
-						{" "}
-						<Text fontSize="20px">Lastname</Text>
-					</Label>
+					<Text fontSize="20px">Lastname</Text>
 					<TextInput
 						type="text"
 						placeholder={user.lastName}
@@ -302,99 +213,76 @@ const SettingsForm = (): JSX.Element => {
 						}}
 					/>
 				</Item>
-				<Item>
-					<Label htmlFor="upload-button">
-						{!image ? (
-							<div>
-								<ImgContainer>
-									<Img
-										src={"http://localhost:5000/" + user.avatar}
-										alt="profileImg"
-										width="300"
-										height="300"
-									/>
-								</ImgContainer>
-								<Text>Click here to upload a new avatar</Text>
-							</div>
-						) : (
+				<Label htmlFor="upload-button">
+					{toInput.image.length == 0 ? (
+						<div>
+							<Text color="black">Click the image to change your avatar</Text>
 							<ImgContainer>
-								<Img src={image} alt="dummy" width="300" height="300" />
+								<Img
+									src={
+										"http://localhost:5000/" + user.avatar + "?" + newPicutre
+									}
+									alt="profileImg"
+									width="300"
+									height="300"
+								/>
 							</ImgContainer>
-						)}
-					</Label>
+						</div>
+					) : (
+						<ImgContainer>
+							<Img src={toInput.image} alt="dummy" width="300" height="300" />
+						</ImgContainer>
+					)}
+				</Label>
+				<input
+					type="file"
+					id="upload-button"
+					style={{ display: "none" }}
+					onChange={handleFileUpload}
+				/>
+				<SettingsTable
+					users={user.friends}
+					endpoint={"/friends/remove/"}
+					setEndpoints={setEndpoints}
+					stagedList={toInput.friendsToAdd}
+					title={"Friends"}
+					onInputEvent={(e: User) =>
+						setToInput({
+							...toInput,
+							friendsToAdd: [...toInput.friendsToAdd, e],
+						})
+					}
+				>
+					<Text>Find Users to add as a friend</Text>
+				</SettingsTable>
+				<SettingsTable
+					users={user.blockedUsers}
+					endpoint={"/blocked/remove/"}
+					setEndpoints={setEndpoints}
+					stagedList={toInput.blockedToAdd}
+					title={"Blocked"}
+					onInputEvent={(e: User) =>
+						setToInput({
+							...toInput,
+							blockedToAdd: [...toInput.blockedToAdd, e],
+						})
+					}
+				>
+					<Text>Find Users to block</Text>
+				</SettingsTable>
+				<Item>
+					<Text fontSize="20px">Two Factor Authentication</Text>
 					<input
-						type="file"
-						id="upload-button"
-						style={{ display: "none" }}
-						onChange={handleFileUpload}
+						type="checkbox"
+						checked={toInput.isChecked}
+						onChange={twoFAChange}
 					/>
 				</Item>
-				<Label>
-					{" "}
-					<Text fontSize="20px">Blocked users</Text>
-				</Label>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHeaderCell>Username</TableHeaderCell>
-							<TableHeaderCell>First Name</TableHeaderCell>
-							<TableHeaderCell>Last Name</TableHeaderCell>
-							<TableHeaderCell>Edit</TableHeaderCell>
-						</TableRow>
-					</TableHeader>
-					<tbody>
-						{listblockedusers && listblockedusers.length
-							? listblockedusers
-							: null}
-					</tbody>
-				</Table>
-				<Text>Search for users to block</Text>
-				<AddUserInput
-					placeholder="Type to search..."
-					onValidUser={(e: User) => setBlockedToAdd([...blockedToAdd, e])}
-				></AddUserInput>
-				{blockedToAdd.length
-					? displayToAdd(blockedToAdd, "Blocked staged to add")
-					: ""}
-				<Label>
-					{" "}
-					<Text fontSize="20px">Friends</Text>
-				</Label>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHeaderCell>Username</TableHeaderCell>
-							<TableHeaderCell>First Name</TableHeaderCell>
-							<TableHeaderCell>Last Name</TableHeaderCell>
-							<TableHeaderCell>Edit</TableHeaderCell>
-						</TableRow>
-					</TableHeader>
-					<tbody>
-						{user.friends && user.friends.length ? listfriends : null}
-					</tbody>
-				</Table>
-				<Item>
-					<Text>Search for friends to add</Text>
-				</Item>
-				<AddUserInput
-					placeholder="Type to search..."
-					onValidUser={(e: User) => setFriendsToAdd([...friendsToAdd, e])}
-				/>
-				{friendsToAdd.length
-					? displayToAdd(friendsToAdd, "Friends staged to add")
-					: ""}
-				<Item>
-					<Label>
-						{" "}
-						<Text fontSize="20px">Two Factor Authentication</Text>
-					</Label>
-					<input type="checkbox" checked={isChecked} onChange={twoFAChange} />
-				</Item>
-
-				{isChecked && !initial2FAEnabled ? (
+				{toInput.isChecked && !toInput.initial2FAEnabled ? (
 					<Item>
-						{qrcode !== undefined && qrcode.qrcode !== undefined ? (
-							<img src={qrcode.qrcode} alt="" />
+						{toInput.qrcode !== undefined &&
+						toInput.qrcode.qrcode !== undefined ? (
+							<img src={toInput.qrcode.qrcode} alt="" />
 						) : (
 							"loading"
 						)}
@@ -404,11 +292,11 @@ const SettingsForm = (): JSX.Element => {
 						<TextInput
 							type="text"
 							onChange={(e) => {
-								setinputtedTwoFA(e.target.value);
+								setToInput({ ...toInput, inputtedTwoFA: e.target.value });
 							}}
 						/>
 					</Item>
-				) : !isChecked && initial2FAEnabled ? (
+				) : !toInput.isChecked && toInput.initial2FAEnabled ? (
 					<Item>
 						<Label>
 							<Text fontSize="20px">Your 2fa code please</Text>
@@ -416,14 +304,14 @@ const SettingsForm = (): JSX.Element => {
 						<TextInput
 							type="text"
 							onChange={(e) => {
-								setinputtedTwoFA(e.target.value);
+								setToInput({ ...toInput, inputtedTwoFA: e.target.value });
 							}}
 						/>
 					</Item>
 				) : (
 					""
 				)}
-				{twoFAvalid === false ? (
+				{toInput.twoFAvalid === false ? (
 					<>
 						<Button disabled>
 							<Text fontSize="15px">Save changes</Text>
@@ -436,7 +324,6 @@ const SettingsForm = (): JSX.Element => {
 						</Button>
 					</>
 				)}
-
 				<Button>
 					<Text fontSize="15px">
 						<Link to="/">Back</Link>

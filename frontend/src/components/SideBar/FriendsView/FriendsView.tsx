@@ -39,9 +39,8 @@ const FriendsView = (): JSX.Element => {
 		setFriends(friends);
 		return friends;
 	}
-	
-	useEffect(() => {
 
+	useEffect(() => {
 		getFriends();
 	}, []);
 
