@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "../../Utils/Text/Text";
 import { fetchData, postData } from "../../../API/API";
-import { List, Item } from "../../Utils/List/List";
-import { Button } from "../../Utils/Buttons/Button/Button";
+import { Item } from "../../Utils/List/List";
 import { Channel, User } from "../../../Types/Types";
 import { SharedChatState } from "../SideBar";
 import {
@@ -16,6 +15,8 @@ import {
 } from "./FriendsViewElements";
 import { Img } from "../../Profile/ProfileElements";
 import { useNavigate, Link } from "react-router-dom";
+import FindFriends from "./FindFriends";
+import AddFriend from "../../AddFriend/AddFriend";
 
 const FriendsView = (): JSX.Element => {
 	const navigate = useNavigate();
@@ -32,18 +33,25 @@ const FriendsView = (): JSX.Element => {
 		setChannel(chatData);
 	}
 
+	async function getFriends(): Promise<User[]> {
+		const friends: User[] = await fetchData("/friends/me");
+		console.log("USERS->hi", friends);
+		setFriends(friends);
+		return friends;
+	}
+	
 	useEffect(() => {
-		async function getFriends(): Promise<User[]> {
-			const friends: User[] = await fetchData("/friends/me");
-			console.log("USERS->hi", friends);
-			setFriends(friends);
-			return friends;
-		}
+
 		getFriends();
 	}, []);
 
 	function goToProfile(id: number): void {
 		navigate(`/profile/${id}`, { replace: true });
+	}
+
+	async function addFriend(user: User): Promise<void> {
+		await fetchData(`/friends/add/${user.id}`);
+		getFriends();
 	}
 
 	const listFriends = friends.map((user: User, key: number) => {
@@ -88,6 +96,7 @@ const FriendsView = (): JSX.Element => {
 		<FriendsViewContainer>
 			<Item>
 				<Text>Friends:</Text>
+				<FindFriends onEnter={(e) => addFriend(e)}></FindFriends>
 			</Item>
 			{friends.length ? listFriends : <Item>No Friends Yet, Add one !</Item>}
 		</FriendsViewContainer>

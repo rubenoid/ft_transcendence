@@ -29,6 +29,8 @@ interface newQrData {
 	secret: string;
 }
 
+
+
 const SettingsForm = (): JSX.Element => {
 	const navigate = useNavigate();
 	const [user, setUser] = useState<detailedUser>(undefined);
@@ -48,22 +50,23 @@ const SettingsForm = (): JSX.Element => {
 	const [blockedToAdd, setBlockedToAdd] = useState<User[]>([]);
 	const [endpoints, setEndpoints] = useState([]);
 
-	useEffect(() => {
-		async function getUser(): Promise<User> {
-			const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
-			console.log("user got", user);
-			if (user.twoFactorSecret.length == 0) {
-				console.log("TWO FA DISABLED");
-				setIsChecked(false);
-				setinitial2FAEnabled(false);
-			} else {
-				console.log("TWO FA ENABLED");
-				setIsChecked(true);
-				setinitial2FAEnabled(true);
-			}
-			setUser(user);
-			return user;
+	async function getUser(): Promise<User> {
+		const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
+		console.log("user got", user);
+		if (user.twoFactorSecret.length == 0) {
+			console.log("TWO FA DISABLED");
+			setIsChecked(false);
+			setinitial2FAEnabled(false);
+		} else {
+			console.log("TWO FA ENABLED");
+			setIsChecked(true);
+			setinitial2FAEnabled(true);
 		}
+		setUser(user);
+		return user;
+	}
+
+	useEffect(() => {
 		getUser();
 	}, []);
 
@@ -73,16 +76,16 @@ const SettingsForm = (): JSX.Element => {
 		e.preventDefault();
 		console.log(endpoints);
 		for (const endpoint of endpoints) {
-			if (typeof endpoint == "string") fetchData(endpoint);
-			else fetchData(endpoint.endpoint);
+			if (typeof endpoint == "string") await fetchData(endpoint);
+			else await fetchData(endpoint.endpoint);
 		}
 
 		for (const user of friendsToAdd) {
-			fetchData(`/friends/add/${user.id}`);
+			await fetchData(`/friends/add/${user.id}`);
 		}
 
 		for (const user of blockedToAdd) {
-			fetchData(`/blocked/add/${user.id}`);
+			await fetchData(`/blocked/add/${user.id}`);
 		}
 
 		const formData = new FormData();
@@ -91,7 +94,24 @@ const SettingsForm = (): JSX.Element => {
 		await postData("/user/updateForm", formData, {
 			"Content-Type": "multipart/form-data",
 		});
-		navigate("/", { replace: false });
+		// setUser(undefined);
+
+		// setImage("");
+		// setfile(undefined);
+	
+		// const [isChecked, setIsChecked] = useState(undefined);
+		// const [qrcode, setqrcode] = useState<newQrData>(undefined);
+		// const [inputtedTwoFA, setinputtedTwoFA] = useState<string>(undefined);
+		// const [twoFAvalid, settwoFAvalid] = useState<boolean>(true);
+		// const [initial2FAEnabled, setinitial2FAEnabled] =
+		// 	useState<boolean>(undefined);
+	
+		// const [UserNameValid, setUserNameValid] = useState<boolean>(undefined);
+		// const [friendsToAdd, setFriendsToAdd] = useState<User[]>([]);
+		// const [blockedToAdd, setBlockedToAdd] = useState<User[]>([]);
+		// setBlockedToAdd([])
+		// const [endpoints, setEndpoints] = useState([]);
+		getUser();
 	};
 
 	/* username valid */
