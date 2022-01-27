@@ -10,6 +10,16 @@ export type User = {
 	friends: User[];
 };
 
+export interface detailedUser extends User {
+	status: string;
+}
+
+export interface userStatus {
+	id: number;
+	status: string;
+}
+
+
 export type Match = {
 	id: number;
 	players: User[];
@@ -32,11 +42,4 @@ export interface Channel {
 	messages: Message[];
 	owner: number;
 	admins: User[];
-}
-
-export interface detailedUser extends User {
-	twoFactorSecret: string;
-	blockedUsers: User[];
-	blockedBy: User[];
-	initial2FAEnabled: boolean;
 }

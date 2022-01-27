@@ -9,9 +9,16 @@ import {
 	AdminTable,
 } from "../Utils/Table/Table";
 import { Text } from "../Utils/Text/Text";
-import { detailedUser, Match, Channel, User } from "../../Types/Types";
+import { Match, Channel, User } from "../../Types/Types";
 import { fetchData } from "../../API/API";
 import { Img, ImgContainer } from "../Profile/ProfileElements";
+
+export interface detailedUser extends User {
+	twoFactorSecret: string;
+	blockedUsers: User[];
+	blockedBy: User[];
+	initial2FAEnabled: boolean;
+}
 
 const AdminView = (): JSX.Element => {
 	const [users, setUsers] = useState<detailedUser[]>([]);

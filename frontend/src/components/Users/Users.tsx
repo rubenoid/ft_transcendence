@@ -11,64 +11,62 @@ import {
 } from "../Utils/Table/Table";
 import socket from "../../API/Socket";
 import { Text } from "../Utils/Text/Text";
-import { User } from "../../Types/Types";
+import { User, detailedUser, userStatus } from "../../Types/Types";
+import { getFoundUsers} from './UsersUtils';
 
-interface detailedUser extends User {
-	status: string;
-}
-
-interface userStatus {
-	id: number;
-	status: string;
-}
-
-let users: detailedUser[] = [];
-
-
-function setListUsers(): JSX.Element[] {
-	const data = [];
+function getUsersTableRows(users: detailedUser[]): JSX.Element[] {
+	const rows = [];
 	for (let i = 0; i < users.length; i++) {
-		const e = users[i];
-		data.push(
+		rows.push(
 			<TableRow key={i}>
 				<TableCell>
-					<Text fontSize="10">{e.id}</Text>
+					<Text fontSize="10">{users[i].id}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{e.userName}</Text>
+					<Text fontSize="10">{users[i].userName}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{e.wins}</Text>
+					<Text fontSize="10">{users[i].wins}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{e.losses}</Text>
+					<Text fontSize="10">{users[i].losses}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{e.status ? e.status : "Offline"}</Text>
+					<Text fontSize="10">{users[i].status ? users[i].status : "Offline"}</Text>
 				</TableCell>
 			</TableRow>,
 		);
 	}
-	console.log("DATAT->",data);
-	return data;
+	return rows;
+}
+
+function getTableHeader () {
+	return(
+		<TableHeader>
+			<TableRow>
+				<TableHeaderCell>id</TableHeaderCell>
+				<TableHeaderCell>username</TableHeaderCell>
+				<TableHeaderCell>wins</TableHeaderCell>
+				<TableHeaderCell>losses</TableHeaderCell>
+				<TableHeaderCell>Status</TableHeaderCell>
+			</TableRow>
+		</TableHeader>
+	);	
+}
+
+
+function getUserById(id: number) {
+
 }
 
 const Users = (): JSX.Element => {
-	const [userlist, setuserlist] = useState(undefined);
+	const [usersTableRows, setUsersTableRows] = useState(undefined);
+	let users: detailedUser[] = [];
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
-			const foundUsers: detailedUser[] = await fetchData("/user/all");
-			const allStatus: userStatus[] = await fetchData("/user/getAllStatus");
-			for (let i = 0; i < allStatus.length; i++) {
-				const e = allStatus[i];
-				const found = foundUsers.find((x) => x.id == e.id);
-				if (found) {
-					found.status = e.status;
-				}
-			}
-			users = foundUsers;
-			setData();
+			users = await getFoundUsers();
+			updateUsers();
 		}
 		getUsers();
 	}, [fetchData]);
@@ -78,30 +76,22 @@ const Users = (): JSX.Element => {
 			const found = users.find((x) => x.id == data.id);
 			if (found) {
 				found.status = data.status;
-				setData();
+				updateUsers();
 			}
 		});
 	}, []);
 
-	function setData () {
-		let data = setListUsers();
-		setuserlist(data);
+	function updateUsers () {
+		let rows = getUsersTableRows(users);
+		setUsersTableRows(rows);
 	}
 
 	return (
 		<WidgetContainer>
 			<Text>Users</Text>
 			<Table>
-				<TableHeader>
-					<TableRow>
-						<TableHeaderCell>id</TableHeaderCell>
-						<TableHeaderCell>username</TableHeaderCell>
-						<TableHeaderCell>wins</TableHeaderCell>
-						<TableHeaderCell>losses</TableHeaderCell>
-						<TableHeaderCell>Status</TableHeaderCell>
-					</TableRow>
-				</TableHeader>
-				<TableBody>{userlist ? userlist : null}</TableBody>
+				{getTableHeader()}
+				<TableBody>{usersTableRows ? usersTableRows : null}</TableBody>
 			</Table>
 		</WidgetContainer>
 	);
