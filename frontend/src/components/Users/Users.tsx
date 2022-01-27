@@ -11,8 +11,8 @@ import {
 } from "../Utils/Table/Table";
 import socket from "../../API/Socket";
 import { Text } from "../Utils/Text/Text";
-import { User, detailedUser, userStatus } from "../../Types/Types";
-import { getFoundUsers} from './UsersUtils';
+import { detailedUser, userStatus } from "../../Types/Types";
+import { getFoundUsers, updateUserStatus } from './UsersUtils';
 
 function getUsersTableRows(users: detailedUser[]): JSX.Element[] {
 	const rows = [];
@@ -55,10 +55,6 @@ function getTableHeader () {
 }
 
 
-function getUserById(id: number) {
-
-}
-
 const Users = (): JSX.Element => {
 	const [usersTableRows, setUsersTableRows] = useState(undefined);
 	let users: detailedUser[] = [];
@@ -72,12 +68,9 @@ const Users = (): JSX.Element => {
 	}, [fetchData]);
 
 	useEffect(() => {
-		socket.on("userUpdate", (data: userStatus) => {
-			const found = users.find((x) => x.id == data.id);
-			if (found) {
-				found.status = data.status;
+		socket.on("userUpdate", (status: userStatus) => {
+			if (updateUserStatus(users, status))
 				updateUsers();
-			}
 		});
 	}, []);
 

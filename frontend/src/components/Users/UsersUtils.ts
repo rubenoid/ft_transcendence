@@ -14,3 +14,12 @@ export async function getFoundUsers() {
 	}
 	return foundUsers;
 }
+
+export function updateUserStatus(users: detailedUser[], status: userStatus): boolean {
+	const found = users.find((user) => user.id == status.id);
+	if (found) {
+		found.status = status.status;
+		return true;
+	}
+	return false;
+}
