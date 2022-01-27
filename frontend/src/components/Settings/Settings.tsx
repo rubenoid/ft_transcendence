@@ -21,8 +21,7 @@ import EndpointButton from "../EndpointButton/EndpointButton";
 
 interface detailedUser extends User {
 	twoFactorSecret: string;
-	blockedUsers: number[];
-	blockedUsersAsUsers: detailedUser[];
+	blockedUsers: User[];
 }
 
 interface newQrData {
@@ -80,6 +79,10 @@ const SettingsForm = (): JSX.Element => {
 
 		for (const user of friendsToAdd) {
 			fetchData(`/friends/add/${user.id}`);
+		}
+
+		for (const user of blockedToAdd) {
+			fetchData(`/blocked/add/${user.id}`);
 		}
 
 		const formData = new FormData();
@@ -155,13 +158,15 @@ const SettingsForm = (): JSX.Element => {
 		return (
 			<div>
 				<Text>{name}</Text>
-				{users.map((user: User, key: number) => {
-					return (
-						<div key={key}>
-							<Text>{user.userName}</Text>
-						</div>
-					);
-				})}
+				{users.length
+					? users.map((user: User, key: number) => {
+							return (
+								<div key={key}>
+									<Text>{user.userName}</Text>
+								</div>
+							);
+					  })
+					: ""}
 			</div>
 		);
 	};
@@ -175,6 +180,8 @@ const SettingsForm = (): JSX.Element => {
 	};
 
 	const settingsData = (): JSX.Element => {
+		console.log("user", user);
+		console.log("user.friends", user.friends);
 		const listfriends = user.friends.map((friend: User, key: number) => {
 			return (
 				<TableRow key={key}>
@@ -200,7 +207,7 @@ const SettingsForm = (): JSX.Element => {
 			);
 		});
 
-		const listblockedusers = user.blockedUsersAsUsers.map(
+		const listblockedusers = user.blockedUsers.map(
 			(blocked: User, key: number) => {
 				return (
 					<TableRow key={key}>

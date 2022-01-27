@@ -39,12 +39,15 @@ export class UserController {
 		return await this.userService.getAllUsersNRelations();
 	}
 	@Get("get/:id")
-	async getUserById(@Param("id") id: string): Promise<UserEntity> {
-		return await this.userService.getUser(parseInt(id));
+	async getUserById(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<UserEntity | string> {
+		return await this.userService.getUser(req.user.id, parseInt(id));
 	}
 	@Get("me")
-	async getme(@Req() req: GuardedRequest): Promise<UserEntity> {
-		return await this.userService.getUser(req.user.id as number);
+	async getme(@Req() req: GuardedRequest): Promise<UserEntity | string> {
+		return await this.userService.getUser(-1, req.user.id as number);
 	}
 
 	@Get("menFriendsnBlocked")
@@ -58,19 +61,7 @@ export class UserController {
 
 	@Get("me/chats")
 	async getMyChats(@Req() req: GuardedRequest): Promise<ChatEntity[]> {
-		const data: ChatEntity[] = (
-			await this.userService.getUserQueryOne({
-				where: { id: req.user.id },
-				relations: ["channels"],
-			})
-		).channels;
-
-		for (let i = 0; i < data.length; i++) {
-			const element = data[i];
-			if (element.password) element["isProtected"] = true;
-			delete element.password;
-		}
-		return data;
+		return await this.userService.getMyChats(req.user.id);
 	}
 
 	@Public()
@@ -103,7 +94,7 @@ export class UserController {
 	}
 
 	@Public()
-	@UseGuards(RegisteringGuard) // take this out for testing
+	// @UseGuards(RegisteringGuard) // take this out for testing
 	@Get("deleteAll")
 	async deleteAll(): Promise<void> {
 		return await this.userService.deleteAll();
@@ -162,7 +153,8 @@ export class UserController {
 	@Get("removeTwoFA")
 	async removeTwoFA(@Req() req: GuardedRequest): Promise<void> {
 		console.log("removetwofa");
-		const user = await this.userService.getUser(req.user.id as number);
+		const user = await this.userService.getUser(-1, req.user.id as number);
+		if (typeof user != "object") return;
 		user.twoFactorSecret = "";
 		user.twoFactorvalid = false;
 		await this.userService.saveUser(user);

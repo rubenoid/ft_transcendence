@@ -24,13 +24,18 @@ interface ChatData {
 	users: User[];
 	admins: User[];
 	bannedUsers: User[];
-	mutedUsers: User[];
+	muted: mutedUser[];
 	owner: number;
 }
 
 interface toSend {
 	endpoint: string;
 	data: object;
+}
+
+interface mutedUser {
+	userTargetId: number;
+	endDate: number;
 }
 
 enum roleLevel {
@@ -160,27 +165,54 @@ const ChatSettings = (): JSX.Element => {
 			return (
 				<UserRowContainer key={key}>
 					<Text>{user.userName}</Text>
-					<EndpointButton
-						useSmall={true}
-						endpointRef={setEndpoints}
-						toSet={{
-							endpoint: "/chat/unbanUser",
-							data: { chatId: chatId, userId: user.id },
-						}}
-					>
-						<Text>Unban</Text>
-					</EndpointButton>
+					{myRole != roleLevel.user ? (
+						<EndpointButton
+							useSmall={true}
+							endpointRef={setEndpoints}
+							toSet={{
+								endpoint: "/chat/unbanUser",
+								data: { chatId: chatId, userId: user.id },
+							}}
+						>
+							<Text>Unban</Text>
+						</EndpointButton>
+					) : (
+						""
+					)}
 				</UserRowContainer>
 			);
 		});
 	};
 
 	const listMutedUsers = (): JSX.Element[] => {
-		return usersToAdd.map((user: User, key: number) => {
+		return chatData.muted.map((user: mutedUser, key: number) => {
+			const realUser = chatData.users.find((x) => x.id == user.userTargetId);
+			const time = new Date(user.endDate * 1000);
+			if (realUser == undefined) return;
 			return (
 				<UserRowContainer key={key}>
-					<Text>{user.userName}</Text>
-					<Button>Unmute</Button>
+					<Text>{realUser.userName}</Text>
+					<Text>
+						{time.getHours() +
+							":" +
+							time.getMinutes() +
+							":" +
+							time.getSeconds()}
+					</Text>
+					{myRole != roleLevel.user ? (
+						<EndpointButton
+							useSmall={true}
+							endpointRef={setEndpoints}
+							toSet={{
+								endpoint: "/chat/unmute",
+								data: { chatId: chatId, userId: realUser.id },
+							}}
+						>
+							<Text>unmute</Text>
+						</EndpointButton>
+					) : (
+						""
+					)}
 				</UserRowContainer>
 			);
 		});
@@ -305,7 +337,7 @@ const ChatSettings = (): JSX.Element => {
 						<br />
 						<UserWrapper>
 							<Text color="black">Muted Users</Text>
-							{/* {listMutedUsers} */}
+							{listMutedUsers()}
 						</UserWrapper>
 						<br />
 						<UserWrapper>

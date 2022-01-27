@@ -18,7 +18,7 @@ import AddUserInput from "../../AddUserInput/AddUserInput";
 
 class CreateChannelsForm {
 	name = "";
-	userIds: number[] = [];
+	users: User[] = [];
 	isPublic: number;
 	password = "";
 }
@@ -29,7 +29,6 @@ const ChannelsView = (): JSX.Element => {
 		new CreateChannelsForm(),
 	);
 	const [showForm, setShowForm] = useState<boolean>(false);
-	const [usersAdded, setUsersAdded] = useState<User[]>([]);
 	const { channel, setChannel } = SharedChatState();
 	const { user, setUser } = SharedUserState();
 
@@ -105,7 +104,7 @@ const ChannelsView = (): JSX.Element => {
 		setShowForm(false);
 	}
 
-	const listUsersAdded = usersAdded.map(
+	const listUsersAdded = channelForm.users.map(
 		(user: User, key: number): JSX.Element => {
 			return (
 				<Text key={key} color="black">
@@ -164,9 +163,14 @@ const ChannelsView = (): JSX.Element => {
 					<AddUserInput
 						placeholder="Type to search..."
 						removeOnEnter={true}
-						onValidUser={(e: User) => setUsersAdded([...usersAdded, e])}
+						onValidUser={(e: User) =>
+							setChannelForm((prevState) => {
+								prevState.users.push(e);
+								return { ...prevState };
+							})
+						}
 					></AddUserInput>
-					{usersAdded ? (
+					{channelForm.users ? (
 						<div>
 							<Text color="black">Users to add</Text>
 							{listUsersAdded}
@@ -184,7 +188,7 @@ const ChannelsView = (): JSX.Element => {
 					<Button
 						onClick={() => {
 							setShowForm(false);
-							setUsersAdded([]);
+							setChannelForm(new CreateChannelsForm());
 						}}
 					>
 						Cancel

@@ -19,15 +19,16 @@ export class AuthService {
 	}
 
 	async validateUser(id: number): Promise<UserEntity | null> {
-		const user = await this.userService.getUser(id);
-		if (user) {
+		const user = await this.userService.getUser(-1, id);
+		if (typeof user == "object") {
 			return user;
 		}
 		return null;
 	}
 
 	async create2fadiv(id: number): Promise<string> {
-		const user: UserEntity = await this.userService.getUser(id);
+		const user: UserEntity | string = await this.userService.getUser(-1, id);
+		if (typeof user == "string") return "";
 		const codedata = twofa.getTwoFactorAuthenticationCode();
 		user.twoFactorSecret = codedata.base32;
 		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
@@ -43,7 +44,8 @@ export class AuthService {
 
 	async saveNewQr(id: number, secret: string): Promise<void> {
 		console.log("save secret");
-		const user: UserEntity = await this.userService.getUser(id);
+		const user: UserEntity | string = await this.userService.getUser(-1, id);
+		if (typeof user != "object") return;
 		user.twoFactorSecret = secret;
 		user.twoFactorvalid = true;
 		await this.userService.saveUser(user);

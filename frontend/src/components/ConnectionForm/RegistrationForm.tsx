@@ -4,11 +4,8 @@ import { FormContainer, Form, Label, Button } from "./ConnectionFormElements";
 import { useNavigate } from "react-router-dom";
 import { SharedConnectionStatus } from "../../App/ConnectionStatus";
 import { postData, fetchData } from "../../API/API";
-import QRCode from "qrcode.react";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
-import { Item } from "../Utils/List/List";
-import { RoundButton } from "../Utils/Buttons/Round/RoundButton";
 import { User } from "../../Types/Types";
 
 class RegistrationItems {
@@ -27,41 +24,45 @@ interface QrData {
 }
 
 const RegistrationForm = (): JSX.Element => {
-	const [registered, setRegistered] = useState<boolean>(false);
 	const navigate = useNavigate();
-
+	const { setIsConnected } = SharedConnectionStatus();
 	const [registration, setRegistration] = useState<RegistrationItems>(
 		new RegistrationItems(),
 	);
-
 	const [qrcode, setQrcode] = useState<QrData>(undefined);
-	const { isConnected, setIsConnected } = SharedConnectionStatus();
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
+			if (registration.userName == "") return;
 			const user: User = await fetchData(
 				`/user/getByUserName/${registration.userName}`,
 			);
-			user ? setRegistration({...registration, userNameValid: false}) : setRegistration({...registration, userNameValid: true});
+			user
+				? setRegistration((prevState) => ({
+						...prevState,
+						userNameValid: false,
+				  }))
+				: setRegistration((prevState) => ({
+						...prevState,
+						userNameValid: true,
+				  }));
 		}
 		getUsers();
 	}, [registration.userName]);
 
 	useEffect(() => {
-		if (registration.twoFAEnabled == true)
-			return;
+		if (registration.twoFAEnabled == true) return;
 		fetchData("auth/getQrRetSecret").then((data: QrData) => {
 			console.log("DATA", data.qrcode);
 			setQrcode(data);
-		}).catch((err) => {
-			console.log("ERRORORORORO", err);
 		});
 	}, [registration.twoFAEnabled]);
 
-	const registerNewUser = (
+	const registerNewUser = async (
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-	): void => {
+	): Promise<void> => {
 		e.preventDefault();
+		console.log("REG->", registration);
 		if (
 			registration.userName &&
 			registration.firstName &&
@@ -69,31 +70,37 @@ const RegistrationForm = (): JSX.Element => {
 			(registration.twoFAEnabled == false || registration.twoFAValid) &&
 			registration.userNameValid
 		) {
-			postData("/auth/register", {
+			await postData("/auth/register", {
 				userName: registration.userName,
 				firstName: registration.firstName,
 				lastName: registration.lastName,
+				twoFASecret:
+					registration.twoFAValid && qrcode && qrcode.secret
+						? qrcode.secret
+						: "",
 			});
-			fetchData("/auth/logedin").then(() => {
-				setIsConnected(true);
-				navigate("/", { replace: true });
-			});
-		} else {
-			console.log(
-				"Error->",
-				registration,
-			);
+			setIsConnected(true);
+			await fetchData("/auth/logedin");
+			if (registration.twoFAValid) navigate("/checkTwoFA", { replace: true });
+			else navigate("/", { replace: true });
 		}
 	};
 
 	useEffect(() => {
 		async function inputAccessCode(): Promise<void> {
-			if (registration.inputtedTwoFA && registration.inputtedTwoFA.length != 6)
+			if (
+				registration.inputtedTwoFA == "" ||
+				registration.inputtedTwoFA.length != 6
+			)
 				return;
-			const validated: boolean = await postData(`/auth/check2faInput`, {
-				usertoken: registration.inputtedTwoFA, secret: qrcode.secret}
-			);
-			setRegistration({...registration, twoFAValid: validated});
+			const validated: boolean = await postData(`/auth/testQrCode`, {
+				usertoken: registration.inputtedTwoFA,
+				secret: qrcode.secret,
+			});
+			setRegistration((prevState) => ({
+				...prevState,
+				twoFAValid: validated,
+			}));
 		}
 		inputAccessCode();
 	}, [registration.inputtedTwoFA]);
@@ -101,100 +108,89 @@ const RegistrationForm = (): JSX.Element => {
 	return (
 		<FormContainer>
 			<Form>
-				{!registered ? (
+				<Label>
+					<Text fontSize="20px">Username</Text>
+				</Label>
+				<TextInput
+					type="text"
+					onChange={(e) => {
+						setRegistration((prevState) => ({
+							...prevState,
+							userName: e.target.value,
+						}));
+					}}
+				/>
+				{!registration.userNameValid ? <Text>username is not valid</Text> : ""}
+				<Label>
+					<Text fontSize="20px">FirstName</Text>
+				</Label>
+				<TextInput
+					type="text"
+					onChange={(e) => {
+						setRegistration((prevState) => ({
+							...prevState,
+							firstName: e.target.value,
+						}));
+					}}
+				/>
+
+				<Label>
+					<Text fontSize="20px">Lastname</Text>
+				</Label>
+				<TextInput
+					type="text"
+					onChange={(e) => {
+						setRegistration((prevState) => ({
+							...prevState,
+							lastName: e.target.value,
+						}));
+					}}
+				/>
+
+				<Text>Enable Two factor Authenication</Text>
+				<Button
+					onClick={(e) => {
+						e.preventDefault();
+						setRegistration((prevState) => ({
+							...prevState,
+							twoFAEnabled: !registration.twoFAEnabled,
+						}));
+					}}
+				>
+					{registration.twoFAEnabled ? (
+						<Text fontSize="20px">Disable</Text>
+					) : (
+						<Text fontSize="20px">Enable</Text>
+					)}
+				</Button>
+				<br />
+				{registration.twoFAEnabled ? (
 					<>
-						<Item>
-							<Label>
-								<Text fontSize="20px">Username</Text>
-							</Label>
-							<TextInput
-								type="text"
-								onChange={(e) => {
-									setRegistration({
-										...registration,
-										userName: e.target.value,
-									});
-								}}
-							/>
-							{!registration.userNameValid ? <Text>username is not valid</Text> : ""}
-						</Item>
-						<Item>
-							<Label>
-								<Text fontSize="20px">FirstName</Text>
-							</Label>
-							<TextInput
-								type="text"
-								onChange={(e) => {
-									setRegistration({
-										...registration,
-										firstName: e.target.value,
-									});
-								}}
-							/>
-						</Item>
-						<Item>
-							<Label>
-								<Text fontSize="20px">Lastname</Text>
-							</Label>
-							<TextInput
-								type="text"
-								onChange={(e) => {
-									setRegistration({
-										...registration,
-										lastName: e.target.value,
-									});
-								}}
-							/>
-						</Item>
-						<Text>Enable Two factor Authenication</Text>
-						<Button
-							onClick={(e) => {
-								e.preventDefault();
-								setRegistration({
-									...registration,
-									twoFAEnabled: !registration.twoFAEnabled,
-								});
+						<img src={qrcode.qrcode} alt="" />
+						<Label>
+							<Text fontSize="20px">Input2FA code pls</Text>
+						</Label>
+						<TextInput
+							type="text"
+							onChange={(e) => {
+								setRegistration((prevState) => ({
+									...prevState,
+									inputtedTwoFA: e.target.value,
+								}));
 							}}
-						>
-							{registration.twoFAEnabled ? (
-								<Text fontSize="20px">Disable</Text>
-							) : (
-								<Text fontSize="20px">Enable</Text>
-							)}
-						</Button>
-						{registration.twoFAEnabled ? (
-							<Item>
-								<img src={qrcode.qrcode} alt="" />
-								<Label>
-									<Text fontSize="20px">Input2FA code pls</Text>
-								</Label>
-								<TextInput
-									type="text"
-									onChange={(e) => {
-										setRegistration({
-											...registration,
-											inputtedTwoFA: e.target.value,
-										});
-									}}
-								/>
-							</Item>
-						) : (
-							""
-						)}
-						<Item>
-							<Button
-								onClick={(e) => {
-									e.preventDefault();
-									registerNewUser(e);
-								}}
-							>
-								<Text fontSize="20px">Register</Text>
-							</Button>
-						</Item>
+						/>
 					</>
 				) : (
-					" "
+					""
 				)}
+				<Button
+					onClick={(e) => {
+						e.preventDefault();
+						registerNewUser(e);
+					}}
+				>
+					<Text fontSize="20px">Register</Text>
+				</Button>
 			</Form>
 		</FormContainer>
 	);

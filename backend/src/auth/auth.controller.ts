@@ -60,12 +60,13 @@ export class AuthController {
 	async logedin(
 		@Req() req: GuardedRequest,
 		@Res({ passthrough: true }) response: Response,
-	): Promise<void> {
+	): Promise<boolean> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});
 		user.logedin = true;
-		this.userService.saveUser(user);
+		await this.userService.saveUser(user);
+		return true;
 	}
 
 	@Public()
@@ -89,6 +90,8 @@ export class AuthController {
 		return await this.authService.saveNewQr(req.user.id, secret);
 	}
 
+	@Public()
+	@UseGuards(RegisteringGuard)
 	@Post("testQrCode")
 	async testQrCode(
 		@Body("usertoken") usertoken: string,
@@ -126,8 +129,16 @@ export class AuthController {
 		@Body("userName") userName: string,
 		@Body("firstName") firstName: string,
 		@Body("lastName") lastName: string,
+		@Body("twoFASecret") twoFASecret: string,
 	): Promise<void> {
-		this.userService.update(req.user.id, userName, firstName, lastName);
+		console.log("TWOFA", twoFASecret);
+		this.userService.update(
+			req.user.id,
+			userName,
+			firstName,
+			lastName,
+			twoFASecret,
+		);
 		return;
 	}
 
