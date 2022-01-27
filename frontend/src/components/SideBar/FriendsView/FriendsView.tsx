@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "../../Utils/Text/Text";
 import { fetchData, postData } from "../../../API/API";
-import { List, Item } from "../../Utils/List/List";
-import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
 import { SharedChatState } from "../SideBar";
 import {
@@ -13,13 +11,18 @@ import {
 	FriendsButtonContainer,
 	FriendsImageContainer,
 	FriendsNameContainer,
+	IconContainer,
 } from "./FriendsViewElements";
 import { Img } from "../../Profile/ProfileElements";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {TiMessages as ChatIcon} from 'react-icons/ti';
+import {CgProfile as ProfileIcon} from 'react-icons/cg';
+import { detailedUser } from "../../../Types/Types";
+import { getMyFriends, setUsersStatus } from "../../Users/UsersUtils";
 
 const FriendsView = (): JSX.Element => {
 	const navigate = useNavigate();
-	const [friends, setFriends] = useState<User[]>([]);
+	const [friends, setFriends] = useState<detailedUser[]>([]);
 	const { channel, setChannel } = SharedChatState();
 
 	async function createNewChat(id: number): Promise<void> {
@@ -33,8 +36,9 @@ const FriendsView = (): JSX.Element => {
 	}
 
 	useEffect(() => {
-		async function getFriends(): Promise<User[]> {
-			const friends: User[] = await fetchData("/friends/me");
+		async function getFriends(): Promise<detailedUser[]> {
+			
+			const friends: detailedUser[] = await getMyFriends();
 			console.log("USERS->hi", friends);
 			setFriends(friends);
 			return friends;
@@ -42,21 +46,21 @@ const FriendsView = (): JSX.Element => {
 		getFriends();
 	}, []);
 
+
 	function goToProfile(id: number): void {
 		navigate(`/profile/${id}`, { replace: true });
 	}
 
-	const listFriends = friends.map((user: User, key: number) => {
+	const listFriends = friends.map((user: detailedUser, key: number) => {
 		return (
-			<Item key={user.id}>
-				<FriendsCardContainer>
+				<FriendsCardContainer key={user.id}>
 					<FriendsTitleContainer>
 						<FriendsImageContainer>
 							<Img src={"http://localhost:5000/" + user.avatar} />
 						</FriendsImageContainer>
 						<FriendsNameContainer>
 							<Text color="black">{user.userName}</Text>
-							<Text color="black">{"Online"}</Text>
+							<Text color="black">{user.status ? user.status : 'offline'}</Text>
 						</FriendsNameContainer>
 					</FriendsTitleContainer>
 					<FriendsButtonContainer>
@@ -66,7 +70,7 @@ const FriendsView = (): JSX.Element => {
 									goToProfile(user.id);
 								}}
 							>
-								👤
+								<IconContainer><ProfileIcon size={25}/></IconContainer>
 							</FriendsCardButton>
 						</div>
 						<div>
@@ -75,21 +79,18 @@ const FriendsView = (): JSX.Element => {
 									createNewChat(user.id);
 								}}
 							>
-								✉
+								<IconContainer><ChatIcon size={25}/></IconContainer>
 							</FriendsCardButton>
 						</div>
 					</FriendsButtonContainer>
 				</FriendsCardContainer>
-			</Item>
 		);
 	});
 
 	return (
 		<FriendsViewContainer>
-			<Item>
 				<Text>Friends:</Text>
-			</Item>
-			{friends.length ? listFriends : <Item>No Friends Yet, Add one !</Item>}
+			{friends.length ? listFriends : 'No Friends Yet, Add one !'}
 		</FriendsViewContainer>
 	);
 };

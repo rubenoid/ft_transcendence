@@ -36,8 +36,15 @@ export const FriendsCardButton = styled.button`
 	width: 80px;
 	border-radius: 0 7px 0 0;
 	border: none;
+	cursor: pointer;
 `;
 
 export const FriendsViewContainer = styled.div`
 	height: 700px;
+`;
+
+export const IconContainer = styled.div`
+	:hover{
+		color: #04aa6d;;
+	}
 `;

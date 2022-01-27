@@ -62,19 +62,19 @@ const Users = (): JSX.Element => {
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
 			users = await getFoundUsers();
-			updateUsers();
+			updateUsersTableRows();
 		}
 		getUsers();
 	}, [fetchData]);
-
+/*
 	useEffect(() => {
 		socket.on("userUpdate", (status: userStatus) => {
 			if (updateUserStatus(users, status))
-				updateUsers();
+				updateUsersTableRows();
 		});
 	}, []);
-
-	function updateUsers () {
+*/
+	function updateUsersTableRows () {
 		let rows = getUsersTableRows(users);
 		setUsersTableRows(rows);
 	}
