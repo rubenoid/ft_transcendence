@@ -24,6 +24,35 @@ interface userStatus {
 
 let users: detailedUser[] = [];
 
+
+function setListUsers(): JSX.Element[] {
+	const data = [];
+	for (let i = 0; i < users.length; i++) {
+		const e = users[i];
+		data.push(
+			<TableRow key={i}>
+				<TableCell>
+					<Text fontSize="10">{e.id}</Text>
+				</TableCell>
+				<TableCell>
+					<Text fontSize="10">{e.userName}</Text>
+				</TableCell>
+				<TableCell>
+					<Text fontSize="10">{e.wins}</Text>
+				</TableCell>
+				<TableCell>
+					<Text fontSize="10">{e.losses}</Text>
+				</TableCell>
+				<TableCell>
+					<Text fontSize="10">{e.status ? e.status : "Offline"}</Text>
+				</TableCell>
+			</TableRow>,
+		);
+	}
+	console.log("DATAT->",data);
+	return data;
+}
+
 const Users = (): JSX.Element => {
 	const [userlist, setuserlist] = useState(undefined);
 
@@ -39,7 +68,7 @@ const Users = (): JSX.Element => {
 				}
 			}
 			users = foundUsers;
-			setListUsers();
+			setData();
 		}
 		getUsers();
 	}, [fetchData]);
@@ -49,37 +78,14 @@ const Users = (): JSX.Element => {
 			const found = users.find((x) => x.id == data.id);
 			if (found) {
 				found.status = data.status;
-				setListUsers();
+				setData();
 			}
 		});
 	}, []);
 
-	function setListUsers(): JSX.Element[] {
-		const data = [];
-		for (let i = 0; i < users.length; i++) {
-			const e = users[i];
-			data.push(
-				<TableRow key={i}>
-					<TableCell>
-						<Text fontSize="10">{e.id}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{e.userName}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{e.wins}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{e.losses}</Text>
-					</TableCell>
-					<TableCell>
-						<Text fontSize="10">{e.status ? e.status : "Offline"}</Text>
-					</TableCell>
-				</TableRow>,
-			);
-		}
+	function setData () {
+		let data = setListUsers();
 		setuserlist(data);
-		return data;
 	}
 
 	return (
