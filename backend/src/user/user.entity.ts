@@ -70,4 +70,7 @@ export class UserEntity {
 
 	@ManyToMany(() => ChatEntity, (chat) => chat.users) //, UserEntity => UserEntity.Friends)
 	channels: ChatEntity[];
+
+	@Column("text", { array: true, default: [] })
+	achievements: string[];
 }
