@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchData } from "../../API/API";
 import { WidgetContainer } from "../Utils/Containers/Containers";
 import {
 	Table,
@@ -65,15 +64,15 @@ const Users = (): JSX.Element => {
 			updateUsersTableRows();
 		}
 		getUsers();
-	}, [fetchData]);
-/*
+	}, [users]);
+
 	useEffect(() => {
 		socket.on("userUpdate", (status: userStatus) => {
 			if (updateUserStatus(users, status))
 				updateUsersTableRows();
 		});
 	}, []);
-*/
+
 	function updateUsersTableRows () {
 		let rows = getUsersTableRows(users);
 		setUsersTableRows(rows);

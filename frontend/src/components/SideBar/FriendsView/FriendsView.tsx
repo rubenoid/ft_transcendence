@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "../../Utils/Text/Text";
 import { fetchData, postData } from "../../../API/API";
-import { Channel, User } from "../../../Types/Types";
+import { Channel } from "../../../Types/Types";
 import { SharedChatState } from "../SideBar";
 import {
 	FriendsViewContainer,
@@ -11,14 +11,14 @@ import {
 	FriendsButtonContainer,
 	FriendsImageContainer,
 	FriendsNameContainer,
-	IconContainer,
 } from "./FriendsViewElements";
 import { Img } from "../../Profile/ProfileElements";
 import { useNavigate } from "react-router-dom";
+import {IconContainer} from '../../Utils/IconContainer'
 import {TiMessages as ChatIcon} from 'react-icons/ti';
 import {CgProfile as ProfileIcon} from 'react-icons/cg';
 import { detailedUser } from "../../../Types/Types";
-import { getMyFriends, setUsersStatus } from "../../Users/UsersUtils";
+import { getMyFriends } from './FriendsUtils';
 
 const FriendsView = (): JSX.Element => {
 	const navigate = useNavigate();
@@ -37,14 +37,12 @@ const FriendsView = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getFriends(): Promise<detailedUser[]> {
-			
 			const friends: detailedUser[] = await getMyFriends();
-			console.log("USERS->hi", friends);
 			setFriends(friends);
 			return friends;
 		}
 		getFriends();
-	}, []);
+	}, [friends]);
 
 
 	function goToProfile(id: number): void {

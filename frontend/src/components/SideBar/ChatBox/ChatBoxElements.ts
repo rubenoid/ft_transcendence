@@ -86,4 +86,5 @@ export const SendIconContainer = styled.div`
 
 export const TopButtonsContainer = styled.div`
 	display: flex;
+	align-items: center;
 `;

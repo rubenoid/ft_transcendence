@@ -40,11 +40,5 @@ export const FriendsCardButton = styled.button`
 `;
 
 export const FriendsViewContainer = styled.div`
-	height: 700px;
-`;
-
-export const IconContainer = styled.div`
-	:hover{
-		color: #04aa6d;;
-	}
+	height: 100%;
 `;
