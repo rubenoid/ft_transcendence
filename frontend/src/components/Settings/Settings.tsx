@@ -18,17 +18,11 @@ interface detailedUser extends User {
 	blockedUsers: User[];
 }
 
-// interface newQrData {
-// 	qrcode: string;
-// 	secret: string;
-// }
 
 export class formData {
 	image = "";
 	isChecked = false;
-	// qrcode: newQrData = undefined;
 	inputtedTwoFA = "";
-	// twoFAvalid = true;
 	initial2FAEnabled = false;
 	friendsToAdd: User[] = [];
 	blockedToAdd: User[] = [];
@@ -38,12 +32,12 @@ export class formData {
 
 const SettingsForm = (): JSX.Element => {
 	const [user, setUser] = useState<detailedUser>(undefined);
-	// const { user, setUser } = SharedUserState();
 	const [toInput, setToInput] = useState(new formData());
 	const [newPicutre, setNewPicture] = useState(new Date().getTime());
 
 	const [endpoints, setEndpoints] = useState([]);
 	const[twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
+	const[changingData, setChangingData] = useState<boolean>(true);
 
 	async function getUser(): Promise<boolean> {
 		const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
@@ -56,41 +50,31 @@ const SettingsForm = (): JSX.Element => {
 	}
 
 	useEffect(() => {
-		getUser().then((res) => {
-			if (res == true)
-				setToInput({ ...toInput, isChecked: true, initial2FAEnabled: true });
-			else
-				setToInput({ ...toInput, isChecked: false, initial2FAEnabled: false });
-			// console.log("toInput.initial2FAEnabled", toInput.initial2FAEnabled);
-		});
+		getUser();
 	}, []);
 
 	const uploadDataForm = async (
 		e: React.FormEvent<HTMLButtonElement>,
 	): Promise<void> => {
 		e.preventDefault();
-		console.log("endpoints", endpoints);
 		for (const endpoint of endpoints) {
 			if (typeof endpoint == "string") await fetchData(endpoint);
 			else await fetchData(endpoint.endpoint);
 		}
-
 		for (const user of toInput.friendsToAdd) {
 			await fetchData(`/friends/add/${user.id}`);
 		}
-
 		for (const user of toInput.blockedToAdd) {
 			await fetchData(`/blocked/add/${user.id}`);
 		}
-
 		const form = new FormData();
 		form.append("user", JSON.stringify(user));
 		form.append("file", toInput.file);
 		await postData("/user/updateForm", form, {
 			"Content-Type": "multipart/form-data",
 		});
-		console.log("getting usr again");
 		const res = await getUser();
+		setChangingData(!changingData);
 		setEndpoints([]);
 		setToInput((prevstate) => {
 			const toReplace = new formData();
@@ -98,15 +82,12 @@ const SettingsForm = (): JSX.Element => {
 			toReplace.initial2FAEnabled = res;
 			toReplace.friendsToAdd = [];
 			toReplace.blockedToAdd = [];
-			console.log("toreplace: ", toReplace);
-			console.log("toInput.initial2FAEnabled", toInput.initial2FAEnabled);
 			return toReplace;
 		});
 		setNewPicture(new Date().getTime());
 	};
 
-	/* username valid */
-	const handleUserName = (e: string): void => {
+	const CheckIfUserNameValid = (e: string): void => {
 		async function getUsersforUsername(): Promise<void> {
 			const endpoint = `/user/getByUserName/${e}`;
 			const UserFromUserName: User = await fetchData(endpoint);
@@ -120,60 +101,7 @@ const SettingsForm = (): JSX.Element => {
 		getUsersforUsername();
 	};
 
-	// /* two FA change */
-	// const twoFAChange = (): void => {
-	// 	if (toInput.initial2FAEnabled) {
-	// 		setToInput({ ...toInput, twoFAvalid: toInput.isChecked == true });
-	// 	} else {
-	// 		setToInput({ ...toInput, twoFAvalid: toInput.isChecked == false });
-	// 	}
-	// 	if (toInput.isChecked && !toInput.initial2FAEnabled) {
-	// 		fetchData("auth/getQrRetSecret").then((data: newQrData) => {
-	// 			setToInput({ ...toInput, qrcode: data });
-	// 		});
-	// 	}
-	// };
-
-	// useEffect(() => {
-	// 	async function inputAccessCode(): Promise<void> {
-	// 		if (
-	// 			toInput.inputtedTwoFA == undefined ||
-	// 			toInput.inputtedTwoFA.length != 6
-	// 		)
-	// 			return;
-	// 		console.log(
-	// 			"inputAccessCode:",
-	// 			toInput.inputtedTwoFA,
-	// 			toInput.inputtedTwoFA.length,
-	// 		);
-	// 		if (toInput.initial2FAEnabled == true) {
-	// 			const validated: boolean = await postData(`/auth/inputAccessCode`, {
-	// 				usertoken: toInput.inputtedTwoFA,
-	// 			});
-	// 			if (validated) {
-	// 				endpoints.push(`user/removeTwoFA`);
-	// 				setToInput({ ...toInput, twoFAvalid: false });
-	// 			} else {
-	// 				setToInput({ ...toInput, twoFAvalid: false });
-	// 			}
-	// 		} else {
-	// 			const validated: boolean = await postData(`/auth/testQrCode`, {
-	// 				usertoken: toInput.inputtedTwoFA,
-	// 				secret: toInput.qrcode.secret,
-	// 			});
-	// 			if (validated) {
-	// 				endpoints.push(`/auth/saveSecret/${toInput.qrcode.secret}`);
-	// 				setToInput({ ...toInput, twoFAvalid: true });
-	// 			} else {
-	// 				setToInput({ ...toInput, twoFAvalid: false });
-	// 			}
-	// 		}
-	// 	}
-	// 	inputAccessCode();
-	// }, [toInput.inputtedTwoFA]);
-
-	/* upload avatar */
-	const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>): void => {
+	const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		console.log("endpoints", endpoints);
 		if (e.target.files && e.target.files.length) {
 			setToInput({
@@ -193,7 +121,7 @@ const SettingsForm = (): JSX.Element => {
 					type="text"
 					placeholder={user.userName}
 					onChange={(e) => {
-						handleUserName(e.target.value);
+						CheckIfUserNameValid(e.target.value);
 					}}
 				/>
 				{toInput.userNameValid ? (
@@ -246,7 +174,7 @@ const SettingsForm = (): JSX.Element => {
 					type="file"
 					id="upload-button"
 					style={{ display: "none" }}
-					onChange={handleFileUpload}
+					onChange={uploadAvatar}
 				/>
 				<SettingsTable
 					users={user.friends}
@@ -281,6 +209,7 @@ const SettingsForm = (): JSX.Element => {
 				<SettingsTwoFA
 					// initial2FAEnabled={toInput.initial2FAEnabled}
 					// twoFAvalid={twoFAvalid}
+					changingData={changingData}
 					endpoints={endpoints}
 					user={user}
 					onInputEvent={(e: boolean) =>

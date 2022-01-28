@@ -16,7 +16,7 @@ interface newQrData {
 
 interface InputParams {
 	// initial2FAEnabled : boolean;
-	// twoFAvalid: boolean;
+	changingData: boolean;
 	endpoints: string[];
     user: User;
     onInputEvent(cb: boolean): void;
@@ -31,11 +31,12 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 	const [qrcode, setQrcode] = useState<newQrData>(undefined);
 	const [isChecked, setIsChecked] = useState<boolean>(true);
 	const [twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
+	const [checkValid, setCheckValid] = useState<boolean>(true);
 
 	useEffect(() => {
-        // setUser(props.user);
+        console.log
 		fetchData("/user/menFriendsnBlocked").then((user: User) => {
-			// setUser(user);
+			console.log("user.twoFactorSecret.length", user.twoFactorSecret.length);
 			if (props.user.twoFactorSecret.length == 0) {
 				setInitial2FAEnabled(false);
 				setIsChecked(false);
@@ -45,7 +46,7 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 			}
             setInputtedTwoFA("");
 		});
-	}, []);
+	}, [props.changingData]);
 
 	const twoFAChange = (): void => {
 		setIsChecked(isChecked == false);
@@ -71,8 +72,8 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 				});
 				if (validated) {
 					props.endpoints.push(`user/removeTwoFA`);
-                    setTwoFAvalid(false);
-                    // setIsChecked(!isChecked);
+					setCheckValid(!checkValid);
+                    setTwoFAvalid(true);
 				} else {
                     setTwoFAvalid(false);
 				}
