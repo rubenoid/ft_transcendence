@@ -35,8 +35,8 @@ const SettingsForm = (): JSX.Element => {
 	const [newPicutre, setNewPicture] = useState(new Date().getTime());
 
 	const [endpoints, setEndpoints] = useState([]);
-	const[twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
-	const[changingData, setChangingData] = useState<boolean>(true);
+	const [twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
+	const [changingData, setChangingData] = useState<boolean>(true);
 
 	async function getUser(): Promise<boolean> {
 		const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
@@ -84,10 +84,8 @@ const SettingsForm = (): JSX.Element => {
 			toReplace.blockedToAdd = [];
 			return toReplace;
 		});
-		if (changingData == true)
-			setChangingData(false);
-		else
-			setChangingData(true);
+		if (changingData == true) setChangingData(false);
+		else setChangingData(true);
 		setNewPicture(new Date().getTime());
 	};
 
