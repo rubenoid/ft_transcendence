@@ -18,7 +18,6 @@ interface detailedUser extends User {
 	blockedUsers: User[];
 }
 
-
 export class formData {
 	image = "";
 	isChecked = false;
@@ -57,6 +56,7 @@ const SettingsForm = (): JSX.Element => {
 		e: React.FormEvent<HTMLButtonElement>,
 	): Promise<void> => {
 		e.preventDefault();
+		console.log("ENDPOINTS:", endpoints);
 		for (const endpoint of endpoints) {
 			if (typeof endpoint == "string") await fetchData(endpoint);
 			else await fetchData(endpoint.endpoint);
@@ -74,7 +74,7 @@ const SettingsForm = (): JSX.Element => {
 			"Content-Type": "multipart/form-data",
 		});
 		const res = await getUser();
-		setChangingData(!changingData);
+		// setChangingData(!changingData);
 		setEndpoints([]);
 		setToInput((prevstate) => {
 			const toReplace = new formData();
@@ -84,6 +84,10 @@ const SettingsForm = (): JSX.Element => {
 			toReplace.blockedToAdd = [];
 			return toReplace;
 		});
+		if (changingData == true)
+			setChangingData(false);
+		else
+			setChangingData(true);
 		setNewPicture(new Date().getTime());
 	};
 
@@ -207,48 +211,10 @@ const SettingsForm = (): JSX.Element => {
 					<Text>Find Users to block</Text>
 				</SettingsTable>
 				<SettingsTwoFA
-					// initial2FAEnabled={toInput.initial2FAEnabled}
-					// twoFAvalid={twoFAvalid}
 					changingData={changingData}
 					endpoints={endpoints}
 					user={user}
-					onInputEvent={(e: boolean) =>
-						setTwoFAvalid(e)
-					}
 				></SettingsTwoFA>
-				{/* {toInput.isChecked && !toInput.initial2FAEnabled ? (
-					<Item>
-						{toInput.qrcode !== undefined &&
-						toInput.qrcode.qrcode !== undefined ? (
-							<img src={toInput.qrcode.qrcode} alt="" />
-						) : (
-							"loading"
-						)}
-						<Label>
-							<Text fontSize="20px">Input2FA code pls</Text>
-						</Label>
-						<TextInput
-							type="text"
-							onChange={(e) => {
-								setToInput({ ...toInput, inputtedTwoFA: e.target.value });
-							}}
-						/>
-					</Item>
-				) : !toInput.isChecked && toInput.initial2FAEnabled ? (
-					<Item>
-						<Label>
-							<Text fontSize="20px">Your 2fa code please</Text>
-						</Label>
-						<TextInput
-							type="text"
-							onChange={(e) => {
-								setToInput({ ...toInput, inputtedTwoFA: e.target.value });
-							}}
-						/>
-					</Item>
-				) : (
-					""
-				)} */}
 				{twoFAvalid === false ? (
 					<>
 						<Button disabled>

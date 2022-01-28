@@ -34,5 +34,8 @@ export async function check2faInput(
 		encoding: "base32",
 		token: input,
 	});
+	console.log("check returns,", check);
+	console.log("check secret,", secret);
+	console.log("check input,", input);
 	return check;
 }
