@@ -460,7 +460,6 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins", "users", "bannedUsers"],
 		});
-
 		if (
 			!chat ||
 			chat.owner == -1 ||

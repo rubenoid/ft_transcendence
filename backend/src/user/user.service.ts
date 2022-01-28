@@ -118,11 +118,11 @@ export class UserService {
 	}
 
 	async getAll(): Promise<UserEntity[]> {
-		const User = await this.UserRepository.find({
+		const Users = await this.UserRepository.find({
 			relations: ["friends", "matches"],
 		});
-		if (User.length === 0) throw "user not found";
-		return User;
+		if (Users.length === 0) throw "user not found";
+		return Users;
 	}
 
 	async getAllUsersNRelations(): Promise<UserEntity[]> {
@@ -141,27 +141,6 @@ export class UserService {
 
 	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
-	}
-
-	async insert(
-		firstName: string,
-		lastName: string,
-		userName: string,
-	): Promise<number> {
-		const newUser: UserEntity = new UserEntity();
-		newUser.id = currentId++;
-		newUser.firstName = firstName;
-		newUser.lastName = lastName;
-		newUser.userName = userName;
-		newUser.rating = 1500;
-		newUser.wins = 0;
-		newUser.losses = 0;
-		newUser.friends = [];
-		newUser.blockedBy = [];
-		newUser.blockedUsers = [];
-		newUser.logedin = false; //?
-		await this.UserRepository.save(newUser);
-		return newUser.id;
 	}
 
 	async update(
@@ -262,4 +241,25 @@ export class UserService {
 	async findUser(name: string): Promise<UserEntity[]> {
 		return await this.UserRepository.find({ userName: Like(`%${name}%`) });
 	}
+
+	// async insert(
+	// 	firstName: string,
+	// 	lastName: string,
+	// 	userName: string,
+	// ): Promise<number> {
+	// 	const newUser: UserEntity = new UserEntity();
+	// 	newUser.id = currentId++;
+	// 	newUser.firstName = firstName;
+	// 	newUser.lastName = lastName;
+	// 	newUser.userName = userName;
+	// 	newUser.rating = 1500;
+	// 	newUser.wins = 0;
+	// 	newUser.losses = 0;
+	// 	newUser.friends = [];
+	// 	newUser.blockedBy = [];
+	// 	newUser.blockedUsers = [];
+	// 	newUser.logedin = false; //?
+	// 	await this.UserRepository.save(newUser);
+	// 	return newUser.id;
+	// }
 }

@@ -13,13 +13,13 @@ export class ChatController {
 		return await this.chatService.getAllChats();
 	}
 
-	// @Get("messages/:id")
-	// async returnMyChats(
-	// 	@Req() req: GuardedRequest,
-	// 	@Param("id") id: string,
-	// ): Promise<ChatMessageEntity[]> {
-	// 	return await this.chatService.getMessages(parseInt(id), req.user.id);
-	// }
+	@Get("messages/:id")
+	async returnMyChats(
+		@Req() req: GuardedRequest,
+		@Param("id") id: string,
+	): Promise<ChatMessageEntity[]> {
+		return await this.chatService.getMessages(parseInt(id), req.user.id);
+	}
 
 	@Get("get/:id")
 	async getChatData(
