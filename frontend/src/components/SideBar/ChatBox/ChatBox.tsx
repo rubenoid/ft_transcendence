@@ -23,9 +23,9 @@ import { SharedChatState } from "../SideBar";
 import { SharedUserState } from "../../../App/UserStatus";
 import { Link } from "react-router-dom";
 import { outputChatName } from "../SideBar";
-import { IconContainer} from '../../Utils/IconContainer';
-import {FiSettings as SettingsIcon} from 'react-icons/fi';
-import {IoMdCloseCircle as CloseIcon} from 'react-icons/io';
+import { IconContainer } from "../../Utils/IconContainer";
+import { FiSettings as SettingsIcon } from "react-icons/fi";
+import { IoMdCloseCircle as CloseIcon } from "react-icons/io";
 
 const ChatBox = (): JSX.Element => {
 	const [msgToSend, setMsgToSend] = useState<string>("");
@@ -117,10 +117,14 @@ const ChatBox = (): JSX.Element => {
 						<TopButtonsContainer>
 							<Link to={`/chat/${channel.id}`}>
 								<IconContainer color="white">
-									<SettingsIcon/>
+									<SettingsIcon />
 								</IconContainer>
 							</Link>
-							<TopText onClick={() => setChannel(undefined)}><IconContainer color="#ff3a3a" hoverColor="#cc3a3a"><CloseIcon size={30}/></IconContainer></TopText>
+							<TopText onClick={() => setChannel(undefined)}>
+								<IconContainer color="#ff3a3a" hoverColor="#cc3a3a">
+									<CloseIcon size={30} />
+								</IconContainer>
+							</TopText>
 						</TopButtonsContainer>
 					</TopContainer>
 					{passwordNeeded ? (

@@ -19,7 +19,6 @@ export interface userStatus {
 	status: string;
 }
 
-
 export type Match = {
 	id: number;
 	players: User[];

@@ -11,7 +11,7 @@ import {
 import socket from "../../API/Socket";
 import { Text } from "../Utils/Text/Text";
 import { detailedUser, userStatus } from "../../Types/Types";
-import { getFoundUsers, updateUserStatus } from './UsersUtils';
+import { getFoundUsers, updateUserStatus } from "./UsersUtils";
 
 function getUsersTableRows(users: detailedUser[]): JSX.Element[] {
 	const rows = [];
@@ -31,7 +31,9 @@ function getUsersTableRows(users: detailedUser[]): JSX.Element[] {
 					<Text fontSize="10">{users[i].losses}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{users[i].status ? users[i].status : "Offline"}</Text>
+					<Text fontSize="10">
+						{users[i].status ? users[i].status : "Offline"}
+					</Text>
 				</TableCell>
 			</TableRow>,
 		);
@@ -39,8 +41,8 @@ function getUsersTableRows(users: detailedUser[]): JSX.Element[] {
 	return rows;
 }
 
-function getTableHeader () {
-	return(
+function getTableHeader(): JSX.Element {
+	return (
 		<TableHeader>
 			<TableRow>
 				<TableHeaderCell>id</TableHeaderCell>
@@ -50,9 +52,8 @@ function getTableHeader () {
 				<TableHeaderCell>Status</TableHeaderCell>
 			</TableRow>
 		</TableHeader>
-	);	
+	);
 }
-
 
 const Users = (): JSX.Element => {
 	const [usersTableRows, setUsersTableRows] = useState(undefined);
@@ -68,13 +69,12 @@ const Users = (): JSX.Element => {
 
 	useEffect(() => {
 		socket.on("userUpdate", (status: userStatus) => {
-			if (updateUserStatus(users, status))
-				updateUsersTableRows();
+			if (updateUserStatus(users, status)) updateUsersTableRows();
 		});
 	}, []);
 
-	function updateUsersTableRows () {
-		let rows = getUsersTableRows(users);
+	function updateUsersTableRows(): void {
+		const rows = getUsersTableRows(users);
 		setUsersTableRows(rows);
 	}
 

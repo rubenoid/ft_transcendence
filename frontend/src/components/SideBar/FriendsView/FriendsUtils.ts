@@ -1,7 +1,7 @@
-import { detailedUser, userStatus } from '../../../Types/Types';
-import { fetchData } from '../../../API/API';
+import { detailedUser, userStatus } from "../../../Types/Types";
+import { fetchData } from "../../../API/API";
 
-export async function getMyFriends() {
+export async function getMyFriends(): Promise<detailedUser[]> {
 	const friends: detailedUser[] = await fetchData("/friends/me");
 	const usersStatus: userStatus[] = await fetchData("/user/getAllStatus");
 

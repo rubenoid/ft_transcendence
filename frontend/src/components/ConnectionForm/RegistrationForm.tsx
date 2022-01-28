@@ -42,20 +42,23 @@ const RegistrationForm = (): JSX.Element => {
 			const user: User = await fetchData(
 				`/user/getByUserName/${registration.userName}`,
 			);
-			user ? setRegistration({...registration, userNameValid: false}) : setRegistration({...registration, userNameValid: true});
+			user
+				? setRegistration({ ...registration, userNameValid: false })
+				: setRegistration({ ...registration, userNameValid: true });
 		}
 		getUsers();
 	}, [registration.userName]);
 
 	useEffect(() => {
-		if (registration.twoFAEnabled == true)
-			return;
-		fetchData("auth/getQrRetSecret").then((data: QrData) => {
-			console.log("DATA", data.qrcode);
-			setQrcode(data);
-		}).catch((err) => {
-			console.log("ERRORORORORO", err);
-		});
+		if (registration.twoFAEnabled == true) return;
+		fetchData("auth/getQrRetSecret")
+			.then((data: QrData) => {
+				console.log("DATA", data.qrcode);
+				setQrcode(data);
+			})
+			.catch((err) => {
+				console.log("ERRORORORORO", err);
+			});
 	}, [registration.twoFAEnabled]);
 
 	const registerNewUser = (
@@ -79,10 +82,7 @@ const RegistrationForm = (): JSX.Element => {
 				navigate("/", { replace: true });
 			});
 		} else {
-			console.log(
-				"Error->",
-				registration,
-			);
+			console.log("Error->", registration);
 		}
 	};
 
@@ -91,9 +91,10 @@ const RegistrationForm = (): JSX.Element => {
 			if (registration.inputtedTwoFA && registration.inputtedTwoFA.length != 6)
 				return;
 			const validated: boolean = await postData(`/auth/check2faInput`, {
-				usertoken: registration.inputtedTwoFA, secret: qrcode.secret}
-			);
-			setRegistration({...registration, twoFAValid: validated});
+				usertoken: registration.inputtedTwoFA,
+				secret: qrcode.secret,
+			});
+			setRegistration({ ...registration, twoFAValid: validated });
 		}
 		inputAccessCode();
 	}, [registration.inputtedTwoFA]);
@@ -116,7 +117,11 @@ const RegistrationForm = (): JSX.Element => {
 									});
 								}}
 							/>
-							{!registration.userNameValid ? <Text>username is not valid</Text> : ""}
+							{!registration.userNameValid ? (
+								<Text>username is not valid</Text>
+							) : (
+								""
+							)}
 						</Item>
 						<Item>
 							<Label>
