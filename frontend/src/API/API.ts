@@ -13,7 +13,7 @@ const headers = {
 	},
 };
 
-export const updateHeaders = (): Promise<void> => {
+export const updateHttpHeaders = (): Promise<void> => {
 	headers.headers.Authorization = Cookies.get("AuthToken");
 	return null;
 };
