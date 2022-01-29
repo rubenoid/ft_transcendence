@@ -7,7 +7,6 @@ import { TextInput } from "../Utils/TextInput/TextInput";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
 import { Item } from "../Utils/List/List";
 import { User } from "../../Types/Types";
-// import { SharedUserState } from "../../App/UserStatus";
 
 interface newQrData {
 	qrcode: string;
@@ -15,20 +14,17 @@ interface newQrData {
 }
 
 interface InputParams {
-	changingData: boolean;
-	endpoints: string[];
+	setEndpoints: React.Dispatch<React.SetStateAction<string[]>>;
+	setTwoFAvalid: React.Dispatch<React.SetStateAction<boolean>>;
 	user: User;
 }
 
 const SettingsTwoFA = (props: InputParams): JSX.Element => {
-	const [inputtedTwoFA, setInputtedTwoFA] = useState<string>("");
 	const [initial2FAEnabled, setInitial2FAEnabled] = useState<boolean>(false);
 	const [qrcode, setQrcode] = useState<newQrData>(undefined);
-	const [isChecked, setIsChecked] = useState<boolean>(false);
-	const [twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
+	const [isChecked, setIsChecked] = useState<boolean>(true);
 
-	useEffect(() => {
-		console.log("props.changingData");
+	function setInitialTwoFaStates(): void {
 		if (props.user.twoFactorSecret.length == 0) {
 			setInitial2FAEnabled(false);
 			setIsChecked(false);
@@ -36,71 +32,70 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 			setInitial2FAEnabled(true);
 			setIsChecked(true);
 		}
-		setInputtedTwoFA("");
-	}, []);
-
-	const twoFAChange = (): boolean => {
-		console.log(isChecked);
-		if (!qrcode) {
-			if (!isChecked && !initial2FAEnabled) {
-				console.log("QR done");
-				fetchData("auth/getQrRetSecret").then((data: newQrData) => {
-					setQrcode(data);
-				});
-			}
-		}
-		return !isChecked;
-	};
+		console.log(
+			"Checking start, initial2FAEnabled",
+			initial2FAEnabled,
+			props.user,
+		);
+	}
 
 	useEffect(() => {
-		async function inputAccessCode(): Promise<void> {
-			if (inputtedTwoFA == undefined || inputtedTwoFA.length != 6) return;
-			console.log("inputting 2fa initial2FAEnabled = ", initial2FAEnabled);
-			console.log("inputtedTwoFA", inputtedTwoFA);
-			if (initial2FAEnabled == true) {
-				console.log(
-					"postData  /auth/inputAccessCode` inputtedTwoFA",
-					inputtedTwoFA,
-				);
-				const validated: boolean = await postData(`/auth/inputAccessCode`, {
-					usertoken: inputtedTwoFA,
-				});
-				if (validated) {
-					console.log("in remove 2FA valid");
-					props.endpoints.push(`user/removeTwoFA`);
-					setTwoFAvalid(true);
-				} else {
-					console.log("in remove 2FA unvalid");
-					setTwoFAvalid(false);
-				}
-			} else {
-				console.log("postData  /auth/testQrCode` inputtedTwoFA", inputtedTwoFA);
-				const validated: boolean = await postData(`/auth/testQrCode`, {
-					usertoken: inputtedTwoFA,
-					secret: qrcode.secret,
-				});
-				if (validated) {
-					console.log("in ADD 2FA valid");
-					props.endpoints.push(`/auth/saveSecret/${qrcode.secret}`);
-					setTwoFAvalid(true);
-				} else {
-					console.log("in add 2FA unvalid");
-					setTwoFAvalid(false);
-				}
-				// props.onInputEvent(twoFAvalid);
-			}
+		setInitialTwoFaStates();
+	}, [props.user]);
+
+	const twoFAChange = (): void => {
+		setIsChecked(!isChecked);
+		if (!isChecked && !initial2FAEnabled) {
+			fetchData("auth/getQrRetSecret").then((data: newQrData) => {
+				setQrcode(data);
+			});
 		}
-		inputAccessCode();
-	}, [inputtedTwoFA]);
+	};
+
+	async function addingAccessCode(inputtedTwoFA: string): Promise<void> {
+		if (inputtedTwoFA == undefined || inputtedTwoFA.length != 6) {
+			if (inputtedTwoFA.length == 0) props.setTwoFAvalid(true);
+			else props.setTwoFAvalid(false);
+			return;
+		}
+		const validated: boolean = await postData(`/auth/testQrCode`, {
+			usertoken: inputtedTwoFA,
+			secret: qrcode.secret,
+		});
+		if (validated) {
+			props.setEndpoints((prev) => [
+				...prev,
+				`/auth/saveSecret/${qrcode.secret}`,
+			]);
+			props.setTwoFAvalid(true);
+		} else {
+			props.setTwoFAvalid(false);
+		}
+	}
+
+	async function removingAccessCode(inputtedTwoFA: string): Promise<void> {
+		if (inputtedTwoFA == undefined || inputtedTwoFA.length != 6) {
+			if (inputtedTwoFA.length == 0) props.setTwoFAvalid(true);
+			else props.setTwoFAvalid(false);
+			return;
+		}
+		const validated: boolean = await postData(`/auth/inputAccessCode`, {
+			usertoken: inputtedTwoFA,
+		});
+		if (validated) {
+			props.setEndpoints((prev) => [...prev, `user/removeTwoFA`]);
+			props.setTwoFAvalid(true);
+		} else {
+			props.setTwoFAvalid(false);
+		}
+	}
+
 	return (
 		<>
+			<Text>{JSON.stringify(initial2FAEnabled)}</Text>
 			<Item>
 				<Text fontSize="20px">Two Factor Authentication</Text>
-				<input
-					type="checkbox"
-					checked={isChecked}
-					onChange={() => setIsChecked(twoFAChange)}
-				/>
+				<input type="checkbox" checked={isChecked} onChange={twoFAChange} />
 			</Item>
 			{isChecked && !initial2FAEnabled ? (
 				<Item>
@@ -114,9 +109,8 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 					</Label>
 					<TextInput
 						type="text"
-						value={inputtedTwoFA}
 						onChange={(e) => {
-							setInputtedTwoFA(e.target.value);
+							addingAccessCode(e.target.value);
 						}}
 					/>
 				</Item>
@@ -127,9 +121,8 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 					</Label>
 					<TextInput
 						type="text"
-						value={inputtedTwoFA}
 						onChange={(e) => {
-							setInputtedTwoFA(e.target.value);
+							removingAccessCode(e.target.value);
 						}}
 					/>
 				</Item>

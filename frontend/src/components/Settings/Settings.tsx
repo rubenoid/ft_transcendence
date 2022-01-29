@@ -8,21 +8,22 @@ import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
-import { User } from "../../Types/Types";
+import { User, detailedUser } from "../../Types/Types";
 import SettingsTable from "./SettingsTable";
 import SettingsTwoFA from "./SettingsTwoFA";
-import { SharedUserState } from "../../App/UserStatus";
 
-interface detailedUser extends User {
-	twoFactorSecret: string;
-	blockedUsers: User[];
+// interface detailedUser extends User {
+// 	twoFactorSecret: string;
+// 	blockedUsers: User[];
+// }
+
+interface toSend {
+	endpoint: string;
+	data: object;
 }
 
 export class formData {
 	image = "";
-	isChecked = false;
-	inputtedTwoFA = "";
-	initial2FAEnabled = false;
 	friendsToAdd: User[] = [];
 	blockedToAdd: User[] = [];
 	userNameValid = false;
@@ -34,9 +35,9 @@ const SettingsForm = (): JSX.Element => {
 	const [toInput, setToInput] = useState(new formData());
 	const [newPicutre, setNewPicture] = useState(new Date().getTime());
 
-	const [endpoints, setEndpoints] = useState([]);
+	const [endpoints, setEndpoints] = useState<string[]>([]);
+	const [removingEndpoints, setremovingEndpoints] = useState<toSend[]>([]);
 	const [twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
-	const [changingData, setChangingData] = useState<boolean>(true);
 
 	async function getUser(): Promise<boolean> {
 		const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
@@ -56,10 +57,11 @@ const SettingsForm = (): JSX.Element => {
 		e: React.FormEvent<HTMLButtonElement>,
 	): Promise<void> => {
 		e.preventDefault();
-		console.log("ENDPOINTS:", endpoints);
 		for (const endpoint of endpoints) {
-			if (typeof endpoint == "string") await fetchData(endpoint);
-			else await fetchData(endpoint.endpoint);
+			await fetchData(endpoint);
+		}
+		for (const removingEndpoint of removingEndpoints) {
+			await fetchData(removingEndpoint.endpoint);
 		}
 		for (const user of toInput.friendsToAdd) {
 			await fetchData(`/friends/add/${user.id}`);
@@ -74,34 +76,29 @@ const SettingsForm = (): JSX.Element => {
 			"Content-Type": "multipart/form-data",
 		});
 		const res = await getUser();
-		// setChangingData(!changingData);
 		setEndpoints([]);
 		setToInput((prevstate) => {
 			const toReplace = new formData();
-			toReplace.isChecked = res;
-			toReplace.initial2FAEnabled = res;
 			toReplace.friendsToAdd = [];
 			toReplace.blockedToAdd = [];
 			return toReplace;
 		});
-		if (changingData == true) setChangingData(false);
-		else setChangingData(true);
 		setNewPicture(new Date().getTime());
 	};
 
-	const CheckIfUserNameValid = (e: string): void => {
-		async function getUsersforUsername(): Promise<void> {
-			const endpoint = `/user/getByUserName/${e}`;
-			const UserFromUserName: User = await fetchData(endpoint);
-			if (!UserFromUserName) {
-				setToInput({ ...toInput, userNameValid: true });
-				setUser({ ...user, userName: e });
-			} else {
+	function getUsersforUsername(name: string): void {
+		const endpoint = `/user/getByUserName/${name}`;
+		setUser({ ...user, userName: name });
+		if (name.length == 0) return;
+		fetchData(endpoint)
+			.then((usr: User) => {
+				if (usr) setToInput({ ...toInput, userNameValid: true });
+				else setToInput({ ...toInput, userNameValid: false });
+			})
+			.catch(() => {
 				setToInput({ ...toInput, userNameValid: false });
-			}
-		}
-		getUsersforUsername();
-	};
+			});
+	}
 
 	const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>): void => {
 		console.log("endpoints", endpoints);
@@ -121,9 +118,9 @@ const SettingsForm = (): JSX.Element => {
 				<Text fontSize="20px">Username</Text>
 				<TextInput
 					type="text"
-					placeholder={user.userName}
+					value={user.userName}
 					onChange={(e) => {
-						CheckIfUserNameValid(e.target.value);
+						getUsersforUsername(e.target.value);
 					}}
 				/>
 				{toInput.userNameValid ? (
@@ -135,9 +132,9 @@ const SettingsForm = (): JSX.Element => {
 					<Text fontSize="20px">FirstName</Text>
 					<TextInput
 						type="text"
-						placeholder={user.firstName}
+						value={user.firstName}
 						onChange={(e) => {
-							user.firstName = e.target.value;
+							setUser({ ...user, firstName: e.target.value });
 						}}
 					/>
 				</Item>
@@ -145,9 +142,9 @@ const SettingsForm = (): JSX.Element => {
 					<Text fontSize="20px">Lastname</Text>
 					<TextInput
 						type="text"
-						placeholder={user.lastName}
+						value={user.lastName}
 						onChange={(e) => {
-							user.lastName = e.target.value;
+							setUser({ ...user, lastName: e.target.value });
 						}}
 					/>
 				</Item>
@@ -181,7 +178,7 @@ const SettingsForm = (): JSX.Element => {
 				<SettingsTable
 					users={user.friends}
 					endpoint={"/friends/remove/"}
-					setEndpoints={setEndpoints}
+					setEndpoints={setremovingEndpoints}
 					stagedList={toInput.friendsToAdd}
 					title={"Friends"}
 					onInputEvent={(e: User) =>
@@ -196,7 +193,7 @@ const SettingsForm = (): JSX.Element => {
 				<SettingsTable
 					users={user.blockedUsers}
 					endpoint={"/blocked/remove/"}
-					setEndpoints={setEndpoints}
+					setEndpoints={setremovingEndpoints}
 					stagedList={toInput.blockedToAdd}
 					title={"Blocked"}
 					onInputEvent={(e: User) =>
@@ -209,9 +206,9 @@ const SettingsForm = (): JSX.Element => {
 					<Text>Find Users to block</Text>
 				</SettingsTable>
 				<SettingsTwoFA
-					changingData={changingData}
-					endpoints={endpoints}
+					setEndpoints={setEndpoints}
 					user={user}
+					setTwoFAvalid={setTwoFAvalid}
 				></SettingsTwoFA>
 				{twoFAvalid === false ? (
 					<>

@@ -11,14 +11,9 @@ import { Text } from "../Utils/Text/Text";
 import AddUserInput from "../AddUserInput/AddUserInput";
 import { User } from "../../Types/Types";
 
-interface toSend {
-	endpoint: string;
-	data: object;
-}
-
 interface InputParams {
 	users: User[];
-	setEndpoints: React.Dispatch<React.SetStateAction<toSend[]>>;
+	setEndpoints: React.Dispatch<React.SetStateAction<object[]>>;
 	endpoint: string;
 	title: string;
 	children: JSX.Element | JSX.Element[];
@@ -43,7 +38,6 @@ const SettingsTable = (props: InputParams): JSX.Element => {
 			</div>
 		);
 	};
-	console.log("props.users", props.users);
 	const listUsers = props.users.map((user: User, key: number) => {
 		return (
 			<TableRow key={key}>
@@ -68,8 +62,6 @@ const SettingsTable = (props: InputParams): JSX.Element => {
 			</TableRow>
 		);
 	});
-
-	console.log(props.users);
 
 	return (
 		<>
