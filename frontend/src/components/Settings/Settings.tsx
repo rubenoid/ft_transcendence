@@ -3,7 +3,7 @@ import { Button } from "../Utils/Buttons/Button/Button";
 import { fetchData, postData } from "../../API/API";
 import { SettingsContainer } from "./SettingsElements";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
-import { Img, ImgContainer } from "../Profile/ProfileElements";
+import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
 import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Header, Text } from "../Utils/Text/Text";
@@ -147,7 +147,7 @@ const SettingsForm = (): JSX.Element => {
 				<Label htmlFor="upload-button">
 					{toInput.image.length == 0 ? (
 						<div>
-							<Text color="black">Click to change your avatar</Text>
+							<Text>Click to change your avatar</Text>
 							<ImgContainer>
 								<Img
 									src={

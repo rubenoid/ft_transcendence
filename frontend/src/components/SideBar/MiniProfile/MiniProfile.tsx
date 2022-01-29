@@ -9,7 +9,7 @@ import {
 	ImgContainer,
 	ProfileHeader,
 	TopContainer,
-} from "../../Profile/ProfileElements";
+} from "./MiniProfileElements";
 import ProfileExtended from "../../ProfileExtended/ProfileExtended";
 import { LinkButton } from "../../Utils/Buttons/Button/LinkButton";
 import { RoundButton } from "../../Utils/Buttons/Round/RoundButton";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SideBarContainer, SideViewWrapper } from "./SideBarElements";
+import { SideBarContainer, SideViewWrapper, Hr } from "./SideBarElements";
 import { Button } from "../Utils/Buttons/Button/Button";
 import FriendsView from "./FriendsView/FriendsView";
 import ChannelsView from "./ChannelsView/ChannelsView";
@@ -9,7 +9,7 @@ import ChatBox from "./ChatBox/ChatBox";
 import { useBetween } from "use-between";
 import { User } from "../../Types/Types";
 import MiniProfile from "./MiniProfile/MiniProfile";
-import { TopContainer } from "../Profile/ProfileElements";
+import { TopContainer } from "./MiniProfile/MiniProfileElements";
 
 const ChatState = (): {
 	channel: Channel;
@@ -41,7 +41,7 @@ const SideBar = (): JSX.Element => {
 	return (
 		<SideBarContainer>
 			<MiniProfile />
-			<hr />
+			<Hr />
 			<TopContainer>
 				<Button
 					onClick={() => {

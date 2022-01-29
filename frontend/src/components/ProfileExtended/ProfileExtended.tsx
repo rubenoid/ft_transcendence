@@ -11,7 +11,7 @@ import {
 	ProfileHeader,
 	Padding,
 	DetailsWrapper,
-} from "../Profile/ProfileElements";
+} from "../SideBar/MiniProfile/MiniProfileElements";
 import { Link, useParams } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Header, HeaderTwo, Text } from "../Utils/Text/Text";

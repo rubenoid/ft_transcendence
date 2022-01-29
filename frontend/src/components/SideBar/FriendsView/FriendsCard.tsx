@@ -7,7 +7,7 @@ import {
 	FriendsButtonContainer,
 	FriendsCardButton,
 } from "./FriendsViewElements";
-import { Img } from "../../Profile/ProfileElements";
+import { Img } from "../MiniProfile/MiniProfileElements";
 import { Channel, User } from "../../../Types/Types";
 import { fetchData, postData } from "../../../API/API";
 import { SharedChatState } from "../SideBar";

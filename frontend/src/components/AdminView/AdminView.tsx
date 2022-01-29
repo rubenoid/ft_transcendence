@@ -11,7 +11,7 @@ import {
 import { Text } from "../Utils/Text/Text";
 import { detailedUser, Match, Channel, User } from "../../Types/Types";
 import { fetchData } from "../../API/API";
-import { Img, ImgContainer } from "../Profile/ProfileElements";
+import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
 import AdminUserTables from "./AdminUserTables";
 import AdminMatchTables from "./AdminMatchTable";
 import AdminChatTables from "./AdminChatTable";

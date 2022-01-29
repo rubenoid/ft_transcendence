@@ -11,8 +11,6 @@ import {
 	ChannelCard,
 } from "./ChannelsViewElements";
 import { TextInput } from "../../Utils/TextInput/TextInput";
-import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
-import { Form } from "../../ConnectionForm/ConnectionFormElements";
 import { SharedUserState } from "../../../App/UserStatus";
 import AddUserInput from "../../AddUserInput/AddUserInput";
 

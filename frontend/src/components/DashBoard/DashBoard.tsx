@@ -1,9 +1,6 @@
 import React from "react";
 import { DashBoardContainer, MainContentWrapper } from "./DashBoardElements";
-import Users from "../Users/Users";
 import Pong from "../Pong/Pong";
-import AddFriend from "../AddFriend/AddFriend";
-import Profile from "../Profile/Profile";
 import { Route, Routes } from "react-router-dom";
 import SettingsForm from "../Settings/Settings";
 import ProfileExtended from "../ProfileExtended/ProfileExtended";
