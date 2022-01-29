@@ -27,7 +27,7 @@ export class ChatEntity {
 	@JoinTable()
 	users: UserEntity[];
 
-	@ManyToMany(() => UserEntity, (user) => user.channels, { cascade: true })
+	@ManyToMany(() => UserEntity, { cascade: true })
 	@JoinTable()
 	bannedUsers: UserEntity[];
 

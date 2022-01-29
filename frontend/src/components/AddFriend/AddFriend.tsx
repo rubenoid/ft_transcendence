@@ -23,8 +23,6 @@ const AddFriend = (): JSX.Element => {
 		getUsers();
 	}, [userName]);
 	console.log(user);
-	console.log("UserName->" + userName);
-
 	const addFriend = async (id: number): Promise<void> => {
 		const endpoint = `/friends/add/${id}`;
 		await fetchData(endpoint);

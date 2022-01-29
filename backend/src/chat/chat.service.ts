@@ -101,19 +101,22 @@ export class ChatService {
 
 	async findChatMatch(ids: number[]): Promise<number> {
 		const allChannels: number[] = [];
-		const users: UserEntity[] = [];
+		var user: UserEntity | undefined;
+		console.log("ids", ids);
+		// all user entities and push all the ids
 		for (let i = 0; i < ids.length; i++) {
-			users[i] = await this.userService.getUserQueryOne({
-				where: { id: ids[0] },
+			user = await this.userService.getUserQueryOne({
+				where: { id: ids[i] },
 				relations: ["channels"],
 			});
-		}
-		for (let i = 0; i < users.length; i++) {
-			for (let x = 0; x < users[i].channels.length; x++) {
-				allChannels.push(users[i].channels[x].id);
+			for (let x = 0; x < user.channels.length; x++) {
+				allChannels.push(user.channels[x].id);
 			}
+
 		}
 
+		console.log("All channels:", allChannels);
+		// comparing all private channels for a match
 		for (let i = 0; i < allChannels.length; i++) {
 			const channel: ChatEntity = await this.chatRepository.findOne({
 				where: { id: allChannels[i], isPublic: false },
@@ -126,6 +129,7 @@ export class ChatService {
 					if (channel.users.findIndex((x) => x.id == ids[k]) == -1) break;
 				}
 				if (k == ids.length) return channel.id;
+				console.log("channel found");
 			}
 		}
 		return -1;
@@ -367,7 +371,7 @@ export class ChatService {
 			chat.isPublic = true;
 			chat.password = await this.protectorService.hash(password);
 		} else {
-			chat.isPublic = !Boolean(privacyLevel);
+			chat.isPublic = Boolean(privacyLevel);
 			chat.password = "";
 		}
 		await this.chatRepository.save(chat);
