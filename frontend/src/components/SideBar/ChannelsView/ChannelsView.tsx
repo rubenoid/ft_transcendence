@@ -70,7 +70,7 @@ const ChannelsView = (): JSX.Element => {
 						openChat(channel.id);
 					}}
 				>
-					<Text color="black" fontSize="20px">
+					<Text fontSize="20px">
 						{channel.isPublic
 							? channel.name
 							: outputChatName(channel, user, channel.name)}
@@ -106,11 +106,7 @@ const ChannelsView = (): JSX.Element => {
 
 	const listUsersAdded = channelForm.users.map(
 		(user: User, key: number): JSX.Element => {
-			return (
-				<Text key={key} color="black">
-					{user.userName}
-				</Text>
-			);
+			return <Text key={key}>{user.userName}</Text>;
 		},
 	);
 
@@ -118,14 +114,14 @@ const ChannelsView = (): JSX.Element => {
 		return (
 			<>
 				<ChannelCreateContainer>
-					<Text color="black">Name of group</Text>
+					<Text>Name of group</Text>
 					<TextInput
 						type="text"
 						onChange={(e) => {
 							channelForm.name = e.target.value;
 						}}
 					/>
-					<Text color="black">Privacy</Text>
+					<Text>Privacy</Text>
 					<input
 						type="radio"
 						name="privacy"
@@ -159,7 +155,7 @@ const ChannelsView = (): JSX.Element => {
 					) : (
 						""
 					)}
-					<Text color="black">Search for users to add</Text>
+					<Text>Search for users to add</Text>
 					<AddUserInput
 						placeholder="Type to search..."
 						removeOnEnter={true}
@@ -172,7 +168,7 @@ const ChannelsView = (): JSX.Element => {
 					></AddUserInput>
 					{channelForm.users ? (
 						<div>
-							<Text color="black">Users to add</Text>
+							<Text>Users to add</Text>
 							{listUsersAdded}
 						</div>
 					) : (

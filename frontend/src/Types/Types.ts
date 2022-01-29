@@ -9,10 +9,12 @@ export type User = {
 	rating: number;
 	friends: User[];
 
-	twoFactorSecret?: string;
-	blockedUsers?: User[];
-	blockedBy?: User[];
-	initial2FAEnabled?: boolean;
+	twoFactorSecret: string;
+	blockedUsers: User[];
+	blockedBy: User[];
+	initial2FAEnabled: boolean;
+	matches: Match[];
+	status: string;
 };
 
 export type Match = {
@@ -39,9 +41,4 @@ export interface Channel {
 	admins: User[];
 }
 
-export interface detailedUser extends User {
-	twoFactorSecret?: string;
-	blockedUsers?: User[];
-	blockedBy?: User[];
-	initial2FAEnabled?: boolean;
-}
+export type detailedUser = User;

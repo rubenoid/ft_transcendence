@@ -3,10 +3,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import { SettingsContainer } from "../Settings/SettingsElements";
 import { User } from "../../Types/Types";
 import { fetchData, postData } from "../../API/API";
-import { Text } from "../Utils/Text/Text";
+import { Text, Header } from "../Utils/Text/Text";
 import { Button } from "../Utils/Buttons/Button/Button";
+import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 import AddUserInput from "../AddUserInput/AddUserInput";
-import EndpointButton from "../EndpointButton/EndpointButton";
+import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { UserWrapper, UserRowContainer } from "./ChatSettingsElements";
 import { SharedUserState } from "../../App/UserStatus";
 import UserList from "./UserList";
@@ -114,68 +115,10 @@ const ChatSettings = (): JSX.Element => {
 		loadChatDetails();
 	}
 
-	// function updatePrivacy(e: number): void {
-	// 	setSettingsForm({ ...settingsForm, privacyLevel: e });
-	// }
-
-	// const displaySettings = (): JSX.Element => {
-	// 	return (
-	// 		<>
-	// 			<Text fontSize="20px" color="black">Settings</Text>
-	// 			<Text>Change Name</Text>
-	// 			<TextInput
-	// 				type={"text"}
-	// 				placeholder={settingsForm.name}
-	// 				onChange={(e) =>
-	// 					setSettingsForm({ ...settingsForm, name: e.target.value })
-	// 				}
-	// 			></TextInput>
-	// 			<Text>Change Visibility</Text>
-	// 			<input
-	// 				type="radio"
-	// 				name="privacy"
-	// 				value={"1"}
-	// 				checked={settingsForm.privacyLevel == 1}
-	// 				onChange={(e) => updatePrivacy(parseInt(e.target.value))}
-	// 			/>
-	// 			Public
-	// 			<br />
-	// 			<input
-	// 				type="radio"
-	// 				name="privacy"
-	// 				value={"0"}
-	// 				checked={settingsForm.privacyLevel == 0}
-	// 				onChange={(e) => updatePrivacy(parseInt(e.target.value))}
-	// 			/>
-	// 			Private
-	// 			<br />
-	// 			<input
-	// 				type="radio"
-	// 				name="privacy"
-	// 				value={"2"}
-	// 				checked={settingsForm.privacyLevel == 2}
-	// 				onChange={(e) => updatePrivacy(parseInt(e.target.value))}
-	// 			/>
-	// 			Protected
-	// 			<br />
-	// 			{settingsForm.privacyLevel == 2 ? (
-	// 				<TextInput
-	// 					placeholder="Enter new password"
-	// 					onChange={(e) =>
-	// 						setSettingsForm({ ...settingsForm, password: e.target.value })
-	// 					}
-	// 				/>
-	// 			) : (
-	// 				""
-	// 			)}
-	// 		</>
-	// 	);
-	// };
-
 	const displayChat = (): JSX.Element => {
 		return (
 			<>
-				<h1>{chatData.name} details</h1>
+				<Header>{chatData.name} details</Header>
 				{chatData.owner == -1 ? (
 					<Text color="pink">Direct channel</Text>
 				) : chatData.isPublic ? (
@@ -193,7 +136,7 @@ const ChatSettings = (): JSX.Element => {
 
 				{myRole != roleLevel.user ? (
 					<>
-						<Text color="black">Add Users</Text>
+						<Text>Add Users</Text>
 						<UserWrapper>
 							<AddUserInput
 								removeOnEnter={true}
@@ -228,22 +171,12 @@ const ChatSettings = (): JSX.Element => {
 							setSettingsForm={setSettingsForm}
 							myRole={myRole}
 						></OwnerSettings>
-						{/* <UserWrapper>
-							{settingsForm && myRole == roleLevel.owner
-								? displaySettings()
-								: ""}
-						</UserWrapper> */}
 					</>
 				)}
 
-				<Button
-					onClick={() => {
-						console.log(endpoints);
-						navigate("/", { replace: true });
-					}}
-				>
-					Back
-				</Button>
+				<LinkButton to={-1}>
+					<Text>Back</Text>
+				</LinkButton>
 				{chatData.owner != -1 ? (
 					<>
 						<Button onClick={() => saveChatSettings()}>Save</Button>

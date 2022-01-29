@@ -1,5 +1,5 @@
 import React from "react";
-import EndpointButton from "../EndpointButton/EndpointButton";
+import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import {
 	TableRow,
 	TableCell,
@@ -42,13 +42,13 @@ const SettingsTable = (props: InputParams): JSX.Element => {
 		return (
 			<TableRow key={key}>
 				<TableCell>
-					<Text fontSize="10">{user.userName}</Text>
+					<Text>{user.userName}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{user.firstName}</Text>
+					<Text>{user.firstName}</Text>
 				</TableCell>
 				<TableCell>
-					<Text fontSize="10">{user.lastName}</Text>
+					<Text>{user.lastName}</Text>
 				</TableCell>
 				<TableCell>
 					<EndpointButton

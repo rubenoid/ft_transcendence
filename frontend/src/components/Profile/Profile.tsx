@@ -10,6 +10,7 @@ import { RoundButton } from "../Utils/Buttons/Round/RoundButton";
 import { Text } from "../Utils/Text/Text";
 import { useBetween } from "use-between";
 import { SharedUserState } from "../../App/UserStatus";
+import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 
 function deleteCookie(
 	name: string,
@@ -67,21 +68,15 @@ const Profile = (): JSX.Element => {
 					<Text>{user.lastName}</Text>
 				</TopContainer>
 				<TopContainer>
-					<Button>
-						<Text>
-							<Link to={`/profile/${user.id}`}>Profile</Link>
-						</Text>
-					</Button>
-					<Button>
-						<Text>
-							<Link to="/settings">settings</Link>
-						</Text>
-					</Button>
-					<Button>
-						<Text>
-							<Link to="/game">Game</Link>
-						</Text>
-					</Button>
+					<LinkButton to={`/profile/${user.id}`}>
+						<Text>Profile</Text>
+					</LinkButton>
+					<LinkButton to="/settings">
+						<Text>settings</Text>
+					</LinkButton>
+					<LinkButton to="/game">
+						<Text>Game</Text>
+					</LinkButton>
 				</TopContainer>
 			</>
 		);

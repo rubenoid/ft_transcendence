@@ -1,19 +1,18 @@
 import styled from "styled-components";
 
 export const ChatBoxContainer = styled.div`
-	grid-area: chatBox;
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	background-color: #fff;
-	border: 2px solid #04aa6d;
+	background-color: black;
+	border: 2px solid #3f3fff;
 `;
 
 export const TopContainer = styled.div`
-	background-color: #393b4c;
 	min-height: 40px;
 	width: 100%;
 	display: flex;
+	background-color: black;
 	justify-content: space-between;
 `;
 
@@ -25,7 +24,7 @@ export const TopText = styled.p`
 `;
 
 export const ChatContainer = styled.div`
-	background-color: white;
+	background-color: black;
 	height: 500px;
 	width: 100%;
 	overflow-y: scroll;
@@ -69,7 +68,7 @@ export const MsgText = styled.p`
 `;
 
 export const SendIconContainer = styled.div`
-	background-color: #04aa6d;
+	background-color: #3f3fff;
 	height: 100%;
 	padding: 2px 2px 2px 2px;
 	position: absolute;

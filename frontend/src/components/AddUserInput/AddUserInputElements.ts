@@ -7,13 +7,13 @@ export const UserInputWrapper = styled.div`
 
 	&:focus {
 		color: #fff;
-		border: 1px solid #04aa6d;
+		border: 1px solid #3f3fff;
 		box-shadow: none;
 	}
 `;
 
 export const UserTextInput = styled.input`
-	background: rgba(0, 255, 0, 0.1);
+	background: black;
 	width: 90%;
 	padding: 12px 10px;
 	border: 0;
@@ -36,6 +36,6 @@ export const UserTextInput = styled.input`
 export const UserInputCheck = styled.div`
 	width: 10%;
 	border: 0;
-	background: rgba(0, 255, 0, 0.1);
+	background: black;
 	padding: 10px;
 `;

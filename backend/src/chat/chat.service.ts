@@ -101,7 +101,7 @@ export class ChatService {
 
 	async findChatMatch(ids: number[]): Promise<number> {
 		const allChannels: number[] = [];
-		var user: UserEntity | undefined;
+		let user: UserEntity | undefined;
 		console.log("ids", ids);
 		// all user entities and push all the ids
 		for (let i = 0; i < ids.length; i++) {
@@ -112,7 +112,6 @@ export class ChatService {
 			for (let x = 0; x < user.channels.length; x++) {
 				allChannels.push(user.channels[x].id);
 			}
-
 		}
 
 		console.log("All channels:", allChannels);

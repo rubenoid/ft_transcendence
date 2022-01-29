@@ -37,15 +37,10 @@ const RegistrationForm = (): JSX.Element => {
 			const user: User = await fetchData(
 				`/user/getByUserName/${registration.userName}`,
 			);
-			user
-				? setRegistration((prevState) => ({
-						...prevState,
-						userNameValid: false,
-				  }))
-				: setRegistration((prevState) => ({
-						...prevState,
-						userNameValid: true,
-				  }));
+			setRegistration((prevState) => ({
+				...prevState,
+				userNameValid: user ? false : true,
+			}));
 		}
 		getUsers();
 	}, [registration.userName]);
@@ -53,7 +48,6 @@ const RegistrationForm = (): JSX.Element => {
 	useEffect(() => {
 		if (registration.twoFAEnabled == true) return;
 		fetchData("auth/getQrRetSecret").then((data: QrData) => {
-			console.log("DATA", data.qrcode);
 			setQrcode(data);
 		});
 	}, [registration.twoFAEnabled]);
@@ -62,7 +56,6 @@ const RegistrationForm = (): JSX.Element => {
 		e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
 	): Promise<void> => {
 		e.preventDefault();
-		console.log("REG->", registration);
 		if (
 			registration.userName &&
 			registration.firstName &&

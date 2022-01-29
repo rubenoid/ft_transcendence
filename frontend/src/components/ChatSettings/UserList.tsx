@@ -7,7 +7,7 @@ import {
 } from "./ChatSettingsElements";
 import { Link } from "react-router-dom";
 import { User } from "../../Types/Types";
-import EndpointButton from "../EndpointButton/EndpointButton";
+import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { Text } from "../Utils/Text/Text";
 import { ChatData, toSend, roleLevel } from "./ChatSettings";
 import { SharedUserState } from "../../App/UserStatus";

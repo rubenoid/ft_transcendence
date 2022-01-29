@@ -6,13 +6,13 @@ export const ChannelTitleContainer = styled.div`
 `;
 
 export const ChannelCreateContainer = styled.div`
-	background-color: pink;
+	border: 5px solid white;
 	border-radius: 7px;
 	padding: 10px;
 `;
 
 export const ChannelCard = styled.div`
-	background-color: white;
+	border: 1px solid white;
 	border-radius: 7px;
 	width: 330px;
 	height: 40px;

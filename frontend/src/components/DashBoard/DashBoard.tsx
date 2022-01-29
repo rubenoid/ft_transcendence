@@ -1,5 +1,5 @@
 import React from "react";
-import { DashBoardContainer, Box } from "./DashBoardElements";
+import { DashBoardContainer, MainContentWrapper } from "./DashBoardElements";
 import Users from "../Users/Users";
 import Pong from "../Pong/Pong";
 import AddFriend from "../AddFriend/AddFriend";
@@ -13,16 +13,7 @@ import SideBar from "../SideBar/SideBar";
 export const DashBoard = (): JSX.Element => {
 	return (
 		<DashBoardContainer>
-			<Box gridArea="info1">
-				<Users />
-			</Box>
-			<Box gridArea="profile">
-				<Profile></Profile>
-			</Box>
-			<Box gridArea="info2">
-				<AddFriend />
-			</Box>
-			<Box gridArea="game">
+			<MainContentWrapper>
 				<Routes>
 					<Route path="/" element={<p>Welcome!</p>} />
 					<Route path="chat/:chatId" element={<ChatSettings />} />
@@ -31,10 +22,8 @@ export const DashBoard = (): JSX.Element => {
 					<Route path="settings" element={<SettingsForm />} />
 					<Route path="game" element={<Pong />} />
 				</Routes>
-			</Box>
-			<Box gridArea="chat" alignSelf="center">
-				<SideBar />
-			</Box>
+			</MainContentWrapper>
+			<SideBar />
 		</DashBoardContainer>
 	);
 };

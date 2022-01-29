@@ -1,5 +1,5 @@
 import React from "react";
-import EndpointButton from "../EndpointButton/EndpointButton";
+import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { Text } from "../Utils/Text/Text";
 import { ChatData, toSend, roleLevel, mutedUser } from "./ChatSettings";
 import { User } from "../../Types/Types";
@@ -78,12 +78,12 @@ const PunishedList = (props: InputParams): JSX.Element => {
 	return (
 		<>
 			<UserWrapper>
-				<Text color="black">Muted Users</Text>
+				<Text>Muted Users</Text>
 				{listMutedUsers()}
 			</UserWrapper>
 			<br />
 			<UserWrapper>
-				<Text color="black">Banned Users</Text>
+				<Text>Banned Users</Text>
 				{listBannedUsers()}
 			</UserWrapper>
 			<br />

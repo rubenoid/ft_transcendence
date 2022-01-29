@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const AddFriendContainer = styled.div`
-	background-color: #393b4c;
 	width: 100%;
 `;
 

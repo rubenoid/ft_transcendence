@@ -6,16 +6,12 @@ import { Label } from "../ConnectionForm/ConnectionFormElements";
 import { Img, ImgContainer } from "../Profile/ProfileElements";
 import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
-import { Text } from "../Utils/Text/Text";
+import { Header, Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { User, detailedUser } from "../../Types/Types";
 import SettingsTable from "./SettingsTable";
 import SettingsTwoFA from "./SettingsTwoFA";
-
-// interface detailedUser extends User {
-// 	twoFactorSecret: string;
-// 	blockedUsers: User[];
-// }
+import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 
 interface toSend {
 	endpoint: string;
@@ -114,7 +110,7 @@ const SettingsForm = (): JSX.Element => {
 	const settingsData = (): JSX.Element => {
 		return (
 			<>
-				<h1>Settings</h1>
+				<Header>Settings</Header>
 				<Text fontSize="20px">Username</Text>
 				<TextInput
 					type="text"
@@ -223,11 +219,9 @@ const SettingsForm = (): JSX.Element => {
 						</Button>
 					</>
 				)}
-				<Button>
-					<Text fontSize="15px">
-						<Link to="/">Back</Link>
-					</Text>
-				</Button>
+				<LinkButton to={-1}>
+					<Text>Back</Text>
+				</LinkButton>
 			</>
 		);
 	};

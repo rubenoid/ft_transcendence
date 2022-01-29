@@ -9,7 +9,7 @@ const ConnectionForm = (): JSX.Element => {
 		<RegistrationContainer>
 			<FormContainer>
 				<Link href="http://localhost:5000/auth/login">
-					<Text color="green">42</Text>
+					<Text color="#3f3fff">42</Text>
 				</Link>
 			</FormContainer>
 		</RegistrationContainer>

@@ -13,6 +13,9 @@ export const PongContainer = styled.div`
 	position: relative;
 	justify-content: center;
 	background-color: transparent;
+	border: 5px solid white;
+	width: max-content;
+	border-radius: 12px;
 `;
 
 export const PongImg = styled.img`
@@ -37,7 +40,7 @@ export const ButtonContainer = styled.div`
 export const Button = styled.button`
 	width: 160px;
 	margin: 10px;
-	background-color: #04aa6d;
+	background-color: #3f3fff;
 	color: white;
 	padding: 12px 20px;
 	border: none;
