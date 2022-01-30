@@ -90,8 +90,6 @@ const ChatBox = (): JSX.Element => {
 			chatId: channel.id,
 			password: password,
 		});
-
-		console.log("RESULTA PASWORDA", res);
 		if (res === true) {
 			setPasswordNeeded(false);
 			setChannel(channel);

@@ -8,7 +8,7 @@ import {
 	AdminTable,
 } from "../Utils/Table/Table";
 import { Match } from "../../Types/Types";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
+import { Label } from "../Utils/Label/Label";
 
 interface InputParams {
 	matches: Match[];

@@ -22,9 +22,8 @@ const UserView = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
-			let allStatus: userStatus[];
 			const allUsers: User[] = await fetchData("/user/all");
-			const status: userStatus[] = await fetchData("/user/getAllStatus");
+			const allStatus: userStatus[] = await fetchData("/user/getAllStatus");
 			for (let i = 0; i < allStatus.length; i++) {
 				const e = allStatus[i];
 				const foundUser = allUsers.find((x) => x.id == e.id);

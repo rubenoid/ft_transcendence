@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchData } from "../../API/API";
 import { User, Match } from "../../Types/Types";
-import { FooterWrapper, SettingsContainer } from "../Settings/SettingsElements";
 import {
 	Img,
 	ImgContainer,
@@ -10,9 +9,12 @@ import {
 	Padding,
 	DetailsWrapper,
 } from "../SideBar/MiniProfile/MiniProfileElements";
-import { MainContentWrapper } from "../Utils/Containers/Containers";
+import {
+	MainContentWrapper,
+	FooterWrapper,
+	MainViewContainer,
+} from "../Utils/Containers/Containers";
 import { Link, useParams } from "react-router-dom";
-import { Item } from "../Utils/List/List";
 import { Header, HeaderTwo, Text } from "../Utils/Text/Text";
 import ListMatch from "./ListMatch";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
@@ -135,7 +137,7 @@ const ProfileExtended = (): JSX.Element => {
 		);
 	};
 	return (
-		<SettingsContainer>
+		<MainViewContainer>
 			{isBlocked != 0
 				? isBlocked == 1
 					? "User is unavailable!"
@@ -148,7 +150,7 @@ const ProfileExtended = (): JSX.Element => {
 					<Text>Back</Text>
 				</LinkButton>
 			</FooterWrapper>
-		</SettingsContainer>
+		</MainViewContainer>
 	);
 };
 

@@ -4,6 +4,7 @@ import {
 	UserRow,
 	RowButton,
 	UserRowContainer,
+	StyledName,
 } from "./ChatSettingsElements";
 import { Link } from "react-router-dom";
 import { User } from "../../Types/Types";
@@ -27,13 +28,19 @@ const UserList = (props: InputParams): JSX.Element => {
 		return props.chatData.users.map((mapUser: User, key: number) => {
 			return (
 				<UserRowContainer key={key}>
-					<Link to={`/profile/${mapUser.id}`}>
-						<Text>{mapUser.userName}</Text>
-					</Link>
+					<StyledName>
+						<Link to={`/profile/${mapUser.id}`}>
+							<Text>{mapUser.userName}</Text>
+						</Link>
+					</StyledName>
 					{props.chatData.owner == mapUser.id ? (
-						<Text>Owner</Text>
+						<StyledName>
+							<Text>Owner</Text>
+						</StyledName>
 					) : props.chatData.admins.find((x) => x.id == mapUser.id) ? (
-						<Text>Admin</Text>
+						<StyledName>
+							<Text>Admin</Text>
+						</StyledName>
 					) : (
 						""
 					)}

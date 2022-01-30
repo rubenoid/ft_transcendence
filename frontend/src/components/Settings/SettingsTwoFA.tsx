@@ -4,7 +4,7 @@ import { fetchData, postData } from "../../API/API";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
+import { Label } from "../Utils/Label/Label";
 import { Item } from "../Utils/List/List";
 import { User } from "../../Types/Types";
 

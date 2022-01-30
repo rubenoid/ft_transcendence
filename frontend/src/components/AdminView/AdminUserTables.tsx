@@ -9,7 +9,7 @@ import {
 	AdminTable,
 } from "../Utils/Table/Table";
 import { ImgContainer, Img } from "../SideBar/MiniProfile/MiniProfileElements";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
+import { Label } from "../Utils/Label/Label";
 
 interface InputParams {
 	users: User[];

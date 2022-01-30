@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { FormContainer, Form, Label, Button } from "./ConnectionFormElements";
+import { FormContainer, Form } from "./ConnectionFormElements";
+import { Button } from "../Utils/Buttons/Button/Button";
+import { Label } from "../Utils/Label/Label";
 import { useNavigate } from "react-router-dom";
 import { SharedConnectionStatus } from "../../App/ConnectionStatus";
 import { postData, fetchData } from "../../API/API";

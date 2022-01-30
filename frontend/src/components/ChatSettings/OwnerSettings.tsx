@@ -3,6 +3,7 @@ import { Text } from "../Utils/Text/Text";
 import { ChatSettingsForm, roleLevel } from "./ChatSettings";
 import { UserWrapper } from "./ChatSettingsElements";
 import { TextInput } from "../Utils/TextInput/TextInput";
+import { Label } from "../Utils/Label/Label";
 
 interface InputParams {
 	settingsForm: ChatSettingsForm;
@@ -33,33 +34,36 @@ const OwnerSettings = (props: InputParams): JSX.Element => {
 					}
 				></TextInput>
 				<Text>Change Visibility</Text>
-				<input
-					type="radio"
-					name="privacy"
-					value={"1"}
-					checked={props.settingsForm.privacyLevel == 1}
-					onChange={(e) => updatePrivacy(parseInt(e.target.value))}
-				/>
-				Public
-				<br />
-				<input
-					type="radio"
-					name="privacy"
-					value={"0"}
-					checked={props.settingsForm.privacyLevel == 0}
-					onChange={(e) => updatePrivacy(parseInt(e.target.value))}
-				/>
-				Private
-				<br />
-				<input
-					type="radio"
-					name="privacy"
-					value={"2"}
-					checked={props.settingsForm.privacyLevel == 2}
-					onChange={(e) => updatePrivacy(parseInt(e.target.value))}
-				/>
-				Protected
-				<br />
+				<Label>
+					<input
+						type="radio"
+						name="privacy"
+						value={"1"}
+						checked={props.settingsForm.privacyLevel == 1}
+						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
+					/>
+					Public
+				</Label>
+				<Label>
+					<input
+						type="radio"
+						name="privacy"
+						value={"0"}
+						checked={props.settingsForm.privacyLevel == 0}
+						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
+					/>
+					Private
+				</Label>
+				<Label>
+					<input
+						type="radio"
+						name="privacy"
+						value={"2"}
+						checked={props.settingsForm.privacyLevel == 2}
+						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
+					/>
+					Protected
+				</Label>
 				{props.settingsForm.privacyLevel == 2 ? (
 					<TextInput
 						placeholder="Enter new password"

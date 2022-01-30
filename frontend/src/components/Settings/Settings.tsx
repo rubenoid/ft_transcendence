@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { fetchData, postData } from "../../API/API";
 import {
-	FooterWrapper,
-	SettingsContainer,
+	MainContentWrapper,
 	HeaderWrapper,
-} from "./SettingsElements";
-import { MainContentWrapper } from "../Utils/Containers/Containers";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
+	FooterWrapper,
+	MainViewContainer,
+} from "../Utils/Containers/Containers";
+import { Label } from "../Utils/Label/Label";
 import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
 import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
@@ -232,7 +232,7 @@ const SettingsForm = (): JSX.Element => {
 		);
 	};
 	return (
-		<SettingsContainer>{user ? settingsData() : "loading"}</SettingsContainer>
+		<MainViewContainer>{user ? settingsData() : "loading"}</MainViewContainer>
 	);
 };
 

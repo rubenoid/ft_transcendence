@@ -8,7 +8,7 @@ import {
 	AdminTable,
 } from "../Utils/Table/Table";
 import { Channel, User, Message } from "../../Types/Types";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
+import { Label } from "../Utils/Label/Label";
 
 interface InputParams {
 	channels: Channel[];
