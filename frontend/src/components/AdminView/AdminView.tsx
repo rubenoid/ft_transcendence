@@ -1,17 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
-import { AdminContainer } from "./AdminViewElements";
-import {
-	TableRow,
-	AdminTableCell,
-	TableHeader,
-	AdminTableHeader,
-	AdminTable,
-} from "../Utils/Table/Table";
-import { Text } from "../Utils/Text/Text";
+import { AdminContainer } from "../Utils/Containers/Containers";
 import { Match, Channel, User } from "../../Types/Types";
 import { fetchData } from "../../API/API";
-import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
 import AdminUserTables from "./AdminUserTables";
 import AdminMatchTables from "./AdminMatchTable";
 import AdminChatTables from "./AdminChatTable";

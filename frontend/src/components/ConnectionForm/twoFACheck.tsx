@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { FormContainer, Form, Label, Button } from "./ConnectionFormElements";
+import { FormContainer, Form } from "./ConnectionFormElements";
+import { Label } from "../Utils/Label/Label";
 import { postData, fetchData } from "../../API/API";
 import QRCode from "qrcode.react";
 import { useNavigate, Link } from "react-router-dom";
