@@ -27,7 +27,6 @@ export class GameController {
 				const e = result.players[i];
 				playerids.push(e.id);
 			}
-			console.log(result);
 			return {
 				running: false,
 				scores: [result.scorePlayer1, result.scorePlayer2],

@@ -13,7 +13,6 @@ const AdminView = (): JSX.Element => {
 
 	useEffect(() => {
 		async function getData(): Promise<void> {
-			console.log("gettin all users n relations");
 			fetchData(`/user/getAllUsersNRelations`).then((user: User[]) => {
 				setUsers(user);
 			});
@@ -23,7 +22,6 @@ const AdminView = (): JSX.Element => {
 			fetchData(`/chat/all`).then((channels: Channel[]) => {
 				setChannels(channels);
 			});
-			console.log(channels);
 		}
 		getData();
 	}, []);

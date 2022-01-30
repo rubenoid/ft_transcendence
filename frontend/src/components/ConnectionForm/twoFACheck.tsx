@@ -3,10 +3,8 @@ import { useState } from "react";
 import { FormContainer, Form } from "./ConnectionFormElements";
 import { Label } from "../Utils/Label/Label";
 import { postData, fetchData } from "../../API/API";
-import QRCode from "qrcode.react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SharedConnectionStatus } from "../../App/ConnectionStatus";
-import { Item } from "../Utils/List/List";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { Text } from "../Utils/Text/Text";
 

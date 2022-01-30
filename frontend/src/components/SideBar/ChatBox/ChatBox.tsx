@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { AiOutlineSend as SendIcon } from "react-icons/ai";
-import { fetchData, postData } from "../../../API/API";
-import { Channel, Message } from "../../../Types/Types";
-import { Button } from "../../Utils/Buttons/Button/Button";
-import { TextInput } from "../../Utils/TextInput/TextInput";
-import { Text } from "../../Utils/Text/Text";
+import { fetchData } from "../../../API/API";
+import { Message } from "../../../Types/Types";
 import socket from "../../../API/Socket";
 import { SharedChatState } from "../SideBar";
 import { SharedUserState } from "../../../App/UserStatus";
-import { Link } from "react-router-dom";
 import { outputChatName } from "../SideBar";
-import { FaWindowMinimize } from "react-icons/fa";
 import MinimizedChatBox from "./MinimizedChatBox";
 import OpenChatContainer from "./OpenChatContainer";
 
@@ -33,7 +27,6 @@ const ChatBox = (): JSX.Element => {
 				msgHistory.push(...messages);
 				setMsgHistory([...msgHistory]);
 			} catch (er) {
-				console.log("NO ACCESIO");
 				setPasswordNeeded(true);
 			}
 		}

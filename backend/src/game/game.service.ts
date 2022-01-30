@@ -1,6 +1,5 @@
 import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
-import { UserEntity } from "src/user/user.entity";
 import { UserService } from "src/user/user.service";
 import { GuardedSocket } from "src/overloaded";
 import { MatchService } from "../match/match.service";
@@ -84,7 +83,6 @@ export class GameService {
 		client2: GuardedSocket,
 		server: Server,
 	): void {
-		console.log("adding" + client1.id + " and " + client2.id);
 		const roomid = (Math.random() + 1).toString(36).substring(7);
 
 		client1.join(roomid);

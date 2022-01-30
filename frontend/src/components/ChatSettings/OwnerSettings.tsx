@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Text } from "../Utils/Text/Text";
 import { ChatSettingsForm, roleLevel } from "./ChatSettings";
 import { UserWrapper } from "./ChatSettingsElements";

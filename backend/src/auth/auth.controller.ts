@@ -7,20 +7,16 @@ import {
 	Post,
 	Body,
 	Param,
-	Redirect,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { localAuthGaurd } from "./auth.guard";
-import { Response, Request, request } from "express";
-import { JwtAuthGuard } from "./jwt.guard";
+import { Response } from "express";
 import { Public } from "./jwt.decorator";
 import { UserService } from "src/user/user.service";
 import { GuardedRequest } from "src/overloaded";
-import { publicDecrypt } from "crypto";
 import { UserEntity } from "src/user/user.entity";
-import { get } from "http";
-import { JwtSecretRequestType, JwtService } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import { RegisteringGuard } from "./registering.guard";
 
 @Controller("auth")
@@ -124,7 +120,6 @@ export class AuthController {
 		@Body("lastName") lastName: string,
 		@Body("twoFASecret") twoFASecret: string,
 	): Promise<void> {
-		console.log("TWOFA", twoFASecret);
 		this.userService.update(
 			req.user.id,
 			userName,

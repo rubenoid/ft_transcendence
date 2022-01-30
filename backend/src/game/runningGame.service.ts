@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import { GameService } from "./game.service";
 import { GuardedSocket } from "src/overloaded";
 
@@ -75,7 +75,6 @@ export class RunningGame {
 
 	moveSpeed = 100;
 	calculate(): void {
-		const oldpos = new Point(this.ball.x, this.ball.y);
 		this.ball.x += this.ballDir.x * this.moveSpeed * this.deltaTime;
 		this.ball.y += this.ballDir.y * this.moveSpeed * this.deltaTime;
 

@@ -9,7 +9,6 @@ import {
 } from "../Utils/Containers/Containers";
 import { Label } from "../Utils/Label/Label";
 import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
-import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Header, Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
@@ -97,7 +96,6 @@ const SettingsForm = (): JSX.Element => {
 	}
 
 	const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>): void => {
-		console.log("endpoints", endpoints);
 		if (e.target.files && e.target.files.length) {
 			setToInput({
 				...toInput,

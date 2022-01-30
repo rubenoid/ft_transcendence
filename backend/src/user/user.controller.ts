@@ -2,9 +2,7 @@ import {
 	Controller,
 	Get,
 	Post,
-	Put,
 	Body,
-	Injectable,
 	Param,
 	Req,
 	UseInterceptors,
@@ -46,7 +44,6 @@ export class UserController {
 
 	@Get("menFriendsnBlocked")
 	async meAndFriends(@Req() req: GuardedRequest): Promise<UserEntity> {
-		console.log("we iz here");
 		return await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 			relations: ["friends", "blockedUsers", "blockedBy"],
@@ -90,7 +87,6 @@ export class UserController {
 		@Body("user") userString: string,
 	): Promise<number> {
 		const user = JSON.parse(userString);
-		console.log("USER FROM FORM", user);
 		this.userService.update(
 			req.user.id,
 			user.userName,
@@ -105,7 +101,6 @@ export class UserController {
 	@UseGuards(RegisteringGuard)
 	@Get("removeTwoFA")
 	async removeTwoFA(@Req() req: GuardedRequest): Promise<void> {
-		console.log("removetwofa");
 		const user = await this.userService.getUser(-1, req.user.id as number);
 		if (typeof user != "object") return;
 		user.twoFactorSecret = "";
