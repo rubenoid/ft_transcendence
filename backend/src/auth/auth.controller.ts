@@ -90,8 +90,6 @@ export class AuthController {
 		@Body("usertoken") usertoken: string,
 		@Body("secret") secret: string,
 	): Promise<boolean> {
-		console.log("usertoken", usertoken);
-		console.log("secret", secret);
 		return this.authService.check2faInput(usertoken, secret);
 	}
 
@@ -102,7 +100,6 @@ export class AuthController {
 		@Body("usertoken") usertoken: string,
 		@Req() req: GuardedRequest,
 	): Promise<boolean> {
-		console.log("TWOFAUSERTOK", usertoken);
 		const user: UserEntity = await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 		});

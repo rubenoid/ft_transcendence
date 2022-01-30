@@ -9,10 +9,12 @@ import {
 	ChannelTitleContainer,
 	ChannelCreateContainer,
 	ChannelCard,
+	RadioInput,
 } from "./ChannelsViewElements";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { SharedUserState } from "../../../App/UserStatus";
 import AddUserInput from "../../AddUserInput/AddUserInput";
+import { Label } from "../../ConnectionForm/ConnectionFormElements";
 
 class CreateChannelsForm {
 	name = "";
@@ -120,30 +122,27 @@ const ChannelsView = (): JSX.Element => {
 						}}
 					/>
 					<Text>Privacy</Text>
-					<input
+					<RadioInput
 						type="radio"
 						name="privacy"
 						value={"0"}
 						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
 					/>
-					Public
-					<br />
-					<input
+					<Label>Public</Label>
+					<RadioInput
 						type="radio"
 						name="privacy"
 						value={"1"}
 						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
 					/>
-					Private
-					<br />
-					<input
+					<Label>Private</Label>
+					<RadioInput
 						type="radio"
 						name="privacy"
 						value={"2"}
 						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
 					/>
-					Protected
-					<br />
+					<Label>Protected</Label>
 					{channelForm && channelForm.isPublic == 2 ? (
 						<TextInput
 							type="text"

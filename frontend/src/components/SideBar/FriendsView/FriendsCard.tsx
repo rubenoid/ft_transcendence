@@ -45,8 +45,8 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 							<Img src={"http://localhost:5000/" + user.avatar} />
 						</FriendsImageContainer>
 						<FriendsNameContainer>
-							<Text color="black">{user.userName}</Text>
-							<Text color="black">{"Online"}</Text>
+							<Text>{user.userName}</Text>
+							<Text>{"Online"}</Text>
 						</FriendsNameContainer>
 					</FriendsTitleContainer>
 					<FriendsButtonContainer>

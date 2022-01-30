@@ -8,7 +8,6 @@ import {
 	AdminTableHeader,
 	AdminTable,
 } from "../Utils/Table/Table";
-import { detailedUser } from "../../Types/Types";
 import { ImgContainer, Img } from "../SideBar/MiniProfile/MiniProfileElements";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
 
@@ -17,7 +16,7 @@ interface InputParams {
 }
 
 const AdminUserTable = (props: InputParams): JSX.Element => {
-	const userlist = props.users.map((users: detailedUser, key: number) => {
+	const userlist = props.users.map((users: User, key: number) => {
 		return (
 			<TableRow key={key}>
 				<AdminTableCell>

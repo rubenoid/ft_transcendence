@@ -34,8 +34,6 @@ export const FriendsWrapper = styled.div`
 	background-color: white;
 `;
 
-export const ProfileWrapper = styled.div``;
-
 export const ProfileHeader = styled.div`
 	display: flex;
 	padding: 10px;

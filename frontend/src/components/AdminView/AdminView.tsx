@@ -9,7 +9,7 @@ import {
 	AdminTable,
 } from "../Utils/Table/Table";
 import { Text } from "../Utils/Text/Text";
-import { detailedUser, Match, Channel, User } from "../../Types/Types";
+import { Match, Channel, User } from "../../Types/Types";
 import { fetchData } from "../../API/API";
 import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
 import AdminUserTables from "./AdminUserTables";
@@ -17,14 +17,14 @@ import AdminMatchTables from "./AdminMatchTable";
 import AdminChatTables from "./AdminChatTable";
 
 const AdminView = (): JSX.Element => {
-	const [users, setUsers] = useState<detailedUser[]>([]);
+	const [users, setUsers] = useState<User[]>([]);
 	const [matches, setMatches] = useState<Match[]>([]);
 	const [channels, setChannels] = useState<Channel[]>([]);
 
 	useEffect(() => {
 		async function getData(): Promise<void> {
 			console.log("gettin all users n relations");
-			fetchData(`/user/getAllUsersNRelations`).then((user: detailedUser[]) => {
+			fetchData(`/user/getAllUsersNRelations`).then((user: User[]) => {
 				setUsers(user);
 			});
 			fetchData(`/match/getAllMatches`).then((matches: Match[]) => {

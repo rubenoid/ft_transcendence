@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Button, RowButton } from "./EndpointButtonElements";
-
-interface toSend {
-	endpoint: string;
-	data: object;
-}
+import { ToSend } from "../../../../Types/Types";
 
 type InputParams = {
-	endpointRef: React.Dispatch<React.SetStateAction<toSend[]>>;
-	toSet: toSend;
+	endpointRef: React.Dispatch<React.SetStateAction<ToSend[]>>;
+	toSet: ToSend;
 	children: JSX.Element | JSX.Element[];
 	useSmall?: boolean;
 };

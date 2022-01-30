@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { SettingsContainer } from "../Settings/SettingsElements";
-import { User } from "../../Types/Types";
+import {
+	SettingsContainer,
+	FooterWrapper,
+	HeaderWrapper,
+} from "../Settings/SettingsElements";
+import { MainContentWrapper } from "../Utils/Containers/Containers";
+import { User, ChatData, ToSend } from "../../Types/Types";
 import { fetchData, postData } from "../../API/API";
 import { Text, Header } from "../Utils/Text/Text";
 import { Button } from "../Utils/Buttons/Button/Button";
@@ -13,28 +18,6 @@ import { SharedUserState } from "../../App/UserStatus";
 import UserList from "./UserList";
 import PunishedList from "./PunishedList";
 import OwnerSettings from "./OwnerSettings";
-
-export interface ChatData {
-	id: number;
-	hasPassword: boolean;
-	isPublic: boolean;
-	name: string;
-	users: User[];
-	admins: User[];
-	bannedUsers: User[];
-	muted: mutedUser[];
-	owner: number;
-}
-
-export interface toSend {
-	endpoint: string;
-	data: object;
-}
-
-export interface mutedUser {
-	userTargetId: number;
-	endDate: number;
-}
 
 export enum roleLevel {
 	user = 0,
@@ -61,7 +44,7 @@ const ChatSettings = (): JSX.Element => {
 	const [chatData, setChatData] = useState<ChatData>(undefined);
 	const [myRole, setMyRole] = useState<roleLevel>(0);
 	const { user, setUser } = SharedUserState();
-	const [endpoints, setEndpoints] = useState<toSend[]>([]);
+	const [endpoints, setEndpoints] = useState<ToSend[]>([]);
 	const [usersToAdd, setUsersToAdd] = useState<User[]>([]);
 	const [settingsForm, setSettingsForm] = useState<ChatSettingsForm>(undefined);
 
@@ -118,83 +101,87 @@ const ChatSettings = (): JSX.Element => {
 	const displayChat = (): JSX.Element => {
 		return (
 			<>
-				<Header>{chatData.name} details</Header>
-				{chatData.owner == -1 ? (
-					<Text color="pink">Direct channel</Text>
-				) : chatData.isPublic ? (
-					<Text color={"green"}> Public Channel</Text>
-				) : (
-					<Text color={"blue"}> Private Channel</Text>
-				)}
+				<HeaderWrapper>
+					<Header>{chatData.name} details</Header>
+					{chatData.owner == -1 ? (
+						<Text color="pink">Direct channel</Text>
+					) : chatData.isPublic ? (
+						<Text color={"green"}> Public Channel</Text>
+					) : (
+						<Text color={"blue"}> Private Channel</Text>
+					)}
+				</HeaderWrapper>
+				<MainContentWrapper>
+					<UserList
+						chatData={chatData}
+						myRole={myRole}
+						setEndpoints={setEndpoints}
+						chatId={chatId}
+					></UserList>
 
-				<UserList
-					chatData={chatData}
-					myRole={myRole}
-					setEndpoints={setEndpoints}
-					chatId={chatId}
-				></UserList>
-
-				{myRole != roleLevel.user ? (
-					<>
-						<Text>Add Users</Text>
-						<UserWrapper>
-							<AddUserInput
-								removeOnEnter={true}
-								placeholder={"Enter username"}
-								onValidUser={(e: User) => {
-									setUsersToAdd([...usersToAdd, e]);
-								}}
+					{myRole != roleLevel.user ? (
+						<>
+							<Text>Add Users</Text>
+							<UserWrapper>
+								<AddUserInput
+									removeOnEnter={true}
+									placeholder={"Enter username"}
+									onValidUser={(e: User) => {
+										setUsersToAdd([...usersToAdd, e]);
+									}}
+								/>
+								<br />
+								<hr />
+								{usersToAdd ? listAddedUsers : ""}
+							</UserWrapper>
+						</>
+					) : (
+						""
+					)}
+					<br />
+					{chatData.owner == -1 ? (
+						""
+					) : (
+						<>
+							<PunishedList
+								chatData={chatData}
+								myRole={myRole}
+								setEndpoints={setEndpoints}
+								mutedUsers={chatData.muted}
+								bannedUsers={chatData.bannedUsers}
+								chatId={chatId}
 							/>
-							<br />
-							<hr />
-							{usersToAdd ? listAddedUsers : ""}
-						</UserWrapper>
-					</>
-				) : (
-					""
-				)}
-				<br />
-				{chatData.owner == -1 ? (
-					""
-				) : (
-					<>
-						<PunishedList
-							chatData={chatData}
-							myRole={myRole}
-							setEndpoints={setEndpoints}
-							mutedUsers={chatData.muted}
-							bannedUsers={chatData.bannedUsers}
-							chatId={chatId}
-						/>
-						<OwnerSettings
-							settingsForm={settingsForm}
-							setSettingsForm={setSettingsForm}
-							myRole={myRole}
-						></OwnerSettings>
-					</>
-				)}
-
-				<LinkButton to={-1}>
-					<Text>Back</Text>
-				</LinkButton>
-				{chatData.owner != -1 ? (
-					<>
-						<Button onClick={() => saveChatSettings()}>Save</Button>
-						<Button
-							onClick={() => {
-								postData("/chat/leave", {
-									chatId: chatId,
-									idToRemove: user.id,
-								});
-								navigate("/", { replace: true });
-							}}
-						>
-							Leave
-						</Button>
-					</>
-				) : (
-					""
-				)}
+							<OwnerSettings
+								settingsForm={settingsForm}
+								setSettingsForm={setSettingsForm}
+								myRole={myRole}
+							></OwnerSettings>
+						</>
+					)}
+				</MainContentWrapper>
+				<FooterWrapper>
+					<LinkButton to={-1}>
+						<Text>Back</Text>
+					</LinkButton>
+					{chatData.owner != -1 ? (
+						<>
+							<Button onClick={() => saveChatSettings()}>Save</Button>
+							<Button
+								onClick={() => {
+									postData("/chat/leave", {
+										chatId: chatId,
+										idToRemove: user.id,
+									});
+									navigate("/", { replace: true });
+								}}
+							>
+								Leave
+							</Button>
+						</>
+					) : (
+						""
+					)}
+				</FooterWrapper>
 			</>
 		);
 	};
@@ -202,7 +189,6 @@ const ChatSettings = (): JSX.Element => {
 	return (
 		<SettingsContainer>
 			{chatData ? displayChat() : "loading"}
-			{JSON.stringify(endpoints)}
 		</SettingsContainer>
 	);
 };

@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { fetchData, postData } from "../../API/API";
-import { SettingsContainer } from "./SettingsElements";
+import {
+	FooterWrapper,
+	SettingsContainer,
+	HeaderWrapper,
+} from "./SettingsElements";
+import { MainContentWrapper } from "../Utils/Containers/Containers";
 import { Label } from "../ConnectionForm/ConnectionFormElements";
 import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
 import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Header, Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
-import { User, detailedUser } from "../../Types/Types";
+import { User, ToSend } from "../../Types/Types";
 import SettingsTable from "./SettingsTable";
 import SettingsTwoFA from "./SettingsTwoFA";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
-
-interface toSend {
-	endpoint: string;
-	data: object;
-}
 
 export class formData {
 	image = "";
@@ -27,16 +27,16 @@ export class formData {
 }
 
 const SettingsForm = (): JSX.Element => {
-	const [user, setUser] = useState<detailedUser>(undefined);
+	const [user, setUser] = useState<User>(undefined);
 	const [toInput, setToInput] = useState(new formData());
 	const [newPicutre, setNewPicture] = useState(new Date().getTime());
 
 	const [endpoints, setEndpoints] = useState<string[]>([]);
-	const [removingEndpoints, setremovingEndpoints] = useState<toSend[]>([]);
+	const [removingEndpoints, setremovingEndpoints] = useState<ToSend[]>([]);
 	const [twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
 
 	async function getUser(): Promise<boolean> {
-		const user: detailedUser = await fetchData("/user/menFriendsnBlocked");
+		const user: User = await fetchData("/user/menFriendsnBlocked");
 		setUser(user);
 		if (user.twoFactorSecret.length == 0) {
 			return false;
@@ -110,118 +110,124 @@ const SettingsForm = (): JSX.Element => {
 	const settingsData = (): JSX.Element => {
 		return (
 			<>
-				<Header>Settings</Header>
-				<Text fontSize="20px">Username</Text>
-				<TextInput
-					type="text"
-					value={user.userName}
-					onChange={(e) => {
-						getUsersforUsername(e.target.value);
-					}}
-				/>
-				{toInput.userNameValid ? (
-					<Text>username available and unique</Text>
-				) : (
-					<Text>username already in use</Text>
-				)}
-				<Item>
-					<Text fontSize="20px">FirstName</Text>
+				<HeaderWrapper>
+					<Header>Settings</Header>
+				</HeaderWrapper>
+				<MainContentWrapper>
+					<Text fontSize="20px">Username</Text>
 					<TextInput
 						type="text"
-						value={user.firstName}
+						value={user.userName}
 						onChange={(e) => {
-							setUser({ ...user, firstName: e.target.value });
+							getUsersforUsername(e.target.value);
 						}}
 					/>
-				</Item>
-				<Item>
-					<Text fontSize="20px">Lastname</Text>
-					<TextInput
-						type="text"
-						value={user.lastName}
-						onChange={(e) => {
-							setUser({ ...user, lastName: e.target.value });
-						}}
-					/>
-				</Item>
-				<Label htmlFor="upload-button">
-					{toInput.image.length == 0 ? (
-						<div>
-							<Text>Click to change your avatar</Text>
-							<ImgContainer>
-								<Img
-									src={
-										"http://localhost:5000/" + user.avatar + "?" + newPicutre
-									}
-									alt="profileImg"
-									width="300"
-									height="300"
-								/>
-							</ImgContainer>
-						</div>
+					{toInput.userNameValid ? (
+						<Text>username available and unique</Text>
 					) : (
-						<ImgContainer>
-							<Img src={toInput.image} alt="dummy" width="300" height="300" />
-						</ImgContainer>
+						<Text>username already in use</Text>
 					)}
-				</Label>
-				<input
-					type="file"
-					id="upload-button"
-					style={{ display: "none" }}
-					onChange={uploadAvatar}
-				/>
-				<SettingsTable
-					users={user.friends}
-					endpoint={"/friends/remove/"}
-					setEndpoints={setremovingEndpoints}
-					stagedList={toInput.friendsToAdd}
-					title={"Friends"}
-					onInputEvent={(e: User) =>
-						setToInput({
-							...toInput,
-							friendsToAdd: [...toInput.friendsToAdd, e],
-						})
-					}
-				>
-					<Text>Find Users to add as a friend</Text>
-				</SettingsTable>
-				<SettingsTable
-					users={user.blockedUsers}
-					endpoint={"/blocked/remove/"}
-					setEndpoints={setremovingEndpoints}
-					stagedList={toInput.blockedToAdd}
-					title={"Blocked"}
-					onInputEvent={(e: User) =>
-						setToInput({
-							...toInput,
-							blockedToAdd: [...toInput.blockedToAdd, e],
-						})
-					}
-				>
-					<Text>Find Users to block</Text>
-				</SettingsTable>
-				<SettingsTwoFA
-					setEndpoints={setEndpoints}
-					user={user}
-					setTwoFAvalid={setTwoFAvalid}
-				></SettingsTwoFA>
-				{twoFAvalid === false ? (
-					<>
-						<Button disabled>
-							<Text fontSize="15px">Save changes</Text>
-						</Button>
-					</>
-				) : (
-					<>
-						<Button onClick={uploadDataForm}>
-							<Text fontSize="15px">Save changes</Text>
-						</Button>
-					</>
-				)}
-				<LinkButton to={-1}>
-					<Text>Back</Text>
-				</LinkButton>
+					<Item>
+						<Text fontSize="20px">FirstName</Text>
+						<TextInput
+							type="text"
+							value={user.firstName}
+							onChange={(e) => {
+								setUser({ ...user, firstName: e.target.value });
+							}}
+						/>
+					</Item>
+					<Item>
+						<Text fontSize="20px">Lastname</Text>
+						<TextInput
+							type="text"
+							value={user.lastName}
+							onChange={(e) => {
+								setUser({ ...user, lastName: e.target.value });
+							}}
+						/>
+					</Item>
+					<Label htmlFor="upload-button">
+						{toInput.image.length == 0 ? (
+							<div>
+								<Text>Click to change your avatar</Text>
+								<ImgContainer>
+									<Img
+										src={
+											"http://localhost:5000/" + user.avatar + "?" + newPicutre
+										}
+										alt="profileImg"
+										width="300"
+										height="300"
+									/>
+								</ImgContainer>
+							</div>
+						) : (
+							<ImgContainer>
+								<Img src={toInput.image} alt="dummy" width="300" height="300" />
+							</ImgContainer>
+						)}
+					</Label>
+					<input
+						type="file"
+						id="upload-button"
+						style={{ display: "none" }}
+						onChange={uploadAvatar}
+					/>
+					<SettingsTable
+						users={user.friends}
+						endpoint={"/friends/remove/"}
+						setEndpoints={setremovingEndpoints}
+						stagedList={toInput.friendsToAdd}
+						title={"Friends"}
+						onInputEvent={(e: User) =>
+							setToInput({
+								...toInput,
+								friendsToAdd: [...toInput.friendsToAdd, e],
+							})
+						}
+					>
+						<Text>Find Users to add as a friend</Text>
+					</SettingsTable>
+					<SettingsTable
+						users={user.blockedUsers}
+						endpoint={"/blocked/remove/"}
+						setEndpoints={setremovingEndpoints}
+						stagedList={toInput.blockedToAdd}
+						title={"Blocked"}
+						onInputEvent={(e: User) =>
+							setToInput({
+								...toInput,
+								blockedToAdd: [...toInput.blockedToAdd, e],
+							})
+						}
+					>
+						<Text>Find Users to block</Text>
+					</SettingsTable>
+					<SettingsTwoFA
+						setEndpoints={setEndpoints}
+						user={user}
+						setTwoFAvalid={setTwoFAvalid}
+					></SettingsTwoFA>
+				</MainContentWrapper>
+				<FooterWrapper>
+					{twoFAvalid === false ? (
+						<>
+							<Button disabled>
+								<Text>Save changes</Text>
+							</Button>
+						</>
+					) : (
+						<>
+							<Button onClick={uploadDataForm}>
+								<Text>Save changes</Text>
+							</Button>
+						</>
+					)}
+					<LinkButton to={-1}>
+						<Text>Back</Text>
+					</LinkButton>
+				</FooterWrapper>
 			</>
 		);
 	};

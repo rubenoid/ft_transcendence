@@ -69,7 +69,11 @@ export class ChatService {
 			relations: ["users"],
 		});
 
-		if (data.users.find((x) => x.id == userId) == undefined) {
+		if (
+			data.users.find((x) => x.id == userId) == undefined &&
+			data.isPublic == true &&
+			data.password == ""
+		) {
 			const user = await this.userService.getUserQueryOne({
 				where: { id: userId },
 			});

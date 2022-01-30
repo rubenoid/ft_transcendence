@@ -41,6 +41,6 @@ export const Box = styled.div<BoxProps>`
 	overflow: "scroll";
 `;
 
-export const MainContentWrapper = styled.div`
+export const DashBoardContentWrapper = styled.div`
 	width: 1000px;
 `;

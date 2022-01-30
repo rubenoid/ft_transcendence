@@ -9,13 +9,14 @@ import { Link } from "react-router-dom";
 import { User } from "../../Types/Types";
 import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { Text } from "../Utils/Text/Text";
-import { ChatData, toSend, roleLevel } from "./ChatSettings";
+import { roleLevel } from "./ChatSettings";
 import { SharedUserState } from "../../App/UserStatus";
+import { ChatData, ToSend } from "../../Types/Types";
 
 interface InputParams {
 	chatData: ChatData;
 	myRole: roleLevel;
-	setEndpoints: React.Dispatch<React.SetStateAction<toSend[]>>;
+	setEndpoints: React.Dispatch<React.SetStateAction<ToSend[]>>;
 	chatId: string;
 }
 
@@ -29,11 +30,13 @@ const UserList = (props: InputParams): JSX.Element => {
 					<Link to={`/profile/${mapUser.id}`}>
 						<Text>{mapUser.userName}</Text>
 					</Link>
-					{props.chatData.owner == mapUser.id
-						? "OWNER"
-						: props.chatData.admins.find((x) => x.id == mapUser.id)
-						? "ADMIN"
-						: ""}
+					{props.chatData.owner == mapUser.id ? (
+						<Text>Owner</Text>
+					) : props.chatData.admins.find((x) => x.id == mapUser.id) ? (
+						<Text>Admin</Text>
+					) : (
+						""
+					)}
 					{props.myRole != roleLevel.user && mapUser.id != user.id ? (
 						<UserRow>
 							{props.chatData.admins.find((x) => x.id != mapUser.id) ? (
@@ -81,7 +84,7 @@ const UserList = (props: InputParams): JSX.Element => {
 	};
 	return (
 		<UserWrapper>
-			<Text color="black">Users</Text>
+			<Text>Users</Text>
 			{listUsers()}
 		</UserWrapper>
 	);

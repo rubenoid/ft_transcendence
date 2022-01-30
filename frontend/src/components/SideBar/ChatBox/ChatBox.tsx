@@ -120,7 +120,7 @@ const ChatBox = (): JSX.Element => {
 					</TopContainer>
 					{passwordNeeded ? (
 						<>
-							<Text color="black">Enter Password</Text>
+							<Text>Enter Password</Text>
 							<TextInput
 								type="text"
 								value={password}
@@ -137,13 +137,7 @@ const ChatBox = (): JSX.Element => {
 							</Button>
 						</>
 					) : (
-						<ChatContainer>
-							{history.length ? (
-								history
-							) : (
-								<Text color="black">Send your first message !</Text>
-							)}
-						</ChatContainer>
+						<ChatContainer>{history.length ? history : ""}</ChatContainer>
 					)}
 					<InputContainer>
 						<TextInput

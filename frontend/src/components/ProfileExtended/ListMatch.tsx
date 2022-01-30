@@ -1,5 +1,5 @@
 import React from "react";
-import { detailedUser, Match } from "../../Types/Types";
+import { User, Match } from "../../Types/Types";
 import {
 	TableRow,
 	TableCell,
@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { Text } from "../Utils/Text/Text";
 
 interface InputParams {
-	user: detailedUser;
+	user: User;
 }
 
 const ListMatch = (props: InputParams): JSX.Element => {

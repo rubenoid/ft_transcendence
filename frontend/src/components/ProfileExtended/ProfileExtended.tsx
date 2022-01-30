@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { fetchData } from "../../API/API";
 import { User, Match } from "../../Types/Types";
-import { SettingsContainer } from "../Settings/SettingsElements";
+import { FooterWrapper, SettingsContainer } from "../Settings/SettingsElements";
 import {
 	Img,
 	ImgContainer,
 	TopContainer,
-	FriendsWrapper,
-	ProfileWrapper,
 	ProfileHeader,
 	Padding,
 	DetailsWrapper,
 } from "../SideBar/MiniProfile/MiniProfileElements";
+import { MainContentWrapper } from "../Utils/Containers/Containers";
 import { Link, useParams } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Header, HeaderTwo, Text } from "../Utils/Text/Text";
 import ListMatch from "./ListMatch";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
-
-interface detailedUser extends User {
-	matches: Match[];
-	status: string;
-}
 
 interface userStatus {
 	id: number;
@@ -29,16 +23,13 @@ interface userStatus {
 }
 
 const ProfileExtended = (): JSX.Element => {
-	const [user, setUser] = useState<detailedUser>(undefined);
+	const [user, setUser] = useState<User>(undefined);
 	const [isBlocked, setIsBlocked] = useState<number>(0);
 	const { profileId } = useParams();
 
 	useEffect(() => {
-		async function getUser(): Promise<detailedUser> {
-			const user: detailedUser | string = await fetchData(
-				`/user/get/${profileId}`,
-			);
-			console.log("USERTYPE", typeof user);
+		async function getUser(): Promise<User> {
+			const user: User | string = await fetchData(`/user/get/${profileId}`);
 			if (typeof user != "object") {
 				if (typeof user == "number") setIsBlocked(2);
 				else setIsBlocked(1);
@@ -87,7 +78,7 @@ const ProfileExtended = (): JSX.Element => {
 		});
 
 		return (
-			<ProfileWrapper>
+			<>
 				<ProfileHeader>
 					<ImgContainer>
 						<Img
@@ -104,42 +95,43 @@ const ProfileExtended = (): JSX.Element => {
 						</Padding>
 					</div>
 				</ProfileHeader>
-
-				<DetailsWrapper>
+				<MainContentWrapper>
+					<DetailsWrapper>
+						<TopContainer>
+							<Text fontSize="20px">Username</Text>
+							<Text fontSize="20px">{user.userName}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">FirstName</Text>
+							<Text fontSize="20px">{user.firstName}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">LastName</Text>
+							<Text fontSize="20px">{user.lastName}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">losses</Text>
+							<Text fontSize="20px">{user.losses}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">wins</Text>
+							<Text fontSize="20px">{user.wins}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">rating</Text>
+							<Text fontSize="20px">{user.rating}</Text>
+						</TopContainer>
+					</DetailsWrapper>
+					<HeaderTwo>Friends</HeaderTwo>
 					<TopContainer>
-						<Text fontSize="20px">Username</Text>
-						<Text fontSize="20px">{user.userName}</Text>
+						{user.friends.length ? listfriends : <Text>No friends</Text>}
 					</TopContainer>
+					<HeaderTwo>Matches</HeaderTwo>
 					<TopContainer>
-						<Text fontSize="20px">FirstName</Text>
-						<Text fontSize="20px">{user.firstName}</Text>
+						<ListMatch user={user}></ListMatch>
 					</TopContainer>
-					<TopContainer>
-						<Text fontSize="20px">LastName</Text>
-						<Text fontSize="20px">{user.lastName}</Text>
-					</TopContainer>
-					<TopContainer>
-						<Text fontSize="20px">losses</Text>
-						<Text fontSize="20px">{user.losses}</Text>
-					</TopContainer>
-					<TopContainer>
-						<Text fontSize="20px">wins</Text>
-						<Text fontSize="20px">{user.wins}</Text>
-					</TopContainer>
-					<TopContainer>
-						<Text fontSize="20px">rating</Text>
-						<Text fontSize="20px">{user.rating}</Text>
-					</TopContainer>
-				</DetailsWrapper>
-				<HeaderTwo>Friends</HeaderTwo>
-				<TopContainer>
-					{user.friends.length ? listfriends : <Text>No friends</Text>}
-				</TopContainer>
-				<HeaderTwo>Matches</HeaderTwo>
-				<TopContainer>
-					<ListMatch user={user}></ListMatch>
-				</TopContainer>
-			</ProfileWrapper>
+				</MainContentWrapper>
+			</>
 		);
 	};
 	return (
@@ -151,9 +143,11 @@ const ProfileExtended = (): JSX.Element => {
 				: user
 				? friendsData()
 				: "loading"}
-			<LinkButton to={-1}>
-				<Text>Back</Text>
-			</LinkButton>
+			<FooterWrapper>
+				<LinkButton to={-1}>
+					<Text>Back</Text>
+				</LinkButton>
+			</FooterWrapper>
 		</SettingsContainer>
 	);
 };

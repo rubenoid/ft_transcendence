@@ -41,4 +41,24 @@ export interface Channel {
 	admins: User[];
 }
 
-export type detailedUser = User;
+export interface ChatData {
+	id: number;
+	hasPassword: boolean;
+	isPublic: boolean;
+	name: string;
+	users: User[];
+	admins: User[];
+	bannedUsers: User[];
+	muted: MutedUser[];
+	owner: number;
+}
+
+export interface MutedUser {
+	userTargetId: number;
+	endDate: number;
+}
+
+export interface ToSend {
+	endpoint: string;
+	data: object;
+}

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const TextInput = styled.input`
+	color: white;
 	background: black;
 	width: 100%;
 	padding: 12px 10px;

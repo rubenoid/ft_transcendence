@@ -1,5 +1,8 @@
 import React from "react";
-import { DashBoardContainer, MainContentWrapper } from "./DashBoardElements";
+import {
+	DashBoardContainer,
+	DashBoardContentWrapper,
+} from "./DashBoardElements";
 import Pong from "../Pong/Pong";
 import { Route, Routes } from "react-router-dom";
 import SettingsForm from "../Settings/Settings";
@@ -10,7 +13,7 @@ import SideBar from "../SideBar/SideBar";
 export const DashBoard = (): JSX.Element => {
 	return (
 		<DashBoardContainer>
-			<MainContentWrapper>
+			<DashBoardContentWrapper>
 				<Routes>
 					<Route path="/" element={<p>Welcome!</p>} />
 					<Route path="chat/:chatId" element={<ChatSettings />} />
@@ -19,7 +22,7 @@ export const DashBoard = (): JSX.Element => {
 					<Route path="settings" element={<SettingsForm />} />
 					<Route path="game" element={<Pong />} />
 				</Routes>
-			</MainContentWrapper>
+			</DashBoardContentWrapper>
 			<SideBar />
 		</DashBoardContainer>
 	);

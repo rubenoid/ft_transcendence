@@ -14,9 +14,13 @@ export const ChannelCreateContainer = styled.div`
 export const ChannelCard = styled.div`
 	border: 1px solid white;
 	border-radius: 7px;
-	width: 330px;
+	width: 100%;
 	height: 40px;
 	padding: 5px;
 	display: flex;
 	justify-content: space-between;
+`;
+
+export const RadioInput = styled.input`
+	color: white;
 `;

@@ -1,22 +1,23 @@
 import React from "react";
 import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { Text } from "../Utils/Text/Text";
-import { ChatData, toSend, roleLevel, mutedUser } from "./ChatSettings";
+import { roleLevel } from "./ChatSettings";
 import { User } from "../../Types/Types";
 import { UserWrapper, UserRow, UserRowContainer } from "./ChatSettingsElements";
+import { ChatData, MutedUser, ToSend } from "../../Types/Types";
 
 interface InputParams {
 	chatData: ChatData;
 	myRole: roleLevel;
-	setEndpoints: React.Dispatch<React.SetStateAction<toSend[]>>;
-	mutedUsers: mutedUser[];
+	setEndpoints: React.Dispatch<React.SetStateAction<ToSend[]>>;
+	mutedUsers: MutedUser[];
 	bannedUsers: User[];
 	chatId: string;
 }
 
 const PunishedList = (props: InputParams): JSX.Element => {
 	const listMutedUsers = (): JSX.Element[] => {
-		return props.mutedUsers.map((user: mutedUser, key: number) => {
+		return props.mutedUsers.map((user: MutedUser, key: number) => {
 			const realUser = props.chatData.users.find(
 				(x) => x.id == user.userTargetId,
 			);

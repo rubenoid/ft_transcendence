@@ -17,34 +17,32 @@ interface userStatus {
 	status: string;
 }
 
-let users: User[] = [];
-
 const UserView = (): JSX.Element => {
-	const [userlist, setuserlist] = useState(undefined);
+	const [users, setUsers] = useState<User[]>([]);
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
-			const foundUsers: User[] = await fetchData("/user/all");
-			const allStatus: userStatus[] = await fetchData("/user/getAllStatus");
+			let allStatus: userStatus[];
+			const allUsers: User[] = await fetchData("/user/all");
+			const status: userStatus[] = await fetchData("/user/getAllStatus");
 			for (let i = 0; i < allStatus.length; i++) {
 				const e = allStatus[i];
-				const found = foundUsers.find((x) => x.id == e.id);
-				if (found) {
-					found.status = e.status;
+				const foundUser = allUsers.find((x) => x.id == e.id);
+				if (foundUser) {
+					foundUser.status = e.status;
 				}
 			}
-			users = foundUsers;
-			setListUsers();
+			setUsers(allUsers);
 		}
 		getUsers();
-	}, [fetchData]);
+	}, []);
 
 	useEffect(() => {
 		socket.on("userUpdate", (data: userStatus) => {
+			if (!users) return;
 			const found = users.find((x) => x.id == data.id);
 			if (found) {
 				found.status = data.status;
-				setListUsers();
 			}
 		});
 	}, []);
@@ -70,7 +68,6 @@ const UserView = (): JSX.Element => {
 				</TableRow>,
 			);
 		}
-		setuserlist(data);
 		return data;
 	}
 
@@ -86,7 +83,7 @@ const UserView = (): JSX.Element => {
 						<TableHeaderCell>Status</TableHeaderCell>
 					</TableRow>
 				</TableHeader>
-				<TableBody>{userlist ? userlist : null}</TableBody>
+				<TableBody>{users && users.length ? setListUsers() : null}</TableBody>
 			</Table>
 		</div>
 	);

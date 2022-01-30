@@ -9,3 +9,8 @@ export const WidgetContainer = styled.div`
 	border: 5px white solid;
 	border-radius: 5px;
 `;
+
+export const MainContentWrapper = styled.div`
+	height: 80vh;
+	overflow-y: auto;
+`;
