@@ -14,6 +14,7 @@ import { FaWindowMinimize } from "react-icons/fa";
 import MinimizedChatBox from "./MinimizedChatBox";
 import OpenChatContainer from "./OpenChatContainer";
 
+
 const ChatBox = (): JSX.Element => {
 	const [msgHistory, setMsgHistory] = useState<Message[]>([]);
 	const [passwordNeeded, setPasswordNeeded] = useState<boolean>(false);

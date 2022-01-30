@@ -24,6 +24,9 @@ import { Text } from "../../Utils/Text/Text";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { ChatContainer } from "./ChatBoxElements";
+import { IconContainer } from "../../Utils/IconContainer";
+import { FiSettings as SettingsIcon } from "react-icons/fi";
+import { IoMdCloseCircle as CloseIcon } from "react-icons/io";
 import colormap from "colormap";
 
 interface InputParams {
@@ -96,12 +99,16 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 					<TopText>{outputChatName(channel, user, channel.name)}</TopText>
 					<TopButtonsContainer>
 						<Link to={`/chat/${channel.id}`}>
-							<TopText>⚙</TopText>
+							<SettingsIcon />
 						</Link>
 						<TopText onClick={() => props.setMinimized(true)}>
 							<FaWindowMinimize />
 						</TopText>
-						<TopText onClick={() => setChannel(undefined)}>✕</TopText>
+						<TopText onClick={() => setChannel(undefined)}>
+							<IconContainer color="#ff3a3a" hoverColor="#cc3a3a">
+								<CloseIcon size={30} />
+							</IconContainer>
+						</TopText>
 					</TopButtonsContainer>
 				</TopContainer>
 				{props.passwordNeeded ? (

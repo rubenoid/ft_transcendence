@@ -13,6 +13,8 @@ import { LinkButton } from "../../Utils/Buttons/Button/LinkButton";
 import { RoundButton } from "../../Utils/Buttons/Round/RoundButton";
 import { Text } from "../../Utils/Text/Text";
 import { DivSpacing } from "./MiniProfileElements";
+import { IconContainer } from "../../Utils/IconContainer";
+import { AiOutlineLogout as LogoutIcon } from "react-icons/ai";
 
 function deleteCookie(
 	name: string,
@@ -69,7 +71,9 @@ const MiniProfile = (): JSX.Element => {
 					</DivSpacing>
 					<DivSpacing text-align="right">
 						<RoundButton onClick={logout}>
-							<Text fontSize="25px">🛫</Text>
+							<IconContainer color="#ff3a3a" hoverColor="#cc3a3a">
+								<LogoutIcon size={30} />
+							</IconContainer>
 						</RoundButton>
 					</DivSpacing>
 				</ProfileHeader>
