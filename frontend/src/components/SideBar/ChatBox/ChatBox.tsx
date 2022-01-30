@@ -116,7 +116,7 @@ const ChatBox = (): JSX.Element => {
 						<TopText>{outputChatName(channel, user, channel.name)}</TopText>
 						<TopButtonsContainer>
 							<Link to={`/chat/${channel.id}`}>
-							<IconContainer color="white">
+							<IconContainer color="white" hoverColor="#3f3fff">
 									<SettingsIcon />
 								</IconContainer>
 							</Link>

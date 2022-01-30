@@ -10,6 +10,6 @@ export const IconContainer = styled.div<IconProps>`
 	color: ${(props: IconProps) => (props.color ? props.color : "black")};
 	:hover {
 		color: ${(props: IconProps) =>
-			props.hoverColor ? props.hoverColor : "#04aa6d"};
+			props.hoverColor ? props.hoverColor : "#3f3fff"};
 	}
 `;
