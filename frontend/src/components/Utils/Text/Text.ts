@@ -18,3 +18,21 @@ export const Text = styled.p<TextProps>`
 		font-size: 18px;
 	}
 `;
+
+export const Header = styled.h1<TextProps>`
+	color: white;
+	font-size: x-large;
+	font-style: bold;
+	bottom: 2rem;
+	padding: 0.5rem;
+	font-family: sans-serif;
+`;
+
+export const HeaderTwo = styled.h1<TextProps>`
+	color: white;
+	font-size: 24px;
+	font-style: bold;
+	bottom: 2rem;
+	padding: 0.5rem;
+	font-family: sans-serif;
+`;

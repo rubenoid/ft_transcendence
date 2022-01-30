@@ -35,9 +35,14 @@ export const postData = async <T>(
 	data: object,
 	extraHeaders?: object,
 ): Promise<T> => {
-	const headersToSend = {
-		headers: Object.assign(headers.headers, extraHeaders),
-	};
+	let headersToSend: object;
+
+	if (extraHeaders) {
+		headersToSend = {
+			headers: { ...headers.headers, extraHeaders },
+		};
+	} else headersToSend = headers;
+	console.log("extraHeaders", extraHeaders, "headersToSend", headersToSend);
 
 	return await instance
 		.post(url, data, headersToSend)

@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
 export const TextInput = styled.input`
-	background: rgba(0, 255, 0, 0.1);
+	color: white;
+	background: black;
 	width: 100%;
 	padding: 12px 10px;
 	border: 1px solid #ccc;
@@ -17,7 +18,7 @@ export const TextInput = styled.input`
 
 	&:focus {
 		color: #fff;
-		border: 1px solid #04aa6d;
+		border: 1px solid #3f3fff;
 		box-shadow: none;
 	}
 `;

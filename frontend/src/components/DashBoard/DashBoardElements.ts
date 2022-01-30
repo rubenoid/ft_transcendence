@@ -3,16 +3,10 @@ import styled from "styled-components";
 export const DashBoardContainer = styled.div`
 	height: 100vh;
 	width: 100%;
-	display: grid;
-	grid-template-columns: 0.5fr 2fr 0.5fr;
-	grid-template-areas:
-		"profile game chat"
-		"info1 game chat"
-		"info2 game chat";
-	grid-gap: 10px;
-	background-color: #8ec5fc;
-	background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%);
+	display: flex;
+	background-color: black;
 	padding: 10px 0;
+	justify-content: space-evenly;
 
 	@media screen and (max-width: 1300px) {
 		grid-template-columns: 1fr 1.5fr 1.5fr;
@@ -39,10 +33,14 @@ type BoxProps = {
 export const Box = styled.div<BoxProps>`
 	width: 100%;
 	height: 100%;
-	background-color: ${(props: BoxProps) =>
-		props.bgColor ? props.bgColor : "transparent"};
+	background-color: black;
+	border: 5px solid;
 	border-radius: 5px;
 	grid-area: ${(props: BoxProps) => props.gridArea};
 	place-self: ${(props: BoxProps) => props.alignSelf};
 	overflow: "scroll";
+`;
+
+export const DashBoardContentWrapper = styled.div`
+	width: 1000px;
 `;

@@ -2,7 +2,8 @@ import styled from "styled-components";
 
 export const UserWrapper = styled.div`
 	border-radius: 7px;
-	background-color: #af2222;
+	background-color: black;
+	border: 5px solid white;
 	padding: 20px;
 	width: 500px;
 `;
@@ -19,7 +20,7 @@ export const UserRow = styled.div`
 export const RowButton = styled.button`
 	padding: 5px;
 	margin: 0 5px;
-	background-color: #04aa6d;
+	background-color: #3f3fff;
 	color: white;
 	border: none;
 	border-radius: 4px;

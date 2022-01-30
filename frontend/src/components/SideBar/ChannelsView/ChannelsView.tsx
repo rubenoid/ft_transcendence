@@ -9,12 +9,12 @@ import {
 	ChannelTitleContainer,
 	ChannelCreateContainer,
 	ChannelCard,
+	RadioInput,
 } from "./ChannelsViewElements";
 import { TextInput } from "../../Utils/TextInput/TextInput";
-import { SearchResultContainer } from "../../AddFriend/AddFriendElements";
-import { Form } from "../../ConnectionForm/ConnectionFormElements";
 import { SharedUserState } from "../../../App/UserStatus";
 import AddUserInput from "../../AddUserInput/AddUserInput";
+import { Label } from "../../ConnectionForm/ConnectionFormElements";
 
 class CreateChannelsForm {
 	name = "";
@@ -70,7 +70,7 @@ const ChannelsView = (): JSX.Element => {
 						openChat(channel.id);
 					}}
 				>
-					<Text color="black" fontSize="20px">
+					<Text fontSize="20px">
 						{channel.isPublic
 							? channel.name
 							: outputChatName(channel, user, channel.name)}
@@ -106,11 +106,7 @@ const ChannelsView = (): JSX.Element => {
 
 	const listUsersAdded = channelForm.users.map(
 		(user: User, key: number): JSX.Element => {
-			return (
-				<Text key={key} color="black">
-					{user.userName}
-				</Text>
-			);
+			return <Text key={key}>{user.userName}</Text>;
 		},
 	);
 
@@ -118,38 +114,35 @@ const ChannelsView = (): JSX.Element => {
 		return (
 			<>
 				<ChannelCreateContainer>
-					<Text color="black">Name of group</Text>
+					<Text>Name of group</Text>
 					<TextInput
 						type="text"
 						onChange={(e) => {
 							channelForm.name = e.target.value;
 						}}
 					/>
-					<Text color="black">Privacy</Text>
-					<input
+					<Text>Privacy</Text>
+					<RadioInput
 						type="radio"
 						name="privacy"
 						value={"0"}
 						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
 					/>
-					Public
-					<br />
-					<input
+					<Label>Public</Label>
+					<RadioInput
 						type="radio"
 						name="privacy"
 						value={"1"}
 						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
 					/>
-					Private
-					<br />
-					<input
+					<Label>Private</Label>
+					<RadioInput
 						type="radio"
 						name="privacy"
 						value={"2"}
 						onChange={(e) => updatePrivacy(parseInt(e.target.value))}
 					/>
-					Protected
-					<br />
+					<Label>Protected</Label>
 					{channelForm && channelForm.isPublic == 2 ? (
 						<TextInput
 							type="text"
@@ -159,7 +152,7 @@ const ChannelsView = (): JSX.Element => {
 					) : (
 						""
 					)}
-					<Text color="black">Search for users to add</Text>
+					<Text>Search for users to add</Text>
 					<AddUserInput
 						placeholder="Type to search..."
 						removeOnEnter={true}
@@ -172,7 +165,7 @@ const ChannelsView = (): JSX.Element => {
 					></AddUserInput>
 					{channelForm.users ? (
 						<div>
-							<Text color="black">Users to add</Text>
+							<Text>Users to add</Text>
 							{listUsersAdded}
 						</div>
 					) : (

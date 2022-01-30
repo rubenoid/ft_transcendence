@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const FriendsCardContainer = styled.div`
-	background-color: white;
+	border: 1px solid white;
 	border-radius: 7px;
 	height: 80px;
 	width: 100%;
@@ -10,7 +10,7 @@ export const FriendsCardContainer = styled.div`
 `;
 export const FriendsTitleContainer = styled.div`
 	display: flex;
-	width: 250px;
+	width: 100%;
 	height: 80px;
 `;
 
@@ -34,7 +34,6 @@ export const FriendsNameContainer = styled.div`
 export const FriendsCardButton = styled.button`
 	height: 40px;
 	width: 80px;
-	border-radius: 0 7px 0 0;
 	border: none;
 `;
 

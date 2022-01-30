@@ -70,13 +70,6 @@ export class AuthController {
 	}
 
 	@Public()
-	@UseGuards(RegisteringGuard)
-	@Get("getQr")
-	async return2fa(@Req() req: GuardedRequest): Promise<string> {
-		return await this.authService.create2fadiv(req.user.id);
-	}
-
-	@Public()
 	@Get("getQrRetSecret")
 	async getQrRetSecret(): Promise<object> {
 		return await this.authService.getQrRetSecret();
@@ -156,6 +149,13 @@ export class AuthController {
 		user.twoFactorvalid = false;
 		this.userService.saveUser(user);
 	}
+
+	// @Public()
+	// @UseGuards(RegisteringGuard)
+	// @Get("getQr")
+	// async return2fa(@Req() req: GuardedRequest): Promise<string> {
+	// 	return await this.authService.create2fadiv(req.user.id);
+	// }
 
 	// @Public()
 	// @Get("protect")

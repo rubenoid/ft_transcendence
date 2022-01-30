@@ -8,9 +8,11 @@ export const FormContainer = styled.div`
 	height: 100%;
 	width: 100%;
 	max-width: 400px;
-	background-color: #444;
+	border: 5px solid white;
 	border-radius: 10px;
 	padding: 10px;
+	margin-top: 20%;
+	margin-left: calc(50% - 200px);
 `;
 
 export const Form = styled.form`
@@ -20,7 +22,7 @@ export const Form = styled.form`
 
 export const Button = styled.button`
 	margin: 10px;
-	background-color: #04aa6d;
+	background-color: #3f3fff;
 	color: white;
 	padding: 12px 20px;
 	border: none;
@@ -45,7 +47,7 @@ export const Btn = styled(LinkR)`
 	background-color: #444;
 	color: white;
 	border-radius: 50px;
-	border: 2px solid #04aa6d;
+	border: 2px solid #3f3fff;
 	cursor: pointer;
 
 	&:hover {

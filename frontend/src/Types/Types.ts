@@ -8,6 +8,13 @@ export type User = {
 	losses: number;
 	rating: number;
 	friends: User[];
+
+	twoFactorSecret: string;
+	blockedUsers: User[];
+	blockedBy: User[];
+	initial2FAEnabled: boolean;
+	matches: Match[];
+	status: string;
 };
 
 export type Match = {
@@ -34,9 +41,24 @@ export interface Channel {
 	admins: User[];
 }
 
-export interface detailedUser extends User {
-	twoFactorSecret: string;
-	blockedUsers: User[];
-	blockedBy: User[];
-	initial2FAEnabled: boolean;
+export interface ChatData {
+	id: number;
+	hasPassword: boolean;
+	isPublic: boolean;
+	name: string;
+	users: User[];
+	admins: User[];
+	bannedUsers: User[];
+	muted: MutedUser[];
+	owner: number;
+}
+
+export interface MutedUser {
+	userTargetId: number;
+	endDate: number;
+}
+
+export interface ToSend {
+	endpoint: string;
+	data: object;
 }

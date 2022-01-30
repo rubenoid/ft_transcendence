@@ -7,7 +7,7 @@ type ButtonProps = {
 export const Button = styled.button<ButtonProps>`
 	margin: 10px;
 	background-color: ${(props: ButtonProps) =>
-		props.color ? props.color : "#04aa6d"};
+		props.color ? props.color : "#3f3fff"};
 	color: ${(props: ButtonProps) => (props.color ? props.color : "#fff")};
 	padding: 12px 20px;
 	border: none;
@@ -23,7 +23,7 @@ export const RowButton = styled.button<ButtonProps>`
 	padding: 5px;
 	margin: 0 5px;
 	background-color: ${(props: ButtonProps) =>
-		props.color ? props.color : "#04aa6d"};
+		props.color ? props.color : "#3f3fff"};
 	color: ${(props: ButtonProps) => (props.color ? props.color : "#fff")};
 	border: none;
 	border-radius: 4px;
