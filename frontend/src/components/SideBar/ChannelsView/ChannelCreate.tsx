@@ -4,14 +4,8 @@ import { fetchData, postData } from "../../../API/API";
 import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
-import {
-	ChannelTitleContainer,
-	ChannelCreateContainer,
-	ChannelCard,
-	RadioInput,
-} from "./ChannelsViewElements";
+import { ChannelCreateContainer, RadioInput } from "./ChannelsViewElements";
 import { TextInput } from "../../Utils/TextInput/TextInput";
-import { SharedUserState } from "../../../App/UserStatus";
 import AddUserInput from "../../AddUserInput/AddUserInput";
 import { Label } from "../../Utils/Label/Label";
 

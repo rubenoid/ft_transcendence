@@ -10,6 +10,7 @@ import { useBetween } from "use-between";
 import { User } from "../../Types/Types";
 import MiniProfile from "./MiniProfile/MiniProfile";
 import { TopContainer } from "./MiniProfile/MiniProfileElements";
+import { SideBarContent } from "./ChatBox/ChatBoxElements";
 
 const ChatState = (): {
 	channel: Channel;
@@ -40,37 +41,41 @@ const SideBar = (): JSX.Element => {
 
 	return (
 		<SideBarContainer>
-			<MiniProfile />
-			<Hr />
-			<TopContainer>
-				<Button
-					onClick={() => {
-						setView(0);
-					}}
-				>
-					Users
-				</Button>
-				<Button
-					onClick={() => {
-						setView(1);
-					}}
-				>
-					Friends
-				</Button>
-				<Button
-					onClick={() => {
-						setView(2);
-					}}
-				>
-					Channels
-				</Button>
-			</TopContainer>
-			<SideViewWrapper>
-				{view == 0 ? <UserView /> : ""}
-				{view == 1 ? <FriendsView /> : ""}
-				{view == 2 ? <ChannelsView /> : ""}
-				<ChatBox />
-			</SideViewWrapper>
+			<div style={{ overflowY: "auto" }}>
+				<MiniProfile />
+				<Hr />
+				<TopContainer>
+					<Button
+						onClick={() => {
+							setView(0);
+						}}
+					>
+						Users
+					</Button>
+					<Button
+						onClick={() => {
+							setView(1);
+						}}
+					>
+						Friends
+					</Button>
+					<Button
+						onClick={() => {
+							setView(2);
+						}}
+					>
+						Channels
+					</Button>
+				</TopContainer>
+				<SideBarContent>
+					<SideViewWrapper>
+						{view == 0 ? <UserView /> : ""}
+						{view == 1 ? <FriendsView /> : ""}
+						{view == 2 ? <ChannelsView /> : ""}
+					</SideViewWrapper>
+				</SideBarContent>
+			</div>
+			<ChatBox />
 		</SideBarContainer>
 	);
 };

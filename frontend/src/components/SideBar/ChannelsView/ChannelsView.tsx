@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Text } from "../../Utils/Text/Text";
-import { fetchData, postData } from "../../../API/API";
+import { fetchData } from "../../../API/API";
 import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
 import { SharedChatState, outputChatName } from "../SideBar";
-import {
-	ChannelTitleContainer,
-	ChannelCreateContainer,
-	ChannelCard,
-	RadioInput,
-} from "./ChannelsViewElements";
-import { TextInput } from "../../Utils/TextInput/TextInput";
+import { ChannelTitleContainer, ChannelCard } from "./ChannelsViewElements";
 import { SharedUserState } from "../../../App/UserStatus";
-import AddUserInput from "../../AddUserInput/AddUserInput";
 import CreateGroupForm from "./ChannelCreate";
 
 const ChannelsView = (): JSX.Element => {

@@ -29,10 +29,8 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 	async function createNewChat(id: number): Promise<void> {
 		console.log("createNewChattt");
 		const chatId: number = await postData("chat/createNewChat", { ids: [id] });
-		console.log(chatId);
 
 		const chatData: Channel = await fetchData(`chat/get/${chatId}`);
-		console.log("cheatData: ", chatData);
 		setChannel(chatData);
 	}
 
