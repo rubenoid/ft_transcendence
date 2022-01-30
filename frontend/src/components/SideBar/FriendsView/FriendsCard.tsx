@@ -14,6 +14,9 @@ import { SharedChatState } from "../SideBar";
 import { Item } from "../../Utils/List/List";
 import { useNavigate } from "react-router-dom";
 import { Text } from "../../Utils/Text/Text";
+import { IconContainer } from "../../Utils/IconContainer";
+import { TiMessages as ChatIcon } from "react-icons/ti";
+import { CgProfile as ProfileIcon } from "react-icons/cg";
 
 interface InputParams {
 	friends: User[];
@@ -56,7 +59,7 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 									goToProfile(user.id);
 								}}
 							>
-								👤
+							<IconContainer><ProfileIcon size={25} /></IconContainer>
 							</FriendsCardButton>
 						</div>
 						<div>
@@ -65,7 +68,7 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 									createNewChat(user.id);
 								}}
 							>
-								✉
+								<IconContainer><ChatIcon size={25} /></IconContainer>
 							</FriendsCardButton>
 						</div>
 					</FriendsButtonContainer>
