@@ -59,7 +59,9 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 									goToProfile(user.id);
 								}}
 							>
-							<IconContainer><ProfileIcon size={25} /></IconContainer>
+								<IconContainer>
+									<ProfileIcon size={25} />
+								</IconContainer>
 							</FriendsCardButton>
 						</div>
 						<div>
@@ -68,7 +70,9 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 									createNewChat(user.id);
 								}}
 							>
-								<IconContainer><ChatIcon size={25} /></IconContainer>
+								<IconContainer>
+									<ChatIcon size={25} />
+								</IconContainer>
 							</FriendsCardButton>
 						</div>
 					</FriendsButtonContainer>
