@@ -9,6 +9,19 @@ const socketOptions = {
 
 const socket: Socket = io("http://localhost:5000", socketOptions);
 
+export const updateSocketHeaders = (): Promise<void> => {
+	const tmp: any = socket;
+	if (socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") || socket.connected)
+		return;
+	tmp.disconnect();
+	socketOptions.extraHeaders.Authorization = Cookies.get("AuthToken");
+	tmp.io.extraHeaders = socketOptions.extraHeaders;
+	tmp.connect();
+	// tmp.disconnect().connect();
+	// socket.socket.connect();
+	return null;
+};
+
 socket.on("connect", () => {
 	socket.emit("userConnect");
 });

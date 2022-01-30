@@ -4,7 +4,8 @@ import { SharedUserState } from "./UserStatus";
 import { SharedConnectionStatus } from "./ConnectionStatus";
 import { Navigate } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { fetchData, updateHeaders } from "../API/API";
+import { fetchData, updateHttpHeaders } from "../API/API";
+import { updateSocketHeaders } from "../API/Socket";
 import { User } from "../Types/Types";
 import RegistrationForm from "../components/ConnectionForm/RegistrationForm";
 import AdminView from "../components/AdminView/AdminView";
@@ -17,7 +18,8 @@ const App = (): JSX.Element => {
 	const { isConnected, setIsConnected } = SharedConnectionStatus();
 
 	useEffect(() => {
-		updateHeaders();
+		updateHttpHeaders();
+		updateSocketHeaders();
 		fetchData("/user/me")
 			.then((user: User) => {
 				setUser(user);
