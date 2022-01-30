@@ -2,7 +2,6 @@ import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
 import { Repository, FindOneOptions, Like } from "typeorm";
 import { writeFile } from "fs";
-import { MatchEntity } from "src/match/match.entity";
 import { GuardedSocket } from "src/overloaded";
 import { Server } from "socket.io";
 import { ChatEntity } from "src/chat/chat.entity";
@@ -104,7 +103,6 @@ export class UserService {
 		newUser.twoFactorvalid = false;
 		newUser.logedin = false;
 		await this.UserRepository.save(newUser);
-		console.log("end add w details");
 	}
 
 	async getUsers(): Promise<UserEntity[]> {
@@ -158,7 +156,6 @@ export class UserService {
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
 
 		await this.UserRepository.save(user);
-		console.log("finished update with id:", id, "userName", userName);
 		return user.id;
 	}
 	async getUserByName(username: string): Promise<UserEntity> {
@@ -194,12 +191,7 @@ export class UserService {
 		type: string,
 	): Promise<void> {
 		if (client.user) {
-			const data = userStatus.get(client.user.id);
-
-			console.log("Data of client" + client.user.id + " " + data);
-
 			userStatus.set(client.user.id, { status: type, client: client });
-
 			server.emit("userUpdate", { id: client.user.id, status: type });
 		}
 	}

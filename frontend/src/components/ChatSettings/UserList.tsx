@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
 	UserWrapper,
 	UserRow,
-	RowButton,
 	UserRowContainer,
 	StyledName,
 } from "./ChatSettingsElements";

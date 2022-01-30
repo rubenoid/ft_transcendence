@@ -4,7 +4,7 @@ module.exports = {
 	  project: 'tsconfig.json',
 	  sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint/eslint-plugin', 'react', "react-hooks"],
+	plugins: ['@typescript-eslint/eslint-plugin', 'react', "react-hooks", "unused-imports"],
 	extends: [
 	  'plugin:@typescript-eslint/recommended',
 	  'plugin:prettier/recommended',
@@ -18,6 +18,7 @@ module.exports = {
 	},
 	ignorePatterns: ['.eslintrc.js'],
 	rules: {
+		"unused-imports/no-unused-imports": "error",
 		"camelcase": "error",
 		"@typescript-eslint/no-unused-vars": "off",
 		'@typescript-eslint/interface-name-prefix': 'off',

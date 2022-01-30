@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Text } from "../../Utils/Text/Text";
 import { fetchData, postData } from "../../../API/API";
-import { List, Item } from "../../Utils/List/List";
 import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
 import { ChannelCreateContainer, RadioInput } from "./ChannelsViewElements";

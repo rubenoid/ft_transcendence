@@ -26,7 +26,7 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 		})
 		.catch((error) => {
 			console.log(error);
-			throw "Error or smth";
+			throw "Error";
 		});
 };
 
@@ -42,8 +42,6 @@ export const postData = async <T>(
 			headers: { ...headers.headers, extraHeaders },
 		};
 	} else headersToSend = headers;
-	console.log("extraHeaders", extraHeaders, "headersToSend", headersToSend);
-
 	return await instance
 		.post(url, data, headersToSend)
 		.then((response) => {

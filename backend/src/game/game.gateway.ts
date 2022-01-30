@@ -3,7 +3,7 @@ import {
 	WebSocketGateway,
 	WebSocketServer,
 } from "@nestjs/websockets";
-import { Logger, Req, UseGuards } from "@nestjs/common";
+import { Logger, UseGuards } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { GameService } from "./game.service";
 import { GuardedSocket } from "src/overloaded";

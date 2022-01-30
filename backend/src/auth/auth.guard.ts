@@ -5,7 +5,7 @@ import {
 	UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Response, Request } from "express";
+import { Request } from "express";
 
 @Injectable()
 export class localAuthGaurd implements CanActivate {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "../../Utils/Text/Text";
-import { fetchData, postData } from "../../../API/API";
+import { fetchData } from "../../../API/API";
 import { Item } from "../../Utils/List/List";
 import { User } from "../../../Types/Types";
 import { FriendsViewContainer } from "./FriendsViewElements";

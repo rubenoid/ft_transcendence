@@ -1,8 +1,6 @@
 import React from "react";
 import { MinimizedContainer, TopText } from "./ChatBoxElements";
-import { Header } from "../../Utils/Text/Text";
 import { FaWindowMinimize } from "react-icons/fa";
-import { Text } from "../../Utils/Text/Text";
 
 interface InputParams {
 	chatName: string;

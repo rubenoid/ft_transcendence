@@ -12,7 +12,6 @@ import { Text, Header } from "../Utils/Text/Text";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 import AddUserInput from "../AddUserInput/AddUserInput";
-import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { UserWrapper, UserRowContainer } from "./ChatSettingsElements";
 import { SharedUserState } from "../../App/UserStatus";
 import UserList from "./UserList";

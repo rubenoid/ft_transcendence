@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
 	PongContainer,
-	PongImg,
 	Button,
 	ButtonContainer,
 	PongCanvas,
@@ -12,7 +11,6 @@ import {
 	FinishedContainer,
 } from "./PongElements";
 
-import PongImgUrl from "../../../public/pong.png";
 import { fetchData } from "../../API/API";
 import { Text } from "../Utils/Text/Text";
 import socket from "../../API/Socket";
@@ -161,31 +159,24 @@ const Pong = (): JSX.Element => {
 
 		socket.on("gameInit", (data: { decor: Line[]; players: number[] }) => {
 			renderer.decor = data.decor;
-			console.log("going to get my players");
 			fetchData(`/user/get/${data.players[0]}`)
 				.then((player1: User) => {
-					console.log("got player 1", player1);
 					fetchData(`/user/get/${data.players[1]}`).then((player2: User) => {
-						console.log("got player 2");
 						setPlayers([player1, player2]);
 					});
 				})
 				.catch((err) => {
-					console.log("ERRROROROOR");
+					console.log(err);
 				});
 		});
 
 		socket.on("startMatch", (gameId: string) => {
-			console.log("STARTING MATCH");
 			const history = window.history;
-
 			history.pushState(null, "", `/game/${gameId}`);
 			setDisplay(GameStatus.ingame);
-			console.log("startMatch finished funct MATCH");
 		});
 
 		socket.on("gameFinished", () => {
-			console.log("game finished!");
 			setDisplay(GameStatus.finished);
 			setQueue(false);
 		});
@@ -201,12 +192,10 @@ const Pong = (): JSX.Element => {
 	}, []);
 
 	useEffect(() => {
-		console.log("THING CHANGE", gameId);
 		async function loadGame(): Promise<void> {
 			const data: fetchedGameData = await fetchData(
 				`/game/getDetails/${gameId}`,
 			);
-			console.log(`/game/getDetails/${gameId}`, data);
 			if (data === undefined) {
 				setPlayers([]);
 				setScores([0, 0]);
@@ -224,7 +213,6 @@ const Pong = (): JSX.Element => {
 			setScores(data.scores);
 			if (!data.running) setDisplay(GameStatus.finished);
 			else {
-				console.log("Starting to spectateGame");
 				socket.emit("joinGame", gameId);
 				setDisplay(GameStatus.ingame);
 			}
@@ -311,9 +299,5 @@ const Pong = (): JSX.Element => {
 		</>
 	);
 };
-
-// import React from 'react';
-// const CanvasContext = React.createContext(null);
-// export default CanvasContext;
 
 export default Pong;

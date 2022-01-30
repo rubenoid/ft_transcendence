@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { fetchData, postData } from "../../API/API";
-import { Button } from "../Utils/Buttons/Button/Button";
 import { Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { Label } from "../Utils/Label/Label";
@@ -32,11 +30,6 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 			setInitial2FAEnabled(true);
 			setIsChecked(true);
 		}
-		console.log(
-			"Checking start, initial2FAEnabled",
-			initial2FAEnabled,
-			props.user,
-		);
 	}
 
 	useEffect(() => {
