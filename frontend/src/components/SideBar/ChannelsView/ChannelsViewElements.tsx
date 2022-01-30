@@ -19,6 +19,10 @@ export const ChannelCard = styled.div`
 	padding: 5px;
 	display: flex;
 	justify-content: space-between;
+	cursor: pointer;
+	:hover {
+		background-color: #3f3fff;
+	}
 `;
 
 export const RadioInput = styled.input`
