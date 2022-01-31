@@ -12,6 +12,7 @@ import { ChatModule } from "./chat/chat.module";
 import { MatchModule } from "./match/match.module";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./auth/jwt.guard";
+import { AchievementsModule } from "./achievements/achievements.module";
 
 @Module({
 	imports: [
@@ -23,6 +24,7 @@ import { JwtAuthGuard } from "./auth/jwt.guard";
 		AuthModule,
 		ChatModule,
 		MatchModule,
+		AchievementsModule,
 	],
 	controllers: [AppController, DatabaseController],
 	providers: [
