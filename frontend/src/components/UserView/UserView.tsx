@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { User } from "../../../Types/Types";
-import socket from "../../../API/Socket";
+import { User } from "../../Types/Types";
+import socket from "../../API/Socket";
 import {
 	Table,
 	TableBody,
@@ -8,8 +8,9 @@ import {
 	TableHeader,
 	TableHeaderCell,
 	TableRow,
-} from "../../Utils/Table/Table";
-import { Text } from "../../Utils/Text/Text";
+} from "../Utils/Table/Table";
+import { Text } from "../Utils/Text/Text";
+import { Link } from "react-router-dom";
 import { getAllUsers, userStatus } from "./getUsers";
 
 const UserView = (): JSX.Element => {
@@ -43,7 +44,9 @@ const UserView = (): JSX.Element => {
 			rows.push(
 				<TableRow key={i}>
 					<TableCell>
-						<Text fontSize="10">{user.userName}</Text>
+						<Link to={`/profile/${user.id}`}>
+							<Text hoverColor="#3f3fff">{user.userName}</Text>
+						</Link>
 					</TableCell>
 					<TableCell>
 						<Text fontSize="10">{user.wins}</Text>

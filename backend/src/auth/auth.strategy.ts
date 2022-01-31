@@ -34,7 +34,7 @@ export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {
 		if (!user) {
 			await this.userService.addwithDetails(
 				result.data.id,
-				result.data.login,
+				"",
 				result.data.first_name,
 				result.data.last_name,
 				false,
