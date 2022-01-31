@@ -93,7 +93,7 @@ export class UserController {
 			user.firstName,
 			user.lastName,
 		);
-		if (file) await this.userService.saveAvatar(req.user.id, file);
+		if (file && file.mimetype.startsWith("image")) await this.userService.saveAvatar(req.user.id, file);
 		return 0;
 	}
 
