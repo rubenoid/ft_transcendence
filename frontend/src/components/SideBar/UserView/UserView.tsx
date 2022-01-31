@@ -19,56 +19,64 @@ interface userStatus {
 
 const UserView = (): JSX.Element => {
 	const [users, setUsers] = useState<User[]>([]);
+	const [usersStatus, setUsersStatus] = useState<userStatus[]>([]);
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
-			let allStatus: userStatus[];
 			const allUsers: User[] = await fetchData("/user/all");
-			const status: userStatus[] = await fetchData("/user/getAllStatus");
-			for (let i = 0; i < allStatus.length; i++) {
-				const e = allStatus[i];
-				const foundUser = allUsers.find((x) => x.id == e.id);
-				if (foundUser) {
-					foundUser.status = e.status;
-				}
-			}
+			const allStatus: userStatus[] = await fetchData("/user/getAllStatus");
 			setUsers(allUsers);
+			setUsersStatus(allStatus);
 		}
 		getUsers();
-	}, []);
+	}, [users]);
+
+	function setUserStatus(user: User) {
+		const found = usersStatus.find((currentUser) => currentUser.id == user.id);
+		if (found) {
+			user.status = found.status;
+		}
+	}
 
 	useEffect(() => {
 		socket.on("userUpdate", (data: userStatus) => {
-			if (!users) return;
-			const found = users.find((x) => x.id == data.id);
+			const found = users.find((user) => user.id == data.id);
 			if (found) {
 				found.status = data.status;
+				getListUsers();
 			}
 		});
 	}, []);
 
-	function setListUsers(): JSX.Element[] {
-		const data = [];
+	function getListUsers(): JSX.Element[] {
+		const rows = [];
 		for (let i = 0; i < users.length; i++) {
-			const e = users[i];
-			data.push(
+			const user = users[i];
+			setUserStatus(user);
+			rows.push(
 				<TableRow key={i}>
 					<TableCell>
-						<Text fontSize="10">{e.userName}</Text>
+						<Text fontSize="10">{user.userName}</Text>
 					</TableCell>
 					<TableCell>
-						<Text fontSize="10">{e.wins}</Text>
+						<Text fontSize="10">{user.wins}</Text>
 					</TableCell>
 					<TableCell>
-						<Text fontSize="10">{e.losses}</Text>
+						<Text fontSize="10">{user.losses}</Text>
 					</TableCell>
 					<TableCell>
-						<Text fontSize="10">{e.status ? e.status : "Offline"}</Text>
+						<Text
+							fontSize="10"
+							color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
+						>
+							{" "}
+							{user.status ? user.status : "Offline"}
+						</Text>
 					</TableCell>
 				</TableRow>,
 			);
 		}
-		return data;
+		return rows;
 	}
 
 	return (
@@ -83,7 +91,7 @@ const UserView = (): JSX.Element => {
 						<TableHeaderCell>Status</TableHeaderCell>
 					</TableRow>
 				</TableHeader>
-				<TableBody>{users && users.length ? setListUsers() : null}</TableBody>
+				<TableBody>{users && users.length ? getListUsers() : null}</TableBody>
 			</Table>
 		</div>
 	);

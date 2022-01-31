@@ -1,15 +1,17 @@
 export type User = {
-	id: number;
-	userName: string;
-	firstName: string;
-	lastName: string;
 	avatar: string;
-	wins: number;
+	firstName: string;
+	id: number;
+	lastName: string;
+	logedin: boolean;
 	losses: number;
 	rating: number;
-	friends: User[];
-
+	registered: boolean;
 	twoFactorSecret: string;
+	twoFactorvalid: boolean;
+	userName: string;
+	wins: number;
+	friends: User[];
 	blockedUsers: User[];
 	blockedBy: User[];
 	initial2FAEnabled: boolean;
