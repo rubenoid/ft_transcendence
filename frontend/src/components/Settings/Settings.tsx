@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { fetchData, postData } from "../../API/API";
 import {
-	FooterWrapper,
-	SettingsContainer,
+	MainContentWrapper,
 	HeaderWrapper,
-} from "./SettingsElements";
-import { MainContentWrapper } from "../Utils/Containers/Containers";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
+	FooterWrapper,
+	MainViewContainer,
+} from "../Utils/Containers/Containers";
+import { Label } from "../Utils/Label/Label";
 import { Img, ImgContainer } from "../SideBar/MiniProfile/MiniProfileElements";
-import { Link } from "react-router-dom";
 import { Item } from "../Utils/List/List";
 import { Header, Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
@@ -97,7 +96,6 @@ const SettingsForm = (): JSX.Element => {
 	}
 
 	const uploadAvatar = (e: React.ChangeEvent<HTMLInputElement>): void => {
-		console.log("endpoints", endpoints);
 		if (e.target.files && e.target.files.length) {
 			setToInput({
 				...toInput,
@@ -189,6 +187,7 @@ const SettingsForm = (): JSX.Element => {
 					>
 						<Text>Find Users to add as a friend</Text>
 					</SettingsTable>
+					<br />
 					<SettingsTable
 						users={user.blockedUsers}
 						endpoint={"/blocked/remove/"}
@@ -204,6 +203,7 @@ const SettingsForm = (): JSX.Element => {
 					>
 						<Text>Find Users to block</Text>
 					</SettingsTable>
+					<br />
 					<SettingsTwoFA
 						setEndpoints={setEndpoints}
 						user={user}
@@ -232,7 +232,7 @@ const SettingsForm = (): JSX.Element => {
 		);
 	};
 	return (
-		<SettingsContainer>{user ? settingsData() : "loading"}</SettingsContainer>
+		<MainViewContainer>{user ? settingsData() : "loading"}</MainViewContainer>
 	);
 };
 

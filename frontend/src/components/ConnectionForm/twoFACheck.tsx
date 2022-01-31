@@ -1,11 +1,14 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { FormContainer, Form, Label, Button } from "./ConnectionFormElements";
+import {
+	FormContainer,
+	Form,
+	RegistrationContainer,
+} from "./ConnectionFormElements";
+import { Label } from "../Utils/Label/Label";
 import { postData, fetchData } from "../../API/API";
-import QRCode from "qrcode.react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SharedConnectionStatus } from "../../App/ConnectionStatus";
-import { Item } from "../Utils/List/List";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { Text } from "../Utils/Text/Text";
 
@@ -29,19 +32,21 @@ const TwoFACheck = (): JSX.Element => {
 	}, [inputtedTwoFA]);
 
 	return (
-		<FormContainer>
-			<Form>
-				<Label>
-					<Text fontSize="20px">Enter your 2FA code</Text>
-				</Label>
-				<TextInput
-					type="text"
-					onChange={(e) => {
-						setinputtedTwoFA(e.target.value);
-					}}
-				/>
-			</Form>
-		</FormContainer>
+		<RegistrationContainer>
+			<FormContainer>
+				<Form>
+					<Label>
+						<Text fontSize="20px">Enter your 2FA code</Text>
+					</Label>
+					<TextInput
+						type="text"
+						onChange={(e) => {
+							setinputtedTwoFA(e.target.value);
+						}}
+					/>
+				</Form>
+			</FormContainer>
+		</RegistrationContainer>
 	);
 };
 

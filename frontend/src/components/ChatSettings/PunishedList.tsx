@@ -3,7 +3,7 @@ import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { Text } from "../Utils/Text/Text";
 import { roleLevel } from "./ChatSettings";
 import { User } from "../../Types/Types";
-import { UserWrapper, UserRow, UserRowContainer } from "./ChatSettingsElements";
+import { UserWrapper, UserRowContainer } from "./ChatSettingsElements";
 import { ChatData, MutedUser, ToSend } from "../../Types/Types";
 
 interface InputParams {

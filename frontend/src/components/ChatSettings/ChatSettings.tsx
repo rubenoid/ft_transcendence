@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-	SettingsContainer,
+	MainContentWrapper,
 	FooterWrapper,
 	HeaderWrapper,
-} from "../Settings/SettingsElements";
-import { MainContentWrapper } from "../Utils/Containers/Containers";
+	MainViewContainer,
+} from "../Utils/Containers/Containers";
 import { User, ChatData, ToSend } from "../../Types/Types";
 import { fetchData, postData } from "../../API/API";
 import { Text, Header } from "../Utils/Text/Text";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 import AddUserInput from "../AddUserInput/AddUserInput";
-import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 import { UserWrapper, UserRowContainer } from "./ChatSettingsElements";
 import { SharedUserState } from "../../App/UserStatus";
 import UserList from "./UserList";
@@ -121,8 +120,8 @@ const ChatSettings = (): JSX.Element => {
 
 					{myRole != roleLevel.user ? (
 						<>
-							<Text>Add Users</Text>
 							<UserWrapper>
+								<Text>Add Users</Text>
 								<AddUserInput
 									removeOnEnter={true}
 									placeholder={"Enter username"}
@@ -131,7 +130,6 @@ const ChatSettings = (): JSX.Element => {
 									}}
 								/>
 								<br />
-								<hr />
 								{usersToAdd ? listAddedUsers : ""}
 							</UserWrapper>
 						</>
@@ -187,9 +185,9 @@ const ChatSettings = (): JSX.Element => {
 	};
 
 	return (
-		<SettingsContainer>
+		<MainViewContainer>
 			{chatData ? displayChat() : "loading"}
-		</SettingsContainer>
+		</MainViewContainer>
 	);
 };
 

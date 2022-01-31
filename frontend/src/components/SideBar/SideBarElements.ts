@@ -5,6 +5,9 @@ export const SideBarContainer = styled.div`
 	height: 100%;
 	border: 5px white solid;
 	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 `;
 
 export const SideViewWrapper = styled.div`
@@ -12,6 +15,7 @@ export const SideViewWrapper = styled.div`
 	justify-content: space-between;
 	flex-direction: column;
 	padding: 10px;
+	width: 100%;
 `;
 
 export const Hr = styled.hr`

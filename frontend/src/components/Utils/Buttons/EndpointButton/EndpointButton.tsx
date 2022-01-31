@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, RowButton } from "./EndpointButtonElements";
 import { ToSend } from "../../../../Types/Types";
 
@@ -20,17 +20,14 @@ const EndpointButton = (props: InputParams): JSX.Element => {
 			});
 		} else {
 			props.endpointRef((prevState) => {
-				console.log(prevState, props.toSet);
 				const idx = prevState.findIndex(
 					(x) =>
 						x.endpoint == props.toSet.endpoint &&
 						JSON.stringify(x.data) == JSON.stringify(props.toSet.data),
 				);
 				if (idx == -1) {
-					console.log("error, endpoint not found");
 					return prevState;
 				}
-				console.log("found and destroyed");
 				prevState.splice(idx, 1);
 				return [...prevState];
 			});

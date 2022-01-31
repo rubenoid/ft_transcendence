@@ -5,8 +5,6 @@ import axios from "axios";
 import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "./auth.service";
 import { UserService } from "src/user/user.service";
-import { UserEntity } from "src/user/user.entity";
-import { ExtractJwt } from "passport-jwt";
 
 @Injectable()
 export class FourtyTwoStrategy extends PassportStrategy(Strategy, "FourtyTwo") {

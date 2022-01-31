@@ -1,4 +1,4 @@
-import { Logger, Req, UseGuards } from "@nestjs/common";
+import { Logger, UseGuards } from "@nestjs/common";
 import {
 	SubscribeMessage,
 	WebSocketGateway,
@@ -16,24 +16,18 @@ export class MatchGateway {
 
 	private logger: Logger = new Logger("MatchGateway");
 
-	afterInit(server: Server): void {
-		this.logger.log("Init");
-	}
-
 	handleDisconnect(client: Socket): void {
 		this.logger.log(`Match::Client disconnected: ${client.id}`);
 		this.matchService.removeFromQueue(client);
 	}
 
-	handleConnection(client: Socket, ...args: string[]): void {
+	handleConnection(client: Socket): void {
 		this.logger.log(`Match::Client connected: ${client.id}`);
 	}
-	// async getme(@Req() req, @Param() param) {
-	// 	return await this.userService.getUser(req.user.id as number);
+
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("addToQueue")
-	handleMessage(client: GuardedSocket, payload: string): void {
-		console.log("ADDED TO QUEUE,");
+	addToQueue(client: GuardedSocket): void {
 		this.matchService.addPlayerToQueue(client, this.server);
 	}
 

@@ -30,8 +30,6 @@ export class ChatService {
 
 	handleDisconnect(client: Socket): void {
 		const res = this.clients.findIndex((x) => x.id == client.id);
-
-		console.log("User disconnected");
 		if (res >= 0) this.clients.splice(res, 1);
 	}
 
@@ -106,7 +104,6 @@ export class ChatService {
 	async findChatMatch(ids: number[]): Promise<number> {
 		const allChannels: number[] = [];
 		let user: UserEntity | undefined;
-		console.log("ids", ids);
 		// all user entities and push all the ids
 		for (let i = 0; i < ids.length; i++) {
 			user = await this.userService.getUserQueryOne({
@@ -117,8 +114,6 @@ export class ChatService {
 				allChannels.push(user.channels[x].id);
 			}
 		}
-
-		console.log("All channels:", allChannels);
 		// comparing all private channels for a match
 		for (let i = 0; i < allChannels.length; i++) {
 			const channel: ChatEntity = await this.chatRepository.findOne({
@@ -132,7 +127,6 @@ export class ChatService {
 					if (channel.users.findIndex((x) => x.id == ids[k]) == -1) break;
 				}
 				if (k == ids.length) return channel.id;
-				console.log("channel found");
 			}
 		}
 		return -1;
@@ -171,7 +165,6 @@ export class ChatService {
 		if (password != "") {
 			toadd.password = await this.protectorService.hash(password);
 		} else toadd.password = "";
-		console.log("IDS:", userIds);
 		let usertmp: UserEntity;
 		for (let i = 0; i < userIds.length; i++) {
 			usertmp = await this.userService.getUserQueryOne({
@@ -249,14 +242,8 @@ export class ChatService {
 		chat.messages.push(toadd);
 
 		for (let i = 0; i < this.clients.length; i++) {
-			const e = this.clients[i];
-			console.log(e.user.id, e.id);
-		}
-
-		for (let i = 0; i < this.clients.length; i++) {
 			const found = chat.users.find((x) => x.id == this.clients[i].user.id);
 			if (found) {
-				console.log("Yes!");
 				server.to(this.clients[i].id).emit("newMessage", {
 					data: data,
 					senderId: client.user.id,
@@ -352,7 +339,6 @@ export class ChatService {
 			await this.chatRepository.save(chat);
 			return true;
 		}
-		console.log("no permissions to remove user from chat");
 		return false;
 	}
 
@@ -500,7 +486,6 @@ export class ChatService {
 			chat.admins.find((x) => x.id == executerId) == undefined ||
 			chat.muted.find((x) => x.userTargetId == userId)
 		) {
-			console.log("Error with req");
 			return;
 		}
 		const toAdd = new MutedUserEntity();
@@ -525,7 +510,6 @@ export class ChatService {
 			chat.owner == -1 ||
 			chat.admins.find((x) => x.id == executerId) == undefined
 		) {
-			console.log("Error with req");
 			return;
 		}
 		let i: number;

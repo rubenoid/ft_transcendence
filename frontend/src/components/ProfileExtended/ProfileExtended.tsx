@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchData } from "../../API/API";
 import { User, Match } from "../../Types/Types";
-import { FooterWrapper, SettingsContainer } from "../Settings/SettingsElements";
 import {
 	Img,
 	ImgContainer,
@@ -10,17 +9,34 @@ import {
 	Padding,
 	DetailsWrapper,
 } from "../SideBar/MiniProfile/MiniProfileElements";
-import { MainContentWrapper } from "../Utils/Containers/Containers";
+import {
+	MainContentWrapper,
+	FooterWrapper,
+	MainViewContainer,
+} from "../Utils/Containers/Containers";
 import { Link, useParams } from "react-router-dom";
-import { Item } from "../Utils/List/List";
 import { Header, HeaderTwo, Text } from "../Utils/Text/Text";
 import ListMatch from "./ListMatch";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
+import AchievementList from "./ListAchievents";
 
 interface userStatus {
 	id: number;
 	status: string;
 }
+
+interface Achievement {
+	title: string;
+	description: string;
+}
+
+const achievemen: Achievement[] = [
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+];
 
 const ProfileExtended = (): JSX.Element => {
 	const [user, setUser] = useState<User>(undefined);
@@ -44,7 +60,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log("1", er);
+					console.log(er);
 				});
 			fetchData(`/match/getUserHistory/${profileId}`)
 				.then((match: Match[]) => {
@@ -52,7 +68,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log("2", er);
+					console.log(er);
 				});
 
 			fetchData(`/user/userStatus/${profileId}`)
@@ -61,7 +77,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log("3", er);
+					console.log(er);
 				});
 			return user;
 		}
@@ -130,25 +146,33 @@ const ProfileExtended = (): JSX.Element => {
 					<TopContainer>
 						<ListMatch user={user}></ListMatch>
 					</TopContainer>
+					<HeaderTwo>Achievements</HeaderTwo>
+					<TopContainer>
+						<AchievementList achievements={achievemen} />
+					</TopContainer>
 				</MainContentWrapper>
 			</>
 		);
 	};
 	return (
-		<SettingsContainer>
-			{isBlocked != 0
-				? isBlocked == 1
-					? "User is unavailable!"
-					: "You blocked this user! Go to settings to unblock"
-				: user
-				? friendsData()
-				: "loading"}
+		<MainViewContainer>
+			{isBlocked != 0 ? (
+				isBlocked == 1 ? (
+					<Text>User is unavailable!</Text>
+				) : (
+					<Text>You blocked this user! Go to settings to unblock</Text>
+				)
+			) : user ? (
+				friendsData()
+			) : (
+				"loading"
+			)}
 			<FooterWrapper>
 				<LinkButton to={-1}>
 					<Text>Back</Text>
 				</LinkButton>
 			</FooterWrapper>
-		</SettingsContainer>
+		</MainViewContainer>
 	);
 };
 

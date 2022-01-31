@@ -37,6 +37,4 @@ export const FriendsCardButton = styled.button`
 	border: none;
 `;
 
-export const FriendsViewContainer = styled.div`
-	height: 700px;
-`;
+export const FriendsViewContainer = styled.div``;

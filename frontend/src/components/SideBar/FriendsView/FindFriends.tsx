@@ -18,11 +18,9 @@ const FindFriends = (props: InputParams): JSX.Element => {
 		async function getSimilarUsers(): Promise<void> {
 			if (userName != "") {
 				const res: User[] = await fetchData(`/user/find/${userName}`);
-				console.log("similarUsers", res);
 				const sortedsimilar = res.sort(
 					(first, second) => 0 - (first.userName > second.userName ? -1 : 1),
 				);
-				console.log("sortedsimilar", sortedsimilar);
 				setSimilarUsers(sortedsimilar);
 			} else setSimilarUsers([]);
 		}

@@ -43,7 +43,7 @@ export const MsgContainer = styled.div`
 	border-radius: 5px;
 	width: fit-content;
 	max-width: 250px;
-	background-color: blue;
+	background-color: gray;
 `;
 
 export const MsgContainerOther = styled.div`
@@ -67,6 +67,19 @@ export const MsgText = styled.p`
 	}
 `;
 
+export const MsgOwnerText = styled.p`
+	word-break: break-all;
+	color: white;
+
+	@media screen and (max-width: 768px) {
+		font-size: 16px;
+	}
+
+	@media screen and (max-width: 480px) {
+		font-size: 12px;
+	}
+`;
+
 export const SendIconContainer = styled.div`
 	background-color: #3f3fff;
 	height: 100%;
@@ -86,4 +99,18 @@ export const SendIconContainer = styled.div`
 export const TopButtonsContainer = styled.div`
 	display: flex;
 	align-items: center;
+`;
+
+export const MinimizedContainer = styled.div`
+	width: 100%;
+	height: 5vh;
+	border: 1px solid #3f3fff;
+	display: flex;
+	justify-content: space-between;
+`;
+
+export const SideBarContent = styled.div`
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 `;

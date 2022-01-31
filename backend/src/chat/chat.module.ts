@@ -1,6 +1,5 @@
 import { Module, forwardRef } from "@nestjs/common";
 import { ChatController } from "./chat.controller";
-import { ChatEntity, ChatMessageEntity } from "./chat.entity";
 import { ChatProvider, ChatMessageProvider } from "./chat.provider";
 import { DatabaseModule } from "src/database/database.module";
 import { ChatService } from "./chat.service";

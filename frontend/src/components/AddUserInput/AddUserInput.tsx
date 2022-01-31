@@ -1,5 +1,4 @@
-import { TextInput } from "../Utils/TextInput/TextInput";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { fetchData } from "../../API/API";
 import {
 	UserInputWrapper,

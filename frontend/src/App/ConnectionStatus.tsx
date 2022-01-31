@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState } from "react";
 import { useBetween } from "use-between";
 
 const ConnectionStatus = (): {

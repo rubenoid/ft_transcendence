@@ -31,7 +31,8 @@ export const ButtonContainer = styled.div`
 	top: 50%;
 	left: 50%;
 	border-radius: 5px;
-	background-color: #393b4c;
+	background-color: black;
+	border: 1px solid white;
 	transform: translate(-50%, -50%);
 	padding: 10px;
 	opacity: 0.9;
@@ -90,7 +91,19 @@ export const FinishedContainer = styled.div`
 	top: 50%;
 	left: 50%;
 	border-radius: 5px;
-	background-color: #b1b1b1;
+	background-color: black;
+	border: 1px solid white;
 	transform: translate(-50%, -50%);
 	padding: 10px;
+`;
+
+export const RunningItemWrapper = styled.div`
+	border: 1px solid white;
+	margin: 20px;
+	text-align: center;
+	border-radius: 7px;
+
+	:hover {
+		background-color: #3f3fff;
+	}
 `;

@@ -1,6 +1,5 @@
 import * as speakeasy from "speakeasy";
 import * as qrcode from "qrcode";
-import * as readline from "readline";
 
 const secrets = [];
 
