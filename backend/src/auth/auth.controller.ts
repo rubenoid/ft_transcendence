@@ -7,20 +7,16 @@ import {
 	Post,
 	Body,
 	Param,
-	Redirect,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { localAuthGaurd } from "./auth.guard";
-import { Response, Request, request } from "express";
-import { JwtAuthGuard } from "./jwt.guard";
+import { Response } from "express";
 import { Public } from "./jwt.decorator";
 import { UserService } from "src/user/user.service";
 import { GuardedRequest } from "src/overloaded";
-import { publicDecrypt } from "crypto";
 import { UserEntity } from "src/user/user.entity";
-import { get } from "http";
-import { JwtSecretRequestType, JwtService } from "@nestjs/jwt";
+import { JwtService } from "@nestjs/jwt";
 import { RegisteringGuard } from "./registering.guard";
 
 @Controller("auth")
@@ -67,13 +63,6 @@ export class AuthController {
 		user.logedin = true;
 		await this.userService.saveUser(user);
 		return true;
-	}
-
-	@Public()
-	@UseGuards(RegisteringGuard)
-	@Get("getQr")
-	async return2fa(@Req() req: GuardedRequest): Promise<string> {
-		return await this.authService.create2fadiv(req.user.id);
 	}
 
 	@Public()
@@ -131,7 +120,6 @@ export class AuthController {
 		@Body("lastName") lastName: string,
 		@Body("twoFASecret") twoFASecret: string,
 	): Promise<void> {
-		console.log("TWOFA", twoFASecret);
 		this.userService.update(
 			req.user.id,
 			userName,
@@ -156,6 +144,13 @@ export class AuthController {
 		user.twoFactorvalid = false;
 		this.userService.saveUser(user);
 	}
+
+	// @Public()
+	// @UseGuards(RegisteringGuard)
+	// @Get("getQr")
+	// async return2fa(@Req() req: GuardedRequest): Promise<string> {
+	// 	return await this.authService.create2fadiv(req.user.id);
+	// }
 
 	// @Public()
 	// @Get("protect")

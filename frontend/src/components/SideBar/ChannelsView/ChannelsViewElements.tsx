@@ -6,17 +6,25 @@ export const ChannelTitleContainer = styled.div`
 `;
 
 export const ChannelCreateContainer = styled.div`
-	background-color: pink;
+	border: 5px solid white;
 	border-radius: 7px;
 	padding: 10px;
 `;
 
 export const ChannelCard = styled.div`
-	background-color: white;
+	border: 1px solid white;
 	border-radius: 7px;
-	width: 330px;
+	width: 100%;
 	height: 40px;
 	padding: 5px;
 	display: flex;
 	justify-content: space-between;
+	cursor: pointer;
+	:hover {
+		background-color: #3f3fff;
+	}
+`;
+
+export const RadioInput = styled.input`
+	color: white;
 `;

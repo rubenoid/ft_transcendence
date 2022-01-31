@@ -1,8 +1,7 @@
 import { Injectable, Inject, forwardRef } from "@nestjs/common";
 import { UserEntity } from "./user.entity";
-import { Repository, FindOneOptions } from "typeorm";
+import { Repository, FindOneOptions, Like } from "typeorm";
 import { writeFile } from "fs";
-import { MatchEntity } from "src/match/match.entity";
 import { GuardedSocket } from "src/overloaded";
 import { Server } from "socket.io";
 import { ChatEntity } from "src/chat/chat.entity";
@@ -106,7 +105,6 @@ export class UserService {
 		newUser.twoFactorvalid = false;
 		newUser.logedin = false;
 		await this.UserRepository.save(newUser);
-		console.log("end add w details");
 	}
 
 	async getUsers(): Promise<UserEntity[]> {
@@ -120,11 +118,11 @@ export class UserService {
 	}
 
 	async getAll(): Promise<UserEntity[]> {
-		const User = await this.UserRepository.find({
+		const Users = await this.UserRepository.find({
 			relations: ["friends", "matches"],
 		});
-		if (User.length === 0) throw "user not found";
-		return User;
+		if (Users.length === 0) throw "user not found";
+		return Users;
 	}
 
 	async getAllUsersNRelations(): Promise<UserEntity[]> {
@@ -145,6 +143,7 @@ export class UserService {
 	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
 	}
+
 
 	async insert(
 		firstName: string,
@@ -178,12 +177,15 @@ export class UserService {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
-		user.userName = userName;
+		if (
+			(await this.getUserQueryOne({ where: { userName: user.userName } })) ==
+			undefined
+		)
+			user.userName = userName;
 		user.registered = true;
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
 
 		await this.UserRepository.save(user);
-		console.log("finished update with id:", id, "userName", userName);
 		return user.id;
 	}
 	async getUserByName(username: string): Promise<UserEntity> {
@@ -219,24 +221,22 @@ export class UserService {
 		type: string,
 	): Promise<void> {
 		if (client.user) {
-			const data = userStatus.get(client.user.id);
-
-			console.log("Data of client" + client.user.id + " " + data);
-
 			userStatus.set(client.user.id, { status: type, client: client });
-
 			server.emit("userUpdate", { id: client.user.id, status: type });
 		}
 	}
 
 	async getAllStatus(): Promise<object[]> {
 		const tosend = [];
-
-		userStatus.forEach(
-			(val: { status: string; client: GuardedSocket }, key: number) => {
-				tosend.push({ id: key, status: val.status });
-			},
-		);
+		const users = await this.UserRepository.find();
+		for (let i = 0; i < users.length; i++) {
+			const e = users[i];
+			const foundStatus = userStatus.get(e.id);
+			tosend.push({
+				id: e.id,
+				status: foundStatus ? foundStatus.status : "Offline",
+			});
+		}
 		return tosend;
 	}
 
@@ -262,4 +262,29 @@ export class UserService {
 		}
 		return data;
 	}
+
+	async findUser(name: string): Promise<UserEntity[]> {
+		return await this.UserRepository.find({ userName: Like(`%${name}%`) });
+	}
+
+	// async insert(
+	// 	firstName: string,
+	// 	lastName: string,
+	// 	userName: string,
+	// ): Promise<number> {
+	// 	const newUser: UserEntity = new UserEntity();
+	// 	newUser.id = currentId++;
+	// 	newUser.firstName = firstName;
+	// 	newUser.lastName = lastName;
+	// 	newUser.userName = userName;
+	// 	newUser.rating = 1500;
+	// 	newUser.wins = 0;
+	// 	newUser.losses = 0;
+	// 	newUser.friends = [];
+	// 	newUser.blockedBy = [];
+	// 	newUser.blockedUsers = [];
+	// 	newUser.logedin = false; //?
+	// 	await this.UserRepository.save(newUser);
+	// 	return newUser.id;
+	// }
 }

@@ -4,10 +4,10 @@ export const RoundButton = styled.button`
 	height: 50px;
 	width: 50px;
 	text-align: center;
-	background-color: #444;
 	color: white;
+	background-color: black;
 	border-radius: 50px;
-	border: 2px solid #04aa6d;
+	border: 2px solid #3f3fff;
 	cursor: pointer;
 
 	&:hover {

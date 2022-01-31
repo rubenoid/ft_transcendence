@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { UserEntity } from "src/user/user.entity";
@@ -26,16 +26,6 @@ export class AuthService {
 		return null;
 	}
 
-	async create2fadiv(id: number): Promise<string> {
-		const user: UserEntity | string = await this.userService.getUser(-1, id);
-		if (typeof user == "string") return "";
-		const codedata = twofa.getTwoFactorAuthenticationCode();
-		user.twoFactorSecret = codedata.base32;
-		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
-		await this.userService.saveUser(user);
-		return qrcode;
-	}
-
 	async getQrRetSecret(): Promise<object> {
 		const codedata = twofa.getTwoFactorAuthenticationCode();
 		const qrcode = await twofa.createQrCodeAsURL(codedata.otpauthUrl);
@@ -43,7 +33,6 @@ export class AuthService {
 	}
 
 	async saveNewQr(id: number, secret: string): Promise<void> {
-		console.log("save secret");
 		const user: UserEntity | string = await this.userService.getUser(-1, id);
 		if (typeof user != "object") return;
 		user.twoFactorSecret = secret;
@@ -54,14 +43,4 @@ export class AuthService {
 	async check2faInput(input: string, secret: string): Promise<boolean> {
 		return await twofa.check2faInput(input, secret);
 	}
-
-	// async testProtector(): Promise<void> {
-	// 	const h = await this.protectorService.hash("i like react kidding");
-	// 	this.protectorService
-	// 		.compare("i love angular", h)
-	// 		.then((res) => console.log(res));
-	// 	this.protectorService
-	// 		.compare("i like react kidding", h)
-	// 		.then((res) => console.log(res));
-	// }
 }

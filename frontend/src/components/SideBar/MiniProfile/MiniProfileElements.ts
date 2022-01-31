@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const DivSpacing = styled.div`
+	width: calc(100% / 3);
+`;
+
 export const ImgContainer = styled.div`
 	background-color: #abc;
 	border-radius: 50%;
@@ -8,7 +12,6 @@ export const ImgContainer = styled.div`
 `;
 
 export const Img = styled.img`
-	position: relative;
 	width: 100%;
 	height: 100%;
 	border-radius: 50%;
@@ -17,13 +20,30 @@ export const Img = styled.img`
 export const TopContainer = styled.div`
 	display: flex;
 	justify-content: space-between;
-	margin: 10;
 	flexdirection: row;
+	padding: 15px;
+	border-radius: 7px;
+	margin: 10px;
 `;
 
 export const FriendsWrapper = styled.div`
 	border-radius: 7px;
 	background-color: #af2222;
 	padding: 20px;
-	width: 500px;
+	margin: 10;
+	background-color: white;
+`;
+
+export const ProfileHeader = styled.div`
+	display: flex;
+	padding: 10px;
+`;
+
+export const Padding = styled.div`
+	padding: 10px;
+`;
+
+export const DetailsWrapper = styled.div`
+	border-radius: 7px;
+	margin: 20px 0;
 `;

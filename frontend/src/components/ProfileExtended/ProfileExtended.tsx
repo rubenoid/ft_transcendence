@@ -1,46 +1,51 @@
 import React, { useEffect, useState } from "react";
-import {
-	TableRow,
-	TableCell,
-	TableHeader,
-	TableHeaderCell,
-	Table,
-} from "../Utils/Table/Table";
 import { fetchData } from "../../API/API";
 import { User, Match } from "../../Types/Types";
-import { SettingsContainer } from "../Settings/SettingsElements";
-import { Label } from "../ConnectionForm/ConnectionFormElements";
 import {
 	Img,
 	ImgContainer,
 	TopContainer,
-	FriendsWrapper,
-} from "../Profile/ProfileElements";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Item } from "../Utils/List/List";
-import { Text } from "../Utils/Text/Text";
-
-interface detailedUser extends User {
-	matches: Match[];
-	status: string;
-}
+	ProfileHeader,
+	Padding,
+	DetailsWrapper,
+} from "../SideBar/MiniProfile/MiniProfileElements";
+import {
+	MainContentWrapper,
+	FooterWrapper,
+	MainViewContainer,
+} from "../Utils/Containers/Containers";
+import { Link, useParams } from "react-router-dom";
+import { Header, HeaderTwo, Text } from "../Utils/Text/Text";
+import ListMatch from "./ListMatch";
+import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
+import AchievementList from "./ListAchievents";
 
 interface userStatus {
 	id: number;
 	status: string;
 }
 
+interface Achievement {
+	title: string;
+	description: string;
+}
+
+const achievemen: Achievement[] = [
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+];
+
 const ProfileExtended = (): JSX.Element => {
-	const [user, setUser] = useState<detailedUser>(undefined);
+	const [user, setUser] = useState<User>(undefined);
 	const [isBlocked, setIsBlocked] = useState<number>(0);
 	const { profileId } = useParams();
 
 	useEffect(() => {
-		async function getUser(): Promise<detailedUser> {
-			const user: detailedUser | string = await fetchData(
-				`/user/get/${profileId}`,
-			);
-			console.log("USERTYPE", typeof user);
+		async function getUser(): Promise<User> {
+			const user: User | string = await fetchData(`/user/get/${profileId}`);
 			if (typeof user != "object") {
 				if (typeof user == "number") setIsBlocked(2);
 				else setIsBlocked(1);
@@ -55,7 +60,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log("1", er);
+					console.log(er);
 				});
 			fetchData(`/match/getUserHistory/${profileId}`)
 				.then((match: Match[]) => {
@@ -63,7 +68,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log("2", er);
+					console.log(er);
 				});
 
 			fetchData(`/user/userStatus/${profileId}`)
@@ -72,7 +77,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log("3", er);
+					console.log(er);
 				});
 			return user;
 		}
@@ -88,136 +93,86 @@ const ProfileExtended = (): JSX.Element => {
 			);
 		});
 
-		const listmatches = user.matches.map((value: Match, key: number) => {
-			return (
-				<TableRow key={key}>
-					{value.players[0].userName == user.userName && value.players[1] ? (
-						<TableCell>
-							<Link to={`/profile/${value.players[1].id}`}>
-								<Text fontSize="10">{value.players[1].userName}</Text>
-							</Link>
-						</TableCell>
-					) : (
-						<TableCell>
-							<Link to={`/profile/${value.players[0].id}`}>
-								<Text fontSize="10">{value.players[0].userName}</Text>
-							</Link>
-						</TableCell>
-					)}
-					<TableCell>
-						{value.players[0].userName == user.userName ? (
-							<Text fontSize="10">{value.scorePlayer1}</Text>
-						) : (
-							<Text fontSize="10">{value.scorePlayer2}</Text>
-						)}
-					</TableCell>
-					<TableCell>
-						{value.players[0].userName == user.userName ? (
-							<Text fontSize="10">{value.scorePlayer2}</Text>
-						) : (
-							<Text fontSize="10">{value.scorePlayer1}</Text>
-						)}
-					</TableCell>
-				</TableRow>
-			);
-		});
-
 		return (
 			<>
-				<Item>
-					<h1>{user.userName}s Profile</h1>
-				</Item>
-				<ImgContainer>
-					<Img
-						src={"http://localhost:5000/" + user.avatar}
-						alt="profileImg"
-						width="300"
-						height="300"
-					/>
-				</ImgContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">Username</Text>
-					</Label>
-					<Text fontSize="20px">{user.userName}</Text>
-				</TopContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">FirstName</Text>
-					</Label>
-					<Text fontSize="20px">{user.firstName}</Text>
-				</TopContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">LastName</Text>
-					</Label>
-					<Text fontSize="20px">{user.lastName}</Text>
-				</TopContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">status</Text>
-					</Label>
-					<Text fontSize="20px">{user.status}</Text>
-				</TopContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">losses</Text>
-					</Label>
-					<Text fontSize="20px">{user.losses}</Text>
-				</TopContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">wins</Text>
-					</Label>
-					<Text fontSize="20px">{user.wins}</Text>
-				</TopContainer>
-				<TopContainer>
-					<Label>
-						<Text fontSize="20px">rating</Text>
-					</Label>
-					<Text fontSize="20px">{user.rating}</Text>
-				</TopContainer>
-				<Item>
-					<Label>
-						<Text fontSize="20px">Friends</Text>
-					</Label>
-					<FriendsWrapper>
+				<ProfileHeader>
+					<ImgContainer>
+						<Img
+							src={"http://localhost:5000/" + user.avatar}
+							alt="profileImg"
+							width="300"
+							height="300"
+						/>
+					</ImgContainer>
+					<div>
+						<Header>{user.userName}s Profile</Header>
+						<Padding>
+							<Text fontSize="20px">{user.status}</Text>
+						</Padding>
+					</div>
+				</ProfileHeader>
+				<MainContentWrapper>
+					<DetailsWrapper>
+						<TopContainer>
+							<Text fontSize="20px">Username</Text>
+							<Text fontSize="20px">{user.userName}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">FirstName</Text>
+							<Text fontSize="20px">{user.firstName}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">LastName</Text>
+							<Text fontSize="20px">{user.lastName}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">losses</Text>
+							<Text fontSize="20px">{user.losses}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">wins</Text>
+							<Text fontSize="20px">{user.wins}</Text>
+						</TopContainer>
+						<TopContainer>
+							<Text fontSize="20px">rating</Text>
+							<Text fontSize="20px">{user.rating}</Text>
+						</TopContainer>
+					</DetailsWrapper>
+					<HeaderTwo>Friends</HeaderTwo>
+					<TopContainer>
 						{user.friends.length ? listfriends : <Text>No friends</Text>}
-					</FriendsWrapper>
-				</Item>
-				<Label>
-					<Text fontSize="20px">Matches</Text>
-				</Label>
-				{user.matches.length ? (
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHeaderCell>Played Against</TableHeaderCell>
-								<TableHeaderCell>
-									{user.userName}
-									{"'"}s score
-								</TableHeaderCell>
-								<TableHeaderCell>Other player Score</TableHeaderCell>
-							</TableRow>
-						</TableHeader>
-						<tbody>{listmatches}</tbody>
-					</Table>
-				) : (
-					<Text>No matches yet</Text>
-				)}
+					</TopContainer>
+					<HeaderTwo>Matches</HeaderTwo>
+					<TopContainer>
+						<ListMatch user={user}></ListMatch>
+					</TopContainer>
+					<HeaderTwo>Achievements</HeaderTwo>
+					<TopContainer>
+						<AchievementList achievements={achievemen} />
+					</TopContainer>
+				</MainContentWrapper>
 			</>
 		);
 	};
 	return (
-		<SettingsContainer>
-			{isBlocked != 0
-				? isBlocked == 1
-					? "User is unavailable!"
-					: "You blocked this user! Go to settings to unblock"
-				: user
-				? friendsData()
-				: "loading"}
-		</SettingsContainer>
+		<MainViewContainer>
+			{isBlocked != 0 ? (
+				isBlocked == 1 ? (
+					<Text>User is unavailable!</Text>
+				) : (
+					<Text>You blocked this user! Go to settings to unblock</Text>
+				)
+			) : user ? (
+				friendsData()
+			) : (
+				"loading"
+			)}
+			<FooterWrapper>
+				<LinkButton to={-1}>
+					<Text>Back</Text>
+				</LinkButton>
+			</FooterWrapper>
+		</MainViewContainer>
 	);
 };
 

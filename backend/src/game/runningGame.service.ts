@@ -1,4 +1,4 @@
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import { GameService } from "./game.service";
 import { GuardedSocket } from "src/overloaded";
 
@@ -75,7 +75,6 @@ export class RunningGame {
 
 	moveSpeed = 100;
 	calculate(): void {
-		const oldpos = new Point(this.ball.x, this.ball.y);
 		this.ball.x += this.ballDir.x * this.moveSpeed * this.deltaTime;
 		this.ball.y += this.ballDir.y * this.moveSpeed * this.deltaTime;
 
@@ -86,6 +85,7 @@ export class RunningGame {
 				this.score[0]++;
 			}
 			this.server.to(this.roomId).emit("scoreUpdate", this.score);
+			this.server.to("SpecBooth").emit("spectateUpdate");
 			this.ball = new Point(200, 300);
 			this.moveSpeed = 100;
 			let newRandAng = Math.random() * 45 + 45;
@@ -142,6 +142,7 @@ export class RunningGame {
 			decor: this.decor,
 			players: [this.players[0].user.id, this.players[1].user.id],
 		});
+		this.server.to("SpecBooth").emit("spectateUpdate");
 		this.lastTime = Date.now();
 		this.deltaTime = 0;
 		this.interval = setInterval(() => {
@@ -149,6 +150,7 @@ export class RunningGame {
 				clearInterval(this.interval);
 				this.server.to(this.roomId).emit("gameFinished");
 				this.service.handleFinishedGame(this);
+				this.server.to("SpecBooth").emit("spectateUpdate");
 				return;
 			}
 			this.deltaTime = (Date.now() - this.lastTime) / 1000;

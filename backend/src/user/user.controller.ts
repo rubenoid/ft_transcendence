@@ -2,9 +2,7 @@ import {
 	Controller,
 	Get,
 	Post,
-	Put,
 	Body,
-	Injectable,
 	Param,
 	Req,
 	UseInterceptors,
@@ -12,26 +10,20 @@ import {
 	UseGuards,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { writeFile } from "fs";
 import { GuardedRequest } from "src/overloaded";
 import { UserEntity } from "./user.entity";
 import { UserService } from "./user.service";
 import { Public } from "src/auth/jwt.decorator";
-import { AuthGuard } from "@nestjs/passport";
 import { RegisteringGuard } from "src/auth/registering.guard";
-import { MatchEntity } from "src/match/match.entity";
 import { ChatEntity } from "src/chat/chat.entity";
-import { ChatService } from "src/chat/chat.service";
 
 @Controller("user")
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
-	@Public()
-	@UseGuards(RegisteringGuard)
-	@Get("getAll")
-	async getAll(): Promise<UserEntity[]> {
-		return await this.userService.getAll();
+	@Get("all")
+	async getAllUsers(): Promise<UserEntity[]> {
+		return await this.userService.getUsers();
 	}
 
 	@Get("getAllUsersNRelations")
@@ -52,7 +44,6 @@ export class UserController {
 
 	@Get("menFriendsnBlocked")
 	async meAndFriends(@Req() req: GuardedRequest): Promise<UserEntity> {
-		console.log("we iz here");
 		return await this.userService.getUserQueryOne({
 			where: { id: req.user.id },
 			relations: ["friends", "blockedUsers", "blockedBy"],
@@ -83,41 +74,9 @@ export class UserController {
 		return await this.userService.addUser();
 	}
 
-	@Get("all")
-	async getAllUsers(): Promise<UserEntity[]> {
-		return await this.userService.getUsers();
-	}
-
 	@Get("delete/:id")
 	async deleteUser(@Param("id") id: string): Promise<boolean> {
 		return await this.userService.deleteUser(parseInt(id));
-	}
-
-	@Public()
-	// @UseGuards(RegisteringGuard) // take this out for testing
-	@Get("deleteAll")
-	async deleteAll(): Promise<void> {
-		return await this.userService.deleteAll();
-	}
-
-	@Post("add")
-	insert(
-		@Body("firstName") firstName: string,
-		@Body("lastName") lastName: string,
-		@Body("userName") userName: string,
-	): Promise<number> {
-		const userId = this.userService.insert(firstName, lastName, userName);
-		return userId;
-	}
-
-	@Put("update")
-	async update(
-		@Req() req: GuardedRequest,
-		@Body("firstName") firstName: string,
-		@Body("lastName") lastName: string,
-		@Body("userName") userName: string,
-	): Promise<number> {
-		return this.userService.update(req.user.id, userName, firstName, lastName);
 	}
 
 	@Post("updateForm")
@@ -128,31 +87,21 @@ export class UserController {
 		@Body("user") userString: string,
 	): Promise<number> {
 		const user = JSON.parse(userString);
-		console.log("USER FROM FORM", user);
 		this.userService.update(
 			req.user.id,
 			user.userName,
 			user.firstName,
 			user.lastName,
 		);
-		if (file) this.userService.saveAvatar(req.user.id, file);
+		if (file && file.mimetype.startsWith("image"))
+			await this.userService.saveAvatar(req.user.id, file);
 		return 0;
-	}
-
-	@Post("uploadAvatar")
-	@UseInterceptors(FileInterceptor("file"))
-	async uploadFile(
-		@Req() req: GuardedRequest,
-		@UploadedFile() file: Express.Multer.File,
-	): Promise<void> {
-		this.userService.saveAvatar(req.user.id, file);
 	}
 
 	@Public()
 	@UseGuards(RegisteringGuard)
 	@Get("removeTwoFA")
 	async removeTwoFA(@Req() req: GuardedRequest): Promise<void> {
-		console.log("removetwofa");
 		const user = await this.userService.getUser(-1, req.user.id as number);
 		if (typeof user != "object") return;
 		user.twoFactorSecret = "";
@@ -171,4 +120,52 @@ export class UserController {
 	async getAllStatus(): Promise<object[]> {
 		return await this.userService.getAllStatus();
 	}
+
+	@Get("find/:id")
+	async find(@Param("id") name: string): Promise<UserEntity[]> {
+		return await this.userService.findUser(name);
+	}
+
+	@Public()
+	// @UseGuards(RegisteringGuard) // take this out for testing
+	@Get("deleteAll")
+	async deleteAll(): Promise<void> {
+		return await this.userService.deleteAll();
+	}
+
+	// @Public()
+	// @UseGuards(RegisteringGuard)
+	// @Get("getAll")
+	// async getAll(): Promise<UserEntity[]> {
+	// 	return await this.userService.getAll();
+	// }
+
+	// @Post("add")
+	// insert(
+	// 	@Body("firstName") firstName: string,
+	// 	@Body("lastName") lastName: string,
+	// 	@Body("userName") userName: string,
+	// ): Promise<number> {
+	// 	const userId = this.userService.insert(firstName, lastName, userName);
+	// 	return userId;
+	// }
+
+	// @Put("update")
+	// async update(
+	// 	@Req() req: GuardedRequest,
+	// 	@Body("firstName") firstName: string,
+	// 	@Body("lastName") lastName: string,
+	// 	@Body("userName") userName: string,
+	// ): Promise<number> {
+	// 	return this.userService.update(req.user.id, userName, firstName, lastName);
+	// }
+
+	// @Post("uploadAvatar")
+	// @UseInterceptors(FileInterceptor("file"))
+	// async uploadFile(
+	// 	@Req() req: GuardedRequest,
+	// 	@UploadedFile() file: Express.Multer.File,
+	// ): Promise<void> {
+	// 	this.userService.saveAvatar(req.user.id, file);
+	// }
 }

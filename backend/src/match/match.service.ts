@@ -29,7 +29,6 @@ export class MatchService {
 
 		if (idx != -1) {
 			queuedSock.splice(idx, 1);
-			console.log("removed " + socket.id + " from queue", queuedSock.length);
 		}
 	}
 
@@ -39,7 +38,6 @@ export class MatchService {
 	): Promise<string> {
 		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
-		console.log("playerr " + connection.id + " qued");
 
 		const p1 = queuedSock.pop();
 		this.gameService.startMatch(p1, p1, server);
@@ -88,7 +86,7 @@ export class MatchService {
 		);
 
 		toAdd.players = [players[0], players[1]];
-		console.log("saved game!");
+		if (players[0].id == players[1].id) return;
 		this.MatchRepository.save(toAdd);
 		this.userService.saveUser(players[0]);
 		this.userService.saveUser(players[1]);
@@ -126,7 +124,6 @@ export class MatchService {
 				where: { id: user.matches[i].id },
 				relations: ["players"],
 			});
-			console.log("matchFind", matchFind);
 			matches.push(matchFind);
 		}
 		return matches;

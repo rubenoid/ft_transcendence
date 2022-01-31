@@ -22,7 +22,6 @@ export class FriendsService {
 	}
 
 	async addFriend(id: number, id2: number): Promise<void> {
-		// add here that cannot add as a friend if already blocked
 		if (id == id2) throw "Cannot add yourself";
 		const user = await this.findUserWithrelations(id);
 		const friend = await this.findUserWithrelations(id2);

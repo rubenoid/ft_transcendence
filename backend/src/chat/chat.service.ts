@@ -30,8 +30,6 @@ export class ChatService {
 
 	handleDisconnect(client: Socket): void {
 		const res = this.clients.findIndex((x) => x.id == client.id);
-
-		console.log("User disconnected");
 		if (res >= 0) this.clients.splice(res, 1);
 	}
 
@@ -69,7 +67,11 @@ export class ChatService {
 			relations: ["users"],
 		});
 
-		if (data.users.find((x) => x.id == userId) == undefined) {
+		if (
+			data.users.find((x) => x.id == userId) == undefined &&
+			data.isPublic == true &&
+			data.password == ""
+		) {
 			const user = await this.userService.getUserQueryOne({
 				where: { id: userId },
 			});
@@ -101,19 +103,18 @@ export class ChatService {
 
 	async findChatMatch(ids: number[]): Promise<number> {
 		const allChannels: number[] = [];
-		const users: UserEntity[] = [];
+		let user: UserEntity | undefined;
+		// all user entities and push all the ids
 		for (let i = 0; i < ids.length; i++) {
-			users[i] = await this.userService.getUserQueryOne({
-				where: { id: ids[0] },
+			user = await this.userService.getUserQueryOne({
+				where: { id: ids[i] },
 				relations: ["channels"],
 			});
-		}
-		for (let i = 0; i < users.length; i++) {
-			for (let x = 0; x < users[i].channels.length; x++) {
-				allChannels.push(users[i].channels[x].id);
+			for (let x = 0; x < user.channels.length; x++) {
+				allChannels.push(user.channels[x].id);
 			}
 		}
-
+		// comparing all private channels for a match
 		for (let i = 0; i < allChannels.length; i++) {
 			const channel: ChatEntity = await this.chatRepository.findOne({
 				where: { id: allChannels[i], isPublic: false },
@@ -161,19 +162,19 @@ export class ChatService {
 		toadd.name = name;
 		toadd.muted = [];
 		toadd.users = [];
+		const uniqueUsers = [...new Set(userIds)];
 		if (password != "") {
 			toadd.password = await this.protectorService.hash(password);
 		} else toadd.password = "";
-		console.log("IDS:", userIds);
 		let usertmp: UserEntity;
-		for (let i = 0; i < userIds.length; i++) {
+		for (let i = 0; i < uniqueUsers.length; i++) {
 			usertmp = await this.userService.getUserQueryOne({
-				where: { id: userIds[i] },
+				where: { id: uniqueUsers[i] },
 			});
 			if (!usertmp) throw "user not found???";
 			toadd.users.push(usertmp);
 		}
-		toadd.owner = userIds[userIds.length - 1];
+		toadd.owner = uniqueUsers[uniqueUsers.length - 1];
 		toadd.admins = [];
 		toadd.admins.push(usertmp);
 		const res = await this.chatRepository.save(toadd);
@@ -242,14 +243,8 @@ export class ChatService {
 		chat.messages.push(toadd);
 
 		for (let i = 0; i < this.clients.length; i++) {
-			const e = this.clients[i];
-			console.log(e.user.id, e.id);
-		}
-
-		for (let i = 0; i < this.clients.length; i++) {
 			const found = chat.users.find((x) => x.id == this.clients[i].user.id);
 			if (found) {
-				console.log("Yes!");
 				server.to(this.clients[i].id).emit("newMessage", {
 					data: data,
 					senderId: client.user.id,
@@ -345,7 +340,6 @@ export class ChatService {
 			await this.chatRepository.save(chat);
 			return true;
 		}
-		console.log("no permissions to remove user from chat");
 		return false;
 	}
 
@@ -367,7 +361,7 @@ export class ChatService {
 			chat.isPublic = true;
 			chat.password = await this.protectorService.hash(password);
 		} else {
-			chat.isPublic = !Boolean(privacyLevel);
+			chat.isPublic = Boolean(privacyLevel);
 			chat.password = "";
 		}
 		await this.chatRepository.save(chat);
@@ -460,7 +454,6 @@ export class ChatService {
 			where: { id: chatId },
 			relations: ["admins", "users", "bannedUsers"],
 		});
-
 		if (
 			!chat ||
 			chat.owner == -1 ||
@@ -494,7 +487,6 @@ export class ChatService {
 			chat.admins.find((x) => x.id == executerId) == undefined ||
 			chat.muted.find((x) => x.userTargetId == userId)
 		) {
-			console.log("Error with req");
 			return;
 		}
 		const toAdd = new MutedUserEntity();
@@ -519,7 +511,6 @@ export class ChatService {
 			chat.owner == -1 ||
 			chat.admins.find((x) => x.id == executerId) == undefined
 		) {
-			console.log("Error with req");
 			return;
 		}
 		let i: number;
