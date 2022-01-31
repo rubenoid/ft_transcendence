@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchData } from "../../API/API";
-import { User, Match } from "../../Types/Types";
+import { User, Match, Achievement } from "../../Types/Types";
 import {
 	Img,
 	ImgContainer,
@@ -24,19 +24,6 @@ interface userStatus {
 	id: number;
 	status: string;
 }
-
-interface Achievement {
-	title: string;
-	description: string;
-}
-
-const achievemen: Achievement[] = [
-	{ title: "won a game", description: "won a single game" },
-	{ title: "won a game", description: "won a single game" },
-	{ title: "won a game", description: "won a single game" },
-	{ title: "won a game", description: "won a single game" },
-	{ title: "won a game", description: "won a single game" },
-];
 
 const ProfileExtended = (): JSX.Element => {
 	const [user, setUser] = useState<User>(undefined);
@@ -71,6 +58,15 @@ const ProfileExtended = (): JSX.Element => {
 					console.log(er);
 				});
 
+			fetchData(`/achievements/get/${profileId}`)
+				.then((achievements: Achievement[]) => {
+					user.achievements = achievements;
+					setUser({ ...user });
+				})
+				.catch((er) => {
+					console.log(er);
+				});
+
 			fetchData(`/user/userStatus/${profileId}`)
 				.then((status: string) => {
 					user.status = status;
@@ -79,6 +75,7 @@ const ProfileExtended = (): JSX.Element => {
 				.catch((er) => {
 					console.log(er);
 				});
+
 			return user;
 		}
 		getUser();
@@ -148,7 +145,7 @@ const ProfileExtended = (): JSX.Element => {
 					</TopContainer>
 					<HeaderTwo>Achievements</HeaderTwo>
 					<TopContainer>
-						<AchievementList achievements={achievemen} />
+						<AchievementList achievements={user.achievements} />
 					</TopContainer>
 				</MainContentWrapper>
 			</>
