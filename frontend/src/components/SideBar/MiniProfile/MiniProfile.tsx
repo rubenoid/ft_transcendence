@@ -82,7 +82,7 @@ const MiniProfile = (): JSX.Element => {
 						<Text>Profile</Text>
 					</LinkButton>
 					<LinkButton to="/settings">
-						<Text>settings</Text>
+						<Text>Settings</Text>
 					</LinkButton>
 					<LinkButton to="/game">
 						<Text>Game</Text>

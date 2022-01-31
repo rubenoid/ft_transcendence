@@ -187,6 +187,7 @@ const SettingsForm = (): JSX.Element => {
 					>
 						<Text>Find Users to add as a friend</Text>
 					</SettingsTable>
+					<br />
 					<SettingsTable
 						users={user.blockedUsers}
 						endpoint={"/blocked/remove/"}
@@ -202,6 +203,7 @@ const SettingsForm = (): JSX.Element => {
 					>
 						<Text>Find Users to block</Text>
 					</SettingsTable>
+					<br />
 					<SettingsTwoFA
 						setEndpoints={setEndpoints}
 						user={user}

@@ -33,14 +33,33 @@ export class GameGateway {
 		this.gameService.handlePositionUpdate(client, payload);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("joinGame")
 	joinGame(client: GuardedSocket, payload: string): void {
 		this.gameService.joinGame(this.server, client, payload);
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("leaveGame")
+	leaveGame(client: GuardedSocket, payload: string): void {
+		this.gameService.leaveGame(this.server, client, payload);
+	}
+
+	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("createNewGame")
 	createNewGame(client: GuardedSocket, payload: string): string {
 		return this.gameService.createLobby(client, this.server);
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("enterSpectatorBooth")
+	enterSpectatorBooth(client: GuardedSocket, payload: string): void {
+		client.join("SpecBooth");
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("leaveSpectatorBooth")
+	leaveSpectatorBooth(client: GuardedSocket, payload: string): void {
+		client.leave("SpecBooth");
 	}
 }

@@ -4,6 +4,7 @@ import { UserService } from "src/user/user.service";
 import { GuardedSocket } from "src/overloaded";
 import { MatchService } from "../match/match.service";
 import { Line, Point, RunningGame } from "./runningGame.service";
+import { UserEntity } from "src/user/user.entity";
 
 const maps: Line[][] = [
 	[
@@ -26,6 +27,12 @@ const maps: Line[][] = [
 	],
 ];
 
+export interface runDownGame {
+	players: UserEntity[];
+	score: number[];
+	id: string;
+}
+
 @Injectable()
 export class GameService {
 	games: RunningGame[] = [];
@@ -41,6 +48,30 @@ export class GameService {
 		return this.games.find((x) => x.roomId == id);
 	}
 
+	async getRunningGames(): Promise<runDownGame[]> {
+		const ret: runDownGame[] = [];
+		for (let i = 0; i < this.games.length; i++) {
+			const e = this.games[i];
+			ret.push({
+				players: [
+					e.players[0] != undefined
+						? await this.userService.getUserQueryOne({
+								where: { id: e.players[0].user.id },
+						  })
+						: undefined,
+					e.players[1] != undefined
+						? await this.userService.getUserQueryOne({
+								where: { id: e.players[1].user.id },
+						  })
+						: undefined,
+				],
+				score: e.score,
+				id: e.roomId,
+			});
+		}
+		return ret;
+	}
+
 	joinGame(server: Server, client: GuardedSocket, id: string): void {
 		const game = this.getRunningGame(id);
 		if (game) {
@@ -52,12 +83,23 @@ export class GameService {
 					server.to(game.roomId).emit("startMatch", game.roomId);
 				}
 			} else {
+				const playerIndex = game.players.findIndex(
+					(x) => x.user.id == client.user.id,
+				);
+				if (playerIndex != -1) {
+					game.players[playerIndex] = client;
+				}
 				server.to(client.id).emit("gameInit", {
 					decor: game.decor,
 					players: [game.players[0].user.id, game.players[1].user.id],
 				});
 			}
 		}
+	}
+
+	leaveGame(server: Server, client: GuardedSocket, id: string): void {
+		console.log("LEAVING SERVER WITH ID", id);
+		client.leave(id);
 	}
 
 	handleFinishedGame(finished: RunningGame): void {

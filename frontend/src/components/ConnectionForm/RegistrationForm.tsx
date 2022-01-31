@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { FormContainer, Form } from "./ConnectionFormElements";
+import {
+	FormContainer,
+	Form,
+	RegistrationContainer,
+} from "./ConnectionFormElements";
 import { Button } from "../Utils/Buttons/Button/Button";
 import { Label } from "../Utils/Label/Label";
 import { useNavigate } from "react-router-dom";
@@ -101,93 +105,99 @@ const RegistrationForm = (): JSX.Element => {
 	}, [registration.inputtedTwoFA]);
 
 	return (
-		<FormContainer>
-			<Form>
-				<Label>
-					<Text fontSize="20px">Username</Text>
-				</Label>
-				<TextInput
-					type="text"
-					onChange={(e) => {
-						setRegistration((prevState) => ({
-							...prevState,
-							userName: e.target.value,
-						}));
-					}}
-				/>
-				{!registration.userNameValid ? <Text>username is not valid</Text> : ""}
-				<Label>
-					<Text fontSize="20px">FirstName</Text>
-				</Label>
-				<TextInput
-					type="text"
-					onChange={(e) => {
-						setRegistration((prevState) => ({
-							...prevState,
-							firstName: e.target.value,
-						}));
-					}}
-				/>
-
-				<Label>
-					<Text fontSize="20px">Lastname</Text>
-				</Label>
-				<TextInput
-					type="text"
-					onChange={(e) => {
-						setRegistration((prevState) => ({
-							...prevState,
-							lastName: e.target.value,
-						}));
-					}}
-				/>
-
-				<Text>Enable Two factor Authenication</Text>
-				<Button
-					onClick={(e) => {
-						e.preventDefault();
-						setRegistration((prevState) => ({
-							...prevState,
-							twoFAEnabled: !registration.twoFAEnabled,
-						}));
-					}}
-				>
-					{registration.twoFAEnabled ? (
-						<Text fontSize="20px">Disable</Text>
+		<RegistrationContainer>
+			<FormContainer>
+				<Form>
+					<Label>
+						<Text fontSize="20px">Username</Text>
+					</Label>
+					<TextInput
+						type="text"
+						onChange={(e) => {
+							setRegistration((prevState) => ({
+								...prevState,
+								userName: e.target.value,
+							}));
+						}}
+					/>
+					{!registration.userNameValid ? (
+						<Text>username is not valid</Text>
 					) : (
-						<Text fontSize="20px">Enable</Text>
+						""
 					)}
-				</Button>
-				<br />
-				{registration.twoFAEnabled ? (
-					<>
-						<img src={qrcode.qrcode} alt="" />
-						<Label>
-							<Text fontSize="20px">Input2FA code pls</Text>
-						</Label>
-						<TextInput
-							type="text"
-							onChange={(e) => {
-								setRegistration((prevState) => ({
-									...prevState,
-									inputtedTwoFA: e.target.value,
-								}));
-							}}
-						/>
-					</>
-				) : (
-					""
-				)}
-				<Button
-					onClick={(e) => {
-						e.preventDefault();
-						registerNewUser(e);
-					}}
-				>
-					<Text fontSize="20px">Register</Text>
-				</Button>
-			</Form>
-		</FormContainer>
+					<Label>
+						<Text fontSize="20px">FirstName</Text>
+					</Label>
+					<TextInput
+						type="text"
+						onChange={(e) => {
+							setRegistration((prevState) => ({
+								...prevState,
+								firstName: e.target.value,
+							}));
+						}}
+					/>
+
+					<Label>
+						<Text fontSize="20px">Lastname</Text>
+					</Label>
+					<TextInput
+						type="text"
+						onChange={(e) => {
+							setRegistration((prevState) => ({
+								...prevState,
+								lastName: e.target.value,
+							}));
+						}}
+					/>
+
+					<Text>Enable Two factor Authenication</Text>
+					<Button
+						onClick={(e) => {
+							e.preventDefault();
+							setRegistration((prevState) => ({
+								...prevState,
+								twoFAEnabled: !registration.twoFAEnabled,
+							}));
+						}}
+					>
+						{registration.twoFAEnabled ? (
+							<Text fontSize="20px">Disable</Text>
+						) : (
+							<Text fontSize="20px">Enable</Text>
+						)}
+					</Button>
+					<br />
+					{registration.twoFAEnabled ? (
+						<>
+							<img src={qrcode.qrcode} alt="" />
+							<Label>
+								<Text fontSize="20px">Input2FA code pls</Text>
+							</Label>
+							<TextInput
+								type="text"
+								onChange={(e) => {
+									setRegistration((prevState) => ({
+										...prevState,
+										inputtedTwoFA: e.target.value,
+									}));
+								}}
+							/>
+						</>
+					) : (
+						""
+					)}
+					<Button
+						onClick={(e) => {
+							e.preventDefault();
+							registerNewUser(e);
+						}}
+					>
+						<Text fontSize="20px">Register</Text>
+					</Button>
+				</Form>
+			</FormContainer>
+		</RegistrationContainer>
 	);
 };
 

@@ -44,6 +44,10 @@ const UserView = (): JSX.Element => {
 				found.status = data.status;
 			}
 		});
+
+		return () => {
+			socket.off("userUpdate");
+		};
 	}, []);
 
 	function setListUsers(): JSX.Element[] {
