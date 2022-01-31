@@ -1,5 +1,10 @@
 import React from "react";
-import { UserWrapper, UserRow, UserRowContainer, StyledName } from "./ChatSettingsElements";
+import {
+	UserWrapper,
+	UserRow,
+	UserRowContainer,
+	StyledName,
+} from "./ChatSettingsElements";
 import { Link } from "react-router-dom";
 import { User, ChatData, ToSend } from "../../Types/Types";
 import { Text } from "../Utils/Text/Text";
