@@ -62,7 +62,7 @@ const UserView = (): JSX.Element => {
 				<TableRow key={i}>
 					<TableCell>
 						<Link to={`/profile/${user.id}`}>
-							<Text>{user.userName}</Text>
+							<Text hoverColor="#3f3fff">{user.userName}</Text>
 						</Link>
 					</TableCell>
 					<TableCell>
