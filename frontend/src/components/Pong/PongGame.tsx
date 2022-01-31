@@ -12,7 +12,7 @@ import {
 } from "./PongElements";
 
 import { fetchData } from "../../API/API";
-import { Text } from "../Utils/Text/Text";
+import { Header, Text } from "../Utils/Text/Text";
 import socket from "../../API/Socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../../Types/Types";
@@ -295,8 +295,8 @@ const Pong = (): JSX.Element => {
 					</ButtonContainer>
 				) : displayStatus == GameStatus.inviteWait ? (
 					<FinishedContainer>
-						<Text fontSize="20px">Created a lobby!</Text>
-						<Text fontSize="15px" color="black">
+						<Header >Created a lobby!</Header>
+						<Text fontSize="15px">
 							http://localhost:8080/game/{inviteLink}
 						</Text>
 						<Text>Waiting for players</Text>
