@@ -123,9 +123,7 @@ export class UserService {
 		const User = await this.UserRepository.find({
 			relations: ["friends", "matches", "achievements"],
 		});
-		console.log("aantal users found: ", User.length);
-		console.log(User[0].achievements[0].title);
-
+		console.log('aantal users found: ', User.length);
 		if (User.length === 0) throw "user not found";
 		return User;
 	}
@@ -146,8 +144,7 @@ export class UserService {
 	}
 
 	async deleteAll(): Promise<void> {
-		// await this.UserRepository.remove(await this.getAll());
-		await this.UserRepository.remove(await this.getAllUsersNRelations());
+		await this.UserRepository.remove(await this.getAll());
 	}
 
 	async insert(
