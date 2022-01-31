@@ -23,24 +23,6 @@ export const DashBoardContainer = styled.div`
 	}
 `;
 
-type BoxProps = {
-	gridArea: string;
-	alignSelf?: string;
-	bgColor?: string;
-	height?: string;
-};
-
-export const Box = styled.div<BoxProps>`
-	width: 100%;
-	height: 100%;
-	background-color: black;
-	border: 5px solid;
-	border-radius: 5px;
-	grid-area: ${(props: BoxProps) => props.gridArea};
-	place-self: ${(props: BoxProps) => props.alignSelf};
-	overflow: "scroll";
-`;
-
 export const DashBoardContentWrapper = styled.div`
 	width: 1000px;
 `;

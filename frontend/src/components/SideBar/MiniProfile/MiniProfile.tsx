@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useBetween } from "use-between";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../../API/API";
 import { SharedConnectionStatus } from "../../../App/ConnectionStatus";
 import { SharedUserState } from "../../../App/UserStatus";
@@ -10,10 +9,8 @@ import {
 	ProfileHeader,
 	TopContainer,
 } from "./MiniProfileElements";
-import ProfileExtended from "../../ProfileExtended/ProfileExtended";
 import { LinkButton } from "../../Utils/Buttons/Button/LinkButton";
 import { RoundButton } from "../../Utils/Buttons/Round/RoundButton";
-import { WidgetContainer } from "../../Utils/Containers/Containers";
 import { Text } from "../../Utils/Text/Text";
 import { DivSpacing } from "./MiniProfileElements";
 import { IconContainer } from "../../Utils/IconContainer";
@@ -85,7 +82,7 @@ const MiniProfile = (): JSX.Element => {
 						<Text>Profile</Text>
 					</LinkButton>
 					<LinkButton to="/settings">
-						<Text>settings</Text>
+						<Text>Settings</Text>
 					</LinkButton>
 					<LinkButton to="/game">
 						<Text>Game</Text>

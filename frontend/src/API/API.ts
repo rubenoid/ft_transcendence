@@ -13,7 +13,7 @@ const headers = {
 	},
 };
 
-export const updateHeaders = (): Promise<void> => {
+export const updateHttpHeaders = (): Promise<void> => {
 	headers.headers.Authorization = Cookies.get("AuthToken");
 	return null;
 };
@@ -25,8 +25,8 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 			return response.data;
 		})
 		.catch((error) => {
-			console.log(error);
-			throw "Error or smth";
+			console.log("Error:", error);
+			throw "Error";
 		});
 };
 
@@ -42,8 +42,6 @@ export const postData = async <T>(
 			headers: { ...headers.headers, extraHeaders },
 		};
 	} else headersToSend = headers;
-	console.log("extraHeaders", extraHeaders, "headersToSend", headersToSend);
-
 	return await instance
 		.post(url, data, headersToSend)
 		.then((response) => {

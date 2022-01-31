@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, FormContainer } from "./ConnectionFormElements";
+import { FormContainer } from "./ConnectionFormElements";
 import { RegistrationContainer } from "./ConnectionFormElements";
 import { Text } from "../Utils/Text/Text";
 import { Link } from "../Utils/Link/Link";

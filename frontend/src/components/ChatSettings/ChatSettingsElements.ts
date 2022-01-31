@@ -3,9 +3,8 @@ import styled from "styled-components";
 export const UserWrapper = styled.div`
 	border-radius: 7px;
 	background-color: black;
-	border: 5px solid white;
+	border: 1px solid white;
 	padding: 20px;
-	width: 500px;
 `;
 
 export const UserRowContainer = styled.div`
@@ -25,4 +24,8 @@ export const RowButton = styled.button`
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
+`;
+
+export const StyledName = styled.div`
+	padding: 15px;
 `;

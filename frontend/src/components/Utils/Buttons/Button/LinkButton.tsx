@@ -1,7 +1,6 @@
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import React from "react";
 import { Button } from "./Button";
-import { RoundButton } from "../Round/RoundButton";
 
 interface InputProps {
 	to: string | number;

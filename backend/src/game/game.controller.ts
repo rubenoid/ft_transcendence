@@ -1,5 +1,5 @@
 import { Controller, Get, Param } from "@nestjs/common";
-import { GameService } from "./game.service";
+import { GameService, runDownGame } from "./game.service";
 import { MatchService } from "../match/match.service";
 
 @Controller("game")
@@ -27,12 +27,16 @@ export class GameController {
 				const e = result.players[i];
 				playerids.push(e.id);
 			}
-			console.log(result);
 			return {
 				running: false,
 				scores: [result.scorePlayer1, result.scorePlayer2],
 				players: playerids,
 			};
 		}
+	}
+
+	@Get("running")
+	async running(): Promise<runDownGame[]> {
+		return await this.gameService.getRunningGames();
 	}
 }
