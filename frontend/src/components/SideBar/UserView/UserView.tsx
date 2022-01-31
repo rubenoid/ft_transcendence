@@ -69,7 +69,6 @@ const UserView = (): JSX.Element => {
 							fontSize="10"
 							color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
 						>
-							{" "}
 							{user.status ? user.status : "Offline"}
 						</Text>
 					</TableCell>
