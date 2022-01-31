@@ -123,7 +123,6 @@ export class UserService {
 		const User = await this.UserRepository.find({
 			relations: ["friends", "matches", "achievements"],
 		});
-		console.log('aantal users found: ', User.length);
 		if (User.length === 0) throw "user not found";
 		return User;
 	}
