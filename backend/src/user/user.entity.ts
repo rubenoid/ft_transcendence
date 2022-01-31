@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany, OneToMany } from "typeorm";
+import {
+	Entity,
+	Column,
+	PrimaryColumn,
+	JoinTable,
+	ManyToMany,
+	OneToMany,
+} from "typeorm";
 import { ChatEntity } from "src/chat/chat.entity";
 import { MatchEntity } from "src/match/match.entity";
 import { AchievementsEntity } from "src/achievements/achievements.entity";
