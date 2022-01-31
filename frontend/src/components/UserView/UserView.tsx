@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { fetchData } from "../../../API/API";
-import { User } from "../../../Types/Types";
-import socket from "../../../API/Socket";
+import { fetchData } from "../../API/API";
+import { User } from "../../Types/Types";
+import socket from "../../API/Socket";
 import {
 	Table,
 	TableBody,
@@ -9,8 +9,8 @@ import {
 	TableHeader,
 	TableHeaderCell,
 	TableRow,
-} from "../../Utils/Table/Table";
-import { Text } from "../../Utils/Text/Text";
+} from "../Utils/Table/Table";
+import { Text } from "../Utils/Text/Text";
 import { Link } from "react-router-dom";
 
 interface userStatus {
