@@ -4,6 +4,7 @@ import { UserService } from "src/user/user.service";
 import { GuardedSocket } from "src/overloaded";
 import { MatchService } from "../match/match.service";
 import { Line, Point, RunningGame } from "./runningGame.service";
+import { UserEntity } from "src/user/user.entity";
 
 const maps: Line[][] = [
 	[
@@ -26,6 +27,12 @@ const maps: Line[][] = [
 	],
 ];
 
+export interface runDownGame {
+	players: UserEntity[];
+	score: number[];
+	id: string;
+}
+
 @Injectable()
 export class GameService {
 	games: RunningGame[] = [];
@@ -39,6 +46,26 @@ export class GameService {
 
 	getRunningGame(id: string): RunningGame | undefined {
 		return this.games.find((x) => x.roomId == id);
+	}
+
+	async getRunningGames(): Promise<runDownGame[]> {
+		const ret: runDownGame[] = [];
+		for (let i = 0; i < this.games.length; i++) {
+			const e = this.games[i];
+			ret.push({
+				players: [
+					await this.userService.getUserQueryOne({
+						where: { id: e.players[0].user.id },
+					}),
+					await this.userService.getUserQueryOne({
+						where: { id: e.players[1].user.id },
+					}),
+				],
+				score: e.score,
+				id: e.roomId,
+			});
+		}
+		return ret;
 	}
 
 	joinGame(server: Server, client: GuardedSocket, id: string): void {

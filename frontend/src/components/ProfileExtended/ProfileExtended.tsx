@@ -30,7 +30,13 @@ interface Achievement {
 	description: string;
 }
 
-const achievemen: Achievement[] = [{title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}];
+const achievemen: Achievement[] = [
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+	{ title: "won a game", description: "won a single game" },
+];
 
 const ProfileExtended = (): JSX.Element => {
 	const [user, setUser] = useState<User>(undefined);
@@ -142,7 +148,7 @@ const ProfileExtended = (): JSX.Element => {
 					</TopContainer>
 					<HeaderTwo>Achievements</HeaderTwo>
 					<TopContainer>
-						<AchievementList achievements={achievemen}/>
+						<AchievementList achievements={achievemen} />
 					</TopContainer>
 				</MainContentWrapper>
 			</>
@@ -150,13 +156,17 @@ const ProfileExtended = (): JSX.Element => {
 	};
 	return (
 		<MainViewContainer>
-			{isBlocked != 0
-				? isBlocked == 1
-					? <Text>User is unavailable!</Text>
-					: <Text>You blocked this user! Go to settings to unblock</Text>
-				: user
-				? friendsData()
-				: "loading"}
+			{isBlocked != 0 ? (
+				isBlocked == 1 ? (
+					<Text>User is unavailable!</Text>
+				) : (
+					<Text>You blocked this user! Go to settings to unblock</Text>
+				)
+			) : user ? (
+				friendsData()
+			) : (
+				"loading"
+			)}
 			<FooterWrapper>
 				<LinkButton to={-1}>
 					<Text>Back</Text>

@@ -45,7 +45,9 @@ const UserView = (): JSX.Element => {
 			}
 		});
 
-		return () => {socket.off("userUpdate")};
+		return () => {
+			socket.off("userUpdate");
+		};
 	}, []);
 
 	function setListUsers(): JSX.Element[] {

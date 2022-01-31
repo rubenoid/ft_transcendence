@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { FormContainer, Form, RegistrationContainer } from "./ConnectionFormElements";
+import {
+	FormContainer,
+	Form,
+	RegistrationContainer,
+} from "./ConnectionFormElements";
 import { Label } from "../Utils/Label/Label";
 import { postData, fetchData } from "../../API/API";
 import { useNavigate } from "react-router-dom";

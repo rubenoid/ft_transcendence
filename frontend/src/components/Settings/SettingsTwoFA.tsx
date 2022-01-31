@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchData, postData } from "../../API/API";
-import { Text } from "../Utils/Text/Text";
+import { HeaderTwo, Text } from "../Utils/Text/Text";
 import { TextInput } from "../Utils/TextInput/TextInput";
 import { Label } from "../Utils/Label/Label";
 import { Item } from "../Utils/List/List";
@@ -85,9 +85,9 @@ const SettingsTwoFA = (props: InputParams): JSX.Element => {
 
 	return (
 		<>
-			<Text>{JSON.stringify(initial2FAEnabled)}</Text>
 			<Item>
-				<Text fontSize="20px">Two Factor Authentication</Text>
+				<HeaderTwo fontSize="20px">Two Factor Authentication</HeaderTwo>
+				<Label>Enabled: </Label>
 				<input type="checkbox" checked={isChecked} onChange={twoFAChange} />
 			</Item>
 			{isChecked && !initial2FAEnabled ? (

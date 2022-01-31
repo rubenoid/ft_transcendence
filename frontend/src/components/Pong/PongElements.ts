@@ -94,3 +94,9 @@ export const FinishedContainer = styled.div`
 	transform: translate(-50%, -50%);
 	padding: 10px;
 `;
+
+export const RunningItemWrapper = styled.div`
+	border: 1px solid white;
+	margin: 20px;
+	text-align: center;
+`;
