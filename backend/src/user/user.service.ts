@@ -151,7 +151,11 @@ export class UserService {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
-		user.userName = userName;
+		if (
+			(await this.getUserQueryOne({ where: { userName: user.userName } })) ==
+			undefined
+		)
+			user.userName = userName;
 		user.registered = true;
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
 

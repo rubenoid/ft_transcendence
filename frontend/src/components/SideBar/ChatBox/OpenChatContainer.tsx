@@ -108,11 +108,13 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 								<MinimizeIcon />
 							</IconContainer>
 						</TopText>
-						<TopText onClick={() => setChannel(undefined)}>
-							<IconContainer color="#ff3a3a" hoverColor="#cc3a3a">
-								<CloseIcon size={30} />
-							</IconContainer>
-						</TopText>
+						<IconContainer
+							color="#ff3a3a"
+							hoverColor="#cc3a3a"
+							onClick={() => setChannel(undefined)}
+						>
+							<CloseIcon size={30} />
+						</IconContainer>
 					</TopButtonsContainer>
 				</TopContainer>
 				{props.passwordNeeded ? (
