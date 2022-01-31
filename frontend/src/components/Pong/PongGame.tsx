@@ -295,10 +295,8 @@ const Pong = (): JSX.Element => {
 					</ButtonContainer>
 				) : displayStatus == GameStatus.inviteWait ? (
 					<FinishedContainer>
-						<Header >Created a lobby!</Header>
-						<Text fontSize="15px">
-							http://localhost:8080/game/{inviteLink}
-						</Text>
+						<Header>Created a lobby!</Header>
+						<Text fontSize="15px">http://localhost:8080/game/{inviteLink}</Text>
 						<Text>Waiting for players</Text>
 					</FinishedContainer>
 				) : (

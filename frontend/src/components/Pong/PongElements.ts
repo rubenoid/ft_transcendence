@@ -102,4 +102,8 @@ export const RunningItemWrapper = styled.div`
 	margin: 20px;
 	text-align: center;
 	border-radius: 7px;
+
+	:hover {
+		background-color: #3f3fff;
+	}
 `;

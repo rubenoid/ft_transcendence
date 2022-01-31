@@ -54,12 +54,16 @@ export class GameService {
 			const e = this.games[i];
 			ret.push({
 				players: [
-					await this.userService.getUserQueryOne({
-						where: { id: e.players[0].user.id },
-					}),
-					await this.userService.getUserQueryOne({
-						where: { id: e.players[1].user.id },
-					}),
+					e.players[0] != undefined
+						? await this.userService.getUserQueryOne({
+								where: { id: e.players[0].user.id },
+						  })
+						: undefined,
+					e.players[1] != undefined
+						? await this.userService.getUserQueryOne({
+								where: { id: e.players[1].user.id },
+						  })
+						: undefined,
 				],
 				score: e.score,
 				id: e.roomId,

@@ -24,10 +24,10 @@ interface specUpdate {
 const RunningGamesList = (props: InputParams): JSX.Element => {
 	const [runningGames, setRunningGames] = useState<RunningGame[]>([]);
 
-	function update() {
+	function update(): void {
 		fetchData("/game/running").then((res: RunningGame[]) => {
 			setRunningGames(res);
-		});	
+		});
 	}
 
 	useEffect(() => {
@@ -49,8 +49,13 @@ const RunningGamesList = (props: InputParams): JSX.Element => {
 					onClick={() => props.onSpectateClick(game.id)}
 				>
 					<Text fontSize="25px">
-						{game.players[0].userName} ({game.score[0]}) - ({game.score[1]}){" "}
-						{game.players[1].userName}
+						{game.players[0] != undefined
+							? game.players[0].userName + " (" + game.score[0] + ")"
+							: "No one"}
+						-
+						{game.players[1] != undefined
+							? " (" + game.score[1] + ") " + game.players[1].userName
+							: "No one"}
 					</Text>
 				</RunningItemWrapper>
 			);
