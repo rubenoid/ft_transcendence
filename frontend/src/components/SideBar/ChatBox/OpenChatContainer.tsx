@@ -104,7 +104,11 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 						<TopText onClick={() => props.setMinimized(true)}>
 							<FaWindowMinimize />
 						</TopText>
-						<IconContainer color="#ff3a3a" hoverColor="#cc3a3a" onClick={() => setChannel(undefined)}>
+						<IconContainer
+							color="#ff3a3a"
+							hoverColor="#cc3a3a"
+							onClick={() => setChannel(undefined)}
+						>
 							<CloseIcon size={30} />
 						</IconContainer>
 					</TopButtonsContainer>

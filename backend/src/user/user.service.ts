@@ -151,7 +151,10 @@ export class UserService {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
-		if (await this.getUserQueryOne({where: {userName: user.userName}}) == undefined)
+		if (
+			(await this.getUserQueryOne({ where: { userName: user.userName } })) ==
+			undefined
+		)
 			user.userName = userName;
 		user.registered = true;
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
@@ -204,7 +207,10 @@ export class UserService {
 		for (let i = 0; i < users.length; i++) {
 			const e = users[i];
 			const foundStatus = userStatus.get(e.id);
-			tosend.push({ id: e.id, status: foundStatus ? foundStatus.status : "Offline"})
+			tosend.push({
+				id: e.id,
+				status: foundStatus ? foundStatus.status : "Offline",
+			});
 		}
 		return tosend;
 	}

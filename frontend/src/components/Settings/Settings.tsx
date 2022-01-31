@@ -88,7 +88,8 @@ const SettingsForm = (): JSX.Element => {
 		fetchData(endpoint)
 			.then((usr: User) => {
 				console.log(name, "User: ", usr);
-				if (usr && usr.id != user.id) setToInput({ ...toInput, userNameValid: false });
+				if (usr && usr.id != user.id)
+					setToInput({ ...toInput, userNameValid: false });
 				else setToInput({ ...toInput, userNameValid: true });
 			})
 			.catch(() => {
