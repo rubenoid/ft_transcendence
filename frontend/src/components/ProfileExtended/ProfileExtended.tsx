@@ -18,11 +18,19 @@ import { Link, useParams } from "react-router-dom";
 import { Header, HeaderTwo, Text } from "../Utils/Text/Text";
 import ListMatch from "./ListMatch";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
+import AchievementList from "./ListAchievents";
 
 interface userStatus {
 	id: number;
 	status: string;
 }
+
+interface Achievement {
+	title: string;
+	description: string;
+}
+
+const achievemen: Achievement[] = [{title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}, {title: "won a game", description: "won a single game"}];
 
 const ProfileExtended = (): JSX.Element => {
 	const [user, setUser] = useState<User>(undefined);
@@ -132,6 +140,10 @@ const ProfileExtended = (): JSX.Element => {
 					<TopContainer>
 						<ListMatch user={user}></ListMatch>
 					</TopContainer>
+					<HeaderTwo>Achievements</HeaderTwo>
+					<TopContainer>
+						<AchievementList achievements={achievemen}/>
+					</TopContainer>
 				</MainContentWrapper>
 			</>
 		);
@@ -140,8 +152,8 @@ const ProfileExtended = (): JSX.Element => {
 		<MainViewContainer>
 			{isBlocked != 0
 				? isBlocked == 1
-					? "User is unavailable!"
-					: "You blocked this user! Go to settings to unblock"
+					? <Text>User is unavailable!</Text>
+					: <Text>You blocked this user! Go to settings to unblock</Text>
 				: user
 				? friendsData()
 				: "loading"}
