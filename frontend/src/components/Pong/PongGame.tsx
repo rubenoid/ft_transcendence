@@ -16,7 +16,6 @@ import { Text } from "../Utils/Text/Text";
 import socket from "../../API/Socket";
 import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../../Types/Types";
-import { UserWrapper } from "../ChatSettings/ChatSettingsElements";
 
 enum GameStatus {
 	base,
@@ -120,7 +119,7 @@ const Pong = (): JSX.Element => {
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const context = canvas.getContext("2d");
-		let renderer: PongRenderer | undefined = new PongRenderer(context, []);
+		const renderer: PongRenderer | undefined = new PongRenderer(context, []);
 
 		function handleKeyDown(event: KeyboardEvent): void {
 			if (
@@ -204,29 +203,28 @@ const Pong = (): JSX.Element => {
 
 	useEffect(() => {
 		async function loadGame(): Promise<void> {
-			fetchData(
-				`/game/getDetails/${gameId}`,
-			).then(async (data: fetchedGameData) => {
-				const players: User[] = [];
-				if (data.players[0])
-					players.push(await fetchData(`/user/get/${data.players[0]}`));
-				if (data.players[1])
-					players.push(await fetchData(`/user/get/${data.players[1]}`));
-	
-				setPlayers(players);
-				setScores(data.scores);
-				if (!data.running) setDisplay(GameStatus.finished);
-				else {
-					socket.emit("joinGame", gameId);
-					setDisplay(GameStatus.ingame);
-				}
-			}).catch(() => {
-				setPlayers([]);
-				setScores([0, 0]);
-				setDisplay(GameStatus.base);
-				return;
-			});
+			fetchData(`/game/getDetails/${gameId}`)
+				.then(async (data: fetchedGameData) => {
+					const players: User[] = [];
+					if (data.players[0])
+						players.push(await fetchData(`/user/get/${data.players[0]}`));
+					if (data.players[1])
+						players.push(await fetchData(`/user/get/${data.players[1]}`));
 
+					setPlayers(players);
+					setScores(data.scores);
+					if (!data.running) setDisplay(GameStatus.finished);
+					else {
+						socket.emit("joinGame", gameId);
+						setDisplay(GameStatus.ingame);
+					}
+				})
+				.catch(() => {
+					setPlayers([]);
+					setScores([0, 0]);
+					setDisplay(GameStatus.base);
+					return;
+				});
 		}
 
 		if (gameId === undefined) {

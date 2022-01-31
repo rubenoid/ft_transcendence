@@ -79,9 +79,10 @@ export class GameService {
 					server.to(game.roomId).emit("startMatch", game.roomId);
 				}
 			} else {
-				const playerIndex = game.players.findIndex((x) => x.user.id == client.user.id)
-				if (playerIndex != -1)
-				{
+				const playerIndex = game.players.findIndex(
+					(x) => x.user.id == client.user.id,
+				);
+				if (playerIndex != -1) {
 					game.players[playerIndex] = client;
 				}
 				server.to(client.id).emit("gameInit", {
@@ -96,7 +97,6 @@ export class GameService {
 		console.log("LEAVING SERVER WITH ID", id);
 		client.leave(id);
 	}
-
 
 	handleFinishedGame(finished: RunningGame): void {
 		this.userService.updateUserStatus(

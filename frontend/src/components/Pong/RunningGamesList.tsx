@@ -26,7 +26,10 @@ const RunningGamesList = (props: InputParams): JSX.Element => {
 	const listRunningGames = runningGames.map(
 		(game: RunningGame, key: number) => {
 			return (
-				<RunningItemWrapper key={key} onClick={() => props.onSpectateClick(game.id)}>
+				<RunningItemWrapper
+					key={key}
+					onClick={() => props.onSpectateClick(game.id)}
+				>
 					<Text fontSize="25px">
 						{game.players[0].userName} ({game.score[0]}) - ({game.score[1]}){" "}
 						{game.players[1].userName}

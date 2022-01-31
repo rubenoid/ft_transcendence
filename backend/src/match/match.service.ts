@@ -84,8 +84,7 @@ export class MatchService {
 		);
 
 		toAdd.players = [players[0], players[1]];
-		if (players[0].id == players[1].id)
-			return;
+		if (players[0].id == players[1].id) return;
 		this.MatchRepository.save(toAdd);
 		this.userService.saveUser(players[0]);
 		this.userService.saveUser(players[1]);

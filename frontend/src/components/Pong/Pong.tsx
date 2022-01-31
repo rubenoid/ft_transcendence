@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 import {
 	FooterWrapper,
@@ -12,7 +12,6 @@ import Pong from "./PongGame";
 import RunningGamesList from "./RunningGamesList";
 
 const PongView = (): JSX.Element => {
-
 	const navigate = useNavigate();
 	return (
 		<MainViewContainer>
