@@ -22,6 +22,7 @@ enum GameStatus {
 	finished,
 	inviteWait,
 	ingame,
+	queuing,
 }
 
 interface fetchedGameData {
@@ -109,7 +110,7 @@ const Pong = (): JSX.Element => {
 	const [displayStatus, setDisplay] = useState(GameStatus.base);
 	const [scores, setScores] = useState([0, 0]);
 	const [players, setPlayers] = useState([undefined, undefined]);
-	const [inviteLink, setInviteLink] = useState(undefined);
+	const [inviteLink, setInviteLink] = useState<string>(undefined);
 
 	const { gameId } = useParams();
 	const navigate = useNavigate();
@@ -189,7 +190,6 @@ const Pong = (): JSX.Element => {
 			setPlayers([]);
 			setScores([0, 0]);
 			renderer.clear();
-			console.log("LEAVING THE TING", gameId);
 			socket.emit("leaveGame", gameId);
 			socket.off("startMatch");
 			socket.off("gameFinished");
@@ -200,6 +200,17 @@ const Pong = (): JSX.Element => {
 			document.removeEventListener("keyup", handleKeyUp, true);
 		};
 	}, [gameId]);
+
+	useEffect(() => {
+
+		return () => {
+			console.log(inviteLink, displayStatus);
+			if (GameStatus.inviteWait == displayStatus) {
+				console.log(inviteLink);
+				socket.emit("leaveInvite", inviteLink);
+			}
+		};
+	}, [inviteLink, displayStatus]);
 
 	useEffect(() => {
 		async function loadGame(): Promise<void> {
@@ -236,8 +247,10 @@ const Pong = (): JSX.Element => {
 	function addToQueue(): void {
 		if (isQueueing) {
 			socket.emit("removeFromQueue");
+			setDisplay(GameStatus.base);
 		} else {
 			socket.emit("addToQueue");
+			setDisplay(GameStatus.queuing);
 		}
 		setQueue(!isQueueing);
 	}
@@ -278,18 +291,18 @@ const Pong = (): JSX.Element => {
 							{" "}
 							{scores[0]} - {scores[1]}{" "}
 						</Text>
-						<Button onClick={addToQueue}>Play Again</Button>
+						<Button onClick={() => setDisplay(GameStatus.base)}>Back</Button>
 					</FinishedContainer>
 				) : displayStatus == GameStatus.base ? (
 					<ButtonContainer>
-						<Button>
-							<Text fontSize="15px" onClick={addToQueue}>
-								{isQueueing ? "In Queue" : "Play Online"}
+						<Button onClick={addToQueue}>
+							<Text fontSize="15px">
+								Play Online
 							</Text>
 						</Button>
-						<Button>
-							<Text fontSize="15px" onClick={createLinkGame}>
-								{isQueueing ? "In Queue" : "Create a link"}
+						<Button onClick={createLinkGame}>
+							<Text fontSize="15px">
+								Create a link
 							</Text>
 						</Button>
 					</ButtonContainer>
@@ -298,10 +311,22 @@ const Pong = (): JSX.Element => {
 						<Header>Created a lobby!</Header>
 						<Text fontSize="15px">http://localhost:8080/game/{inviteLink}</Text>
 						<Text>Waiting for players</Text>
+						<Button onClick={() => setDisplay(GameStatus.base)}>
+							<Text fontSize="15px">
+								Back
+							</Text>
+						</Button>
 					</FinishedContainer>
-				) : (
-					""
-				)}
+				) : displayStatus == GameStatus.queuing ? (
+					<ButtonContainer>
+						<Header>In Queue</Header>
+						<Button onClick={addToQueue}>
+							<Text fontSize="15px">
+								Cancel
+							</Text>
+						</Button>
+					</ButtonContainer>
+				) : ""}
 			</PongContainer>
 		</>
 	);
