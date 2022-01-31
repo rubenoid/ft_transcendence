@@ -31,7 +31,7 @@ const UserView = (): JSX.Element => {
 		getUsers();
 	}, [users]);
 
-	function setUserStatus(user: User) {
+	function setUserStatus(user: User): void {
 		const found = usersStatus.find((currentUser) => currentUser.id == user.id);
 		if (found) {
 			user.status = found.status;
