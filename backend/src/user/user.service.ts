@@ -151,7 +151,11 @@ export class UserService {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
-		user.userName = userName;
+		if (
+			(await this.getUserQueryOne({ where: { userName: user.userName } })) ==
+			undefined
+		)
+			user.userName = userName;
 		user.registered = true;
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
 
@@ -198,12 +202,15 @@ export class UserService {
 
 	async getAllStatus(): Promise<object[]> {
 		const tosend = [];
-
-		userStatus.forEach(
-			(val: { status: string; client: GuardedSocket }, key: number) => {
-				tosend.push({ id: key, status: val.status });
-			},
-		);
+		const users = await this.UserRepository.find();
+		for (let i = 0; i < users.length; i++) {
+			const e = users[i];
+			const foundStatus = userStatus.get(e.id);
+			tosend.push({
+				id: e.id,
+				status: foundStatus ? foundStatus.status : "Offline",
+			});
+		}
 		return tosend;
 	}
 

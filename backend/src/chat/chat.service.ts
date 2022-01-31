@@ -162,18 +162,19 @@ export class ChatService {
 		toadd.name = name;
 		toadd.muted = [];
 		toadd.users = [];
+		const uniqueUsers = [...new Set(userIds)];
 		if (password != "") {
 			toadd.password = await this.protectorService.hash(password);
 		} else toadd.password = "";
 		let usertmp: UserEntity;
-		for (let i = 0; i < userIds.length; i++) {
+		for (let i = 0; i < uniqueUsers.length; i++) {
 			usertmp = await this.userService.getUserQueryOne({
-				where: { id: userIds[i] },
+				where: { id: uniqueUsers[i] },
 			});
 			if (!usertmp) throw "user not found???";
 			toadd.users.push(usertmp);
 		}
-		toadd.owner = userIds[userIds.length - 1];
+		toadd.owner = uniqueUsers[uniqueUsers.length - 1];
 		toadd.admins = [];
 		toadd.admins.push(usertmp);
 		const res = await this.chatRepository.save(toadd);

@@ -19,7 +19,7 @@ import { outputChatName } from "../SideBar";
 import { postData } from "../../../API/API";
 import { Link } from "react-router-dom";
 import { AiOutlineSend as SendIcon } from "react-icons/ai";
-import { FaWindowMinimize } from "react-icons/fa";
+import { FaWindowMinimize as MinimizeIcon } from "react-icons/fa";
 import { Text } from "../../Utils/Text/Text";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { Button } from "../../Utils/Buttons/Button/Button";
@@ -99,16 +99,22 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 					<TopText>{outputChatName(channel, user, channel.name)}</TopText>
 					<TopButtonsContainer>
 						<Link to={`/chat/${channel.id}`}>
-							<SettingsIcon />
+							<IconContainer hoverColor="white">
+								<SettingsIcon />
+							</IconContainer>
 						</Link>
 						<TopText onClick={() => props.setMinimized(true)}>
-							<FaWindowMinimize />
-						</TopText>
-						<TopText onClick={() => setChannel(undefined)}>
-							<IconContainer color="#ff3a3a" hoverColor="#cc3a3a">
-								<CloseIcon size={30} />
+							<IconContainer hoverColor="white">
+								<MinimizeIcon />
 							</IconContainer>
 						</TopText>
+						<IconContainer
+							color="#ff3a3a"
+							hoverColor="#cc3a3a"
+							onClick={() => setChannel(undefined)}
+						>
+							<CloseIcon size={30} />
+						</IconContainer>
 					</TopButtonsContainer>
 				</TopContainer>
 				{props.passwordNeeded ? (
