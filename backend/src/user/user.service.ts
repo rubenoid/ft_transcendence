@@ -203,7 +203,6 @@ export class UserService {
 	async getAllStatus(): Promise<object[]> {
 		const tosend = [];
 		const users = await this.UserRepository.find();
-
 		for (let i = 0; i < users.length; i++) {
 			const e = users[i];
 			const foundStatus = userStatus.get(e.id);

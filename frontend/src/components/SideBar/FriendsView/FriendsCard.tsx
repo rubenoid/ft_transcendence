@@ -21,6 +21,7 @@ import { CgProfile as ProfileIcon } from "react-icons/cg";
 interface InputParams {
 	friends: User[];
 }
+
 const FriendsCard = (props: InputParams): JSX.Element => {
 	const navigate = useNavigate();
 	const { channel, setChannel } = SharedChatState();
@@ -45,7 +46,12 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 						</FriendsImageContainer>
 						<FriendsNameContainer>
 							<Text>{user.userName}</Text>
-							<Text>{"Online"}</Text>
+							<Text
+								fontSize="10"
+								color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
+							>
+								{user.status}
+							</Text>
 						</FriendsNameContainer>
 					</FriendsTitleContainer>
 					<FriendsButtonContainer>
@@ -55,7 +61,7 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 									goToProfile(user.id);
 								}}
 							>
-								<IconContainer>
+								<IconContainer color="black">
 									<ProfileIcon size={25} />
 								</IconContainer>
 							</FriendsCardButton>
@@ -67,7 +73,7 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 								}}
 							>
 								<IconContainer>
-									<ChatIcon size={25} />
+									<ChatIcon size={25} color="black" />
 								</IconContainer>
 							</FriendsCardButton>
 						</div>

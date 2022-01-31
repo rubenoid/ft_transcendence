@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { fetchData } from "../../../API/API";
 import { User } from "../../../Types/Types";
 import socket from "../../../API/Socket";
 import {
@@ -11,39 +10,24 @@ import {
 	TableRow,
 } from "../../Utils/Table/Table";
 import { Text } from "../../Utils/Text/Text";
-
-interface userStatus {
-	id: number;
-	status: string;
-}
+import { getAllUsers, userStatus } from "./getUsers";
 
 const UserView = (): JSX.Element => {
 	const [users, setUsers] = useState<User[]>([]);
-	const [usersStatus, setUsersStatus] = useState<userStatus[]>([]);
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
-			const allUsers: User[] = await fetchData("/user/all");
-			const allStatus: userStatus[] = await fetchData("/user/getAllStatus");
+			const allUsers: User[] = await getAllUsers();
 			setUsers(allUsers);
-			setUsersStatus(allStatus);
 		}
 		getUsers();
 	}, [users]);
-
-	function setUserStatus(user: User): void {
-		const found = usersStatus.find((currentUser) => currentUser.id == user.id);
-		if (found) {
-			user.status = found.status;
-		}
-	}
 
 	useEffect(() => {
 		socket.on("userUpdate", (data: userStatus) => {
 			const found = users.find((user) => user.id == data.id);
 			if (found) {
 				found.status = data.status;
-				getListUsers();
 			}
 		});
 
@@ -56,7 +40,6 @@ const UserView = (): JSX.Element => {
 		const rows = [];
 		for (let i = 0; i < users.length; i++) {
 			const user = users[i];
-			setUserStatus(user);
 			rows.push(
 				<TableRow key={i}>
 					<TableCell>
@@ -73,7 +56,7 @@ const UserView = (): JSX.Element => {
 							fontSize="10"
 							color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
 						>
-							{user.status ? user.status : "Offline"}
+							{user.status}
 						</Text>
 					</TableCell>
 				</TableRow>,
