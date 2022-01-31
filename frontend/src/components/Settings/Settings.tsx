@@ -21,7 +21,7 @@ export class formData {
 	image = "";
 	friendsToAdd: User[] = [];
 	blockedToAdd: User[] = [];
-	userNameValid = false;
+	userNameValid = true;
 	file: File = undefined;
 }
 
@@ -84,11 +84,12 @@ const SettingsForm = (): JSX.Element => {
 	function getUsersforUsername(name: string): void {
 		const endpoint = `/user/getByUserName/${name}`;
 		setUser({ ...user, userName: name });
-		if (name.length == 0) return;
+		if (name.length == 0) setToInput({ ...toInput, userNameValid: false });
 		fetchData(endpoint)
 			.then((usr: User) => {
-				if (usr) setToInput({ ...toInput, userNameValid: true });
-				else setToInput({ ...toInput, userNameValid: false });
+				console.log(name, "User: ", usr);
+				if (usr && usr.id != user.id) setToInput({ ...toInput, userNameValid: false });
+				else setToInput({ ...toInput, userNameValid: true });
 			})
 			.catch(() => {
 				setToInput({ ...toInput, userNameValid: false });
@@ -120,7 +121,7 @@ const SettingsForm = (): JSX.Element => {
 							getUsersforUsername(e.target.value);
 						}}
 					/>
-					{toInput.userNameValid ? (
+					{toInput.userNameValid == true ? (
 						<Text>username available and unique</Text>
 					) : (
 						<Text>username already in use</Text>
