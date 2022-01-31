@@ -14,8 +14,9 @@ import {
 import { fetchData } from "../../API/API";
 import { Text } from "../Utils/Text/Text";
 import socket from "../../API/Socket";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { User } from "../../Types/Types";
+import { UserWrapper } from "../ChatSettings/ChatSettingsElements";
 
 enum GameStatus {
 	base,
@@ -112,13 +113,14 @@ const Pong = (): JSX.Element => {
 	const [inviteLink, setInviteLink] = useState(undefined);
 
 	const { gameId } = useParams();
+	const navigate = useNavigate();
 
 	const keys = [false, false];
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
 		const context = canvas.getContext("2d");
-		const renderer: PongRenderer | undefined = new PongRenderer(context, []);
+		let renderer: PongRenderer | undefined = new PongRenderer(context, []);
 
 		function handleKeyDown(event: KeyboardEvent): void {
 			if (
@@ -171,8 +173,7 @@ const Pong = (): JSX.Element => {
 		});
 
 		socket.on("startMatch", (gameId: string) => {
-			const history = window.history;
-			history.pushState(null, "", `/game/${gameId}`);
+			navigate(`/game/${gameId}`);
 			setDisplay(GameStatus.ingame);
 		});
 
@@ -186,36 +187,46 @@ const Pong = (): JSX.Element => {
 		});
 
 		return () => {
+			setPlayers([]);
+			setScores([0, 0]);
+			renderer.clear();
+			console.log("LEAVING THE TING", gameId);
+			socket.emit("leaveGame", gameId);
+			socket.off("startMatch");
+			socket.off("gameFinished");
+			socket.off("scoreUpdate");
+			socket.off("gameInit");
+			socket.off("gameUpdate");
 			document.removeEventListener("keydown", handleKeyDown, true);
 			document.removeEventListener("keyup", handleKeyUp, true);
 		};
-	}, []);
+	}, [gameId]);
 
 	useEffect(() => {
 		async function loadGame(): Promise<void> {
-			const data: fetchedGameData = await fetchData(
+			fetchData(
 				`/game/getDetails/${gameId}`,
-			);
-			if (data === undefined) {
+			).then(async (data: fetchedGameData) => {
+				const players: User[] = [];
+				if (data.players[0])
+					players.push(await fetchData(`/user/get/${data.players[0]}`));
+				if (data.players[1])
+					players.push(await fetchData(`/user/get/${data.players[1]}`));
+	
+				setPlayers(players);
+				setScores(data.scores);
+				if (!data.running) setDisplay(GameStatus.finished);
+				else {
+					socket.emit("joinGame", gameId);
+					setDisplay(GameStatus.ingame);
+				}
+			}).catch(() => {
 				setPlayers([]);
 				setScores([0, 0]);
 				setDisplay(GameStatus.base);
 				return;
-			}
+			});
 
-			const players: User[] = [];
-			if (data.players[0])
-				players.push(await fetchData(`/user/get/${data.players[0]}`));
-			if (data.players[1])
-				players.push(await fetchData(`/user/get/${data.players[1]}`));
-
-			setPlayers(players);
-			setScores(data.scores);
-			if (!data.running) setDisplay(GameStatus.finished);
-			else {
-				socket.emit("joinGame", gameId);
-				setDisplay(GameStatus.ingame);
-			}
 		}
 
 		if (gameId === undefined) {

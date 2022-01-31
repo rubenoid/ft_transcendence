@@ -40,6 +40,12 @@ export class GameGateway {
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("leaveGame")
+	leaveGame(client: GuardedSocket, payload: string): void {
+		this.gameService.leaveGame(this.server, client, payload);
+	}
+
+	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("createNewGame")
 	createNewGame(client: GuardedSocket, payload: string): string {
 		return this.gameService.createLobby(client, this.server);

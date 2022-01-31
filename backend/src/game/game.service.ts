@@ -92,6 +92,12 @@ export class GameService {
 		}
 	}
 
+	leaveGame(server: Server, client: GuardedSocket, id: string): void {
+		console.log("LEAVING SERVER WITH ID", id);
+		client.leave(id);
+	}
+
+
 	handleFinishedGame(finished: RunningGame): void {
 		this.userService.updateUserStatus(
 			finished.server,

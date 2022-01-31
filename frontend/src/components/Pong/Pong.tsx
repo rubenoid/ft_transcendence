@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 import {
 	FooterWrapper,
@@ -11,6 +12,8 @@ import Pong from "./PongGame";
 import RunningGamesList from "./RunningGamesList";
 
 const PongView = (): JSX.Element => {
+
+	const navigate = useNavigate();
 	return (
 		<MainViewContainer>
 			<HeaderWrapper>
@@ -20,8 +23,8 @@ const PongView = (): JSX.Element => {
 				<div style={{ display: "flex", justifyContent: "space-between" }}>
 					<Pong />
 					<RunningGamesList
-						onSpectateClick={() => {
-							console.log("UNIMPLEMENTED");
+						onSpectateClick={(id: string) => {
+							navigate(`/game/${id}`);
 						}}
 					/>
 				</div>
