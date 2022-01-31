@@ -33,6 +33,7 @@ export class GameGateway {
 		this.gameService.handlePositionUpdate(client, payload);
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("joinGame")
 	joinGame(client: GuardedSocket, payload: string): void {
 		this.gameService.joinGame(this.server, client, payload);

@@ -79,6 +79,11 @@ export class GameService {
 					server.to(game.roomId).emit("startMatch", game.roomId);
 				}
 			} else {
+				const playerIndex = game.players.findIndex((x) => x.user.id == client.user.id)
+				if (playerIndex != -1)
+				{
+					game.players[playerIndex] = client;
+				}
 				server.to(client.id).emit("gameInit", {
 					decor: game.decor,
 					players: [game.players[0].user.id, game.players[1].user.id],
