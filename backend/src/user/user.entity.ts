@@ -72,6 +72,8 @@ export class UserEntity {
 	@ManyToMany(() => ChatEntity, (chat) => chat.users) //, UserEntity => UserEntity.Friends)
 	channels: ChatEntity[];
 
-	@OneToMany(() => AchievementsEntity, (target) => target.target, { cascade: true })
-	achievements: AchievementsEntity[]
+	@OneToMany(() => AchievementsEntity, (target) => target.target, {
+		cascade: true,
+	})
+	achievements: AchievementsEntity[];
 }

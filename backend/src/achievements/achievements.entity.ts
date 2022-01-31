@@ -23,6 +23,8 @@ export class AchievementsEntity {
 	@Column()
 	description: string;
 
-	@ManyToOne(() => UserEntity, (target) => target.achievements, { onDelete: "CASCADE" })
+	@ManyToOne(() => UserEntity, (target) => target.achievements, {
+		onDelete: "CASCADE",
+	})
 	target: UserEntity;
 }

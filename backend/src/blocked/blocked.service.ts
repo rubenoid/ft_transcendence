@@ -10,7 +10,6 @@ export class BlockedService {
 		private readonly userService: UserService,
 		private readonly friendService: FriendsService,
 		private readonly achievementsService: AchievementsService,
-
 	) {}
 
 	async findUserWithBlocked(id: number): Promise<UserEntity> {

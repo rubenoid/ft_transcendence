@@ -10,7 +10,12 @@ import { RatingService } from "src/rating/rating";
 import { AchievementsModule } from "src/achievements/achievements.module";
 
 @Module({
-	imports: [DatabaseModule, UserModule, forwardRef(() => GameModule), AchievementsModule],
+	imports: [
+		DatabaseModule,
+		UserModule,
+		forwardRef(() => GameModule),
+		AchievementsModule,
+	],
 	controllers: [MatchController],
 	providers: [MatchService, ...MatchProvider, MatchGateway, RatingService],
 	exports: [MatchService, ...MatchProvider],

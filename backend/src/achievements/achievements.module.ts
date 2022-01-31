@@ -9,6 +9,6 @@ import { DatabaseModule } from "src/database/database.module";
 	imports: [DatabaseModule, UserModule],
 	providers: [AchievementsService, ...AchievementsProvider],
 	controllers: [AchievementsController],
-	exports: [AchievementsService, ...AchievementsProvider]
+	exports: [AchievementsService, ...AchievementsProvider],
 })
 export class AchievementsModule {}
