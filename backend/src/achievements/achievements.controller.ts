@@ -6,7 +6,7 @@ import { AchievementsService } from "./achievements.service";
 
 @Controller("achievements")
 export class AchievementsController {
-    constructor(private readonly achievenmentsService: AchievementsService) {}
+	constructor(private readonly achievenmentsService: AchievementsService) {}
 
 	@Get("get/:id")
 	async getACHV(@Param("id") id: string): Promise<string[] | string> {

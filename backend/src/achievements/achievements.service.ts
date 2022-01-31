@@ -4,24 +4,24 @@ import { UserEntity } from "../user/user.entity";
 
 @Injectable()
 export class AchievementsService {
-    constructor(private readonly userService: UserService) {}
+	constructor(private readonly userService: UserService) {}
 
-    addFirstWin(user: UserEntity): void {
-        user.achievements.push('First Win!');
-    }
+	firstWin(user: UserEntity): void {
+		user.achievements.push("First Win!");
+	}
 
-    addThreeWins(user: UserEntity): void {
-        user.achievements.push('Won Three Times!');
-    }
+	threeWins(user: UserEntity): void {
+		user.achievements.push("Won Three Times!");
+	}
 
-    async getACHV(toFind: number): Promise<string[] | string> {
+	friendAdded(user: UserEntity): void {
+		user.achievements.push("Friendzone");
+	}
+
+	async getACHV(toFind: number): Promise<string[] | string> {
 		const user = await this.userService.getUserQueryOne({
-			where: { id: toFind }	
+			where: { id: toFind },
 		});
-        //user.achievements.push('First Game Won'!);
-        this.addFirstWin(user);
-        
-        this.userService.saveUser(user);
 		return user.achievements;
 	}
 }
