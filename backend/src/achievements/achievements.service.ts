@@ -15,14 +15,16 @@ const achv: Array<string> = [
 export class AchievementsService {
 	constructor(private readonly userService: UserService) {}
 
-	async createNewAchievement(title: string, desc: string, userRef: UserEntity) {
+	async createNewAchievement(
+		title: string,
+		desc: string,
+		userRef: UserEntity,
+	): Promise<void> {
 		const toAdd = new AchievementsEntity();
 
 		toAdd.title = title;
 		toAdd.description = desc;
 		toAdd.date = Math.floor(Date.now() / 1000);
-
-		//const user = await this.userService.getUserQueryOne({where: {id: userRef.id}, relations: ["achievements"]})
 
 		userRef.achievements.push(toAdd);
 
