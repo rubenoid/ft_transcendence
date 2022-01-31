@@ -10,8 +10,6 @@ export const FormContainer = styled.div`
 	border: 5px solid white;
 	border-radius: 10px;
 	padding: 10px;
-	margin-top: 20%;
-	margin-left: calc(50% - 200px);
 `;
 
 export const Form = styled.form`

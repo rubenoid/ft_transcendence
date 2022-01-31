@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { FormContainer, Form } from "./ConnectionFormElements";
+import { FormContainer, Form, RegistrationContainer } from "./ConnectionFormElements";
 import { Label } from "../Utils/Label/Label";
 import { postData, fetchData } from "../../API/API";
 import { useNavigate } from "react-router-dom";
@@ -28,19 +28,21 @@ const TwoFACheck = (): JSX.Element => {
 	}, [inputtedTwoFA]);
 
 	return (
-		<FormContainer>
-			<Form>
-				<Label>
-					<Text fontSize="20px">Enter your 2FA code</Text>
-				</Label>
-				<TextInput
-					type="text"
-					onChange={(e) => {
-						setinputtedTwoFA(e.target.value);
-					}}
-				/>
-			</Form>
-		</FormContainer>
+		<RegistrationContainer>
+			<FormContainer>
+				<Form>
+					<Label>
+						<Text fontSize="20px">Enter your 2FA code</Text>
+					</Label>
+					<TextInput
+						type="text"
+						onChange={(e) => {
+							setinputtedTwoFA(e.target.value);
+						}}
+					/>
+				</Form>
+			</FormContainer>
+		</RegistrationContainer>
 	);
 };
 
