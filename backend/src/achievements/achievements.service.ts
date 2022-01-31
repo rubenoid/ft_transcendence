@@ -57,7 +57,7 @@ export class AchievementsService {
 		);
 	}
 
-	async addACHV(user: UserEntity) {
+	async addACHV(user: UserEntity): Promise<void> {
 		const userExt = await this.userService.getUserQueryOne({
 			where: { id: user.id },
 			relations: ["achievements", "friends", "blockedUsers"],
