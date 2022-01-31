@@ -1,4 +1,4 @@
-import { Injectable, Get, Req, Param } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { UserEntity } from "../user/user.entity";
 import { AchievementsEntity } from "./achievements.entity";

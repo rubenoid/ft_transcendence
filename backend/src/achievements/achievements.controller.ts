@@ -1,7 +1,4 @@
-import { Controller, Get, Param, Req } from "@nestjs/common";
-import { identity } from "rxjs";
-import { GuardedRequest } from "src/overloaded";
-import { UserEntity } from "src/user/user.entity";
+import { Controller, Get, Param } from "@nestjs/common";
 import { AchievementsEntity } from "./achievements.entity";
 import { AchievementsService } from "./achievements.service";
 

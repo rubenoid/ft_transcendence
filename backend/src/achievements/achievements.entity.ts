@@ -1,12 +1,4 @@
-import {
-	Entity,
-	Column,
-	PrimaryGeneratedColumn,
-	JoinTable,
-	ManyToMany,
-	OneToMany,
-	ManyToOne,
-} from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 import { UserEntity } from "src/user/user.entity";
 
 @Entity()

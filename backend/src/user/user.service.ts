@@ -144,7 +144,6 @@ export class UserService {
 		await this.UserRepository.remove(await this.getAll());
 	}
 
-
 	async insert(
 		firstName: string,
 		lastName: string,
