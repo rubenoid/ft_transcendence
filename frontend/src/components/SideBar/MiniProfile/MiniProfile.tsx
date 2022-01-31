@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../../API/API";
 import { SharedConnectionStatus } from "../../../App/ConnectionStatus";
@@ -42,6 +42,7 @@ const MiniProfile = (): JSX.Element => {
 
 	const { user, setUser } = SharedUserState();
 	const { isConnected, setIsConnected } = SharedConnectionStatus();
+	const [status, setStatus] = useState<string>("");
 
 	async function logout(): Promise<void> {
 		const endpoint = "/auth/logout";
@@ -50,6 +51,16 @@ const MiniProfile = (): JSX.Element => {
 		setIsConnected(false);
 		navigate("/", { replace: true });
 	}
+
+	useEffect(() => {
+		async function getMyStatus(): Promise<void> {
+			const foundStatus: string = await fetchData(
+				`/user/userStatus/${user.id}`,
+			);
+			setStatus(foundStatus);
+		}
+		getMyStatus();
+	}, []);
 
 	const userInfo = (): JSX.Element => {
 		return (
@@ -67,7 +78,12 @@ const MiniProfile = (): JSX.Element => {
 						<Text>{user.userName}</Text>
 						<Text>{user.firstName}</Text>
 						<Text>{user.lastName}</Text>
-						<Text>{"online"}</Text>
+						<Text
+							fontSize="10"
+							color={status === "Online" ? "#04aa6d" : "#ff3a3a"}
+						>
+							{status ? status : "Offline"}
+						</Text>
 					</DivSpacing>
 					<DivSpacing text-align="right">
 						<RoundButton onClick={logout}>

@@ -11,6 +11,7 @@ import {
 	TableRow,
 } from "../../Utils/Table/Table";
 import { Text } from "../../Utils/Text/Text";
+import { Link } from "react-router-dom";
 
 interface userStatus {
 	id: number;
@@ -60,7 +61,9 @@ const UserView = (): JSX.Element => {
 			rows.push(
 				<TableRow key={i}>
 					<TableCell>
-						<Text fontSize="10">{user.userName}</Text>
+						<Link to={`/profile/${user.id}`}>
+							<Text>{user.userName}</Text>
+						</Link>
 					</TableCell>
 					<TableCell>
 						<Text fontSize="10">{user.wins}</Text>
