@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { UserEntity } from "../user/user.entity";
+import { AchievementsService } from "src/achievements/achievements.service";
 
 @Injectable()
 export class FriendsService {
-	constructor(private readonly userService: UserService) {}
+	constructor(private readonly userService: UserService, private readonly achievementsService: AchievementsService) {}
 
 	async findUserWithrelations(id: number): Promise<UserEntity> {
 		const user: UserEntity = await this.userService.getUserQueryOne({
@@ -34,6 +35,10 @@ export class FriendsService {
 		friend.friends.push(user);
 		await this.userService.saveUser(user);
 		await this.userService.saveUser(friend);
+
+		await this.achievementsService.addACHV(user);
+
+	
 	}
 
 	async getFriends(
