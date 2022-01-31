@@ -99,4 +99,5 @@ export const RunningItemWrapper = styled.div`
 	border: 1px solid white;
 	margin: 20px;
 	text-align: center;
+	border-radius: 7px;
 `;

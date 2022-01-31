@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchData } from "../../API/API";
+import socket from "../../API/Socket";
 import { User } from "../../Types/Types";
 import { Header, Text } from "../Utils/Text/Text";
 import { RunningItemWrapper } from "./PongElements";
@@ -14,13 +15,30 @@ interface RunningGame {
 	score: number[];
 }
 
+interface specUpdate {
+	isRemove: boolean;
+	id: string;
+	score: number[];
+}
+
 const RunningGamesList = (props: InputParams): JSX.Element => {
 	const [runningGames, setRunningGames] = useState<RunningGame[]>([]);
 
-	useEffect(() => {
+	function update() {
 		fetchData("/game/running").then((res: RunningGame[]) => {
 			setRunningGames(res);
-		});
+		});	
+	}
+
+	useEffect(() => {
+		update();
+		socket.emit("enterSpectatorBooth");
+		socket.on("spectateUpdate", update);
+
+		return () => {
+			socket.emit("leaveSpectatorBooth");
+			socket.off("spectateUpdate");
+		};
 	}, []);
 
 	const listRunningGames = runningGames.map(

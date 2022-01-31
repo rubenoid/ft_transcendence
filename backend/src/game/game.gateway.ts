@@ -50,4 +50,16 @@ export class GameGateway {
 	createNewGame(client: GuardedSocket, payload: string): string {
 		return this.gameService.createLobby(client, this.server);
 	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("enterSpectatorBooth")
+	enterSpectatorBooth(client: GuardedSocket, payload: string) {
+		client.join("SpecBooth");
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("leaveSpectatorBooth")
+	leaveSpectatorBooth(client: GuardedSocket, payload: string) {
+		client.leave("SpecBooth");
+	}
 }
