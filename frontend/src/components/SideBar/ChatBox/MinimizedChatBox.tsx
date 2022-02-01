@@ -21,16 +21,16 @@ const MinimizedChatBox = (props: InputParams): JSX.Element => {
 			<TopContainer>
 				<TopText>{props.chatName}</TopText>
 				<TopButtonsContainer>
-					<TopText onClick={() => props.onMinimizeClick()}>
-						<IconContainer>
-							<Maximize size={30} />
-						</IconContainer>
-					</TopText>
-					<TopText onClick={() => props.onClose()}>
-						<IconContainer color="#ff3a3a" hoverColor="#cc3a3a">
-							<CloseIcon size={30} />
-						</IconContainer>
-					</TopText>
+					<IconContainer onClick={() => props.onMinimizeClick()}>
+						<Maximize size={30} />
+					</IconContainer>
+					<IconContainer
+						onClick={() => props.onClose()}
+						color="#ff3a3a"
+						hoverColor="#cc3a3a"
+					>
+						<CloseIcon size={30} />
+					</IconContainer>
 				</TopButtonsContainer>
 			</TopContainer>
 		</MinimizedContainer>
