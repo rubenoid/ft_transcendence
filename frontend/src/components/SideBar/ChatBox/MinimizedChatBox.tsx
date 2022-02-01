@@ -1,6 +1,13 @@
 import React from "react";
-import { MinimizedContainer, TopText } from "./ChatBoxElements";
-import { FaWindowMinimize } from "react-icons/fa";
+import {
+	MinimizedContainer,
+	TopText,
+	TopButtonsContainer,
+	TopContainer,
+} from "./ChatBoxElements";
+import { IoMdCloseCircle as CloseIcon } from "react-icons/io";
+import { VscChromeMaximize as Maximize } from "react-icons/vsc";
+import { IconContainer } from "../../Utils/IconContainer";
 
 interface InputParams {
 	chatName: string;
@@ -11,13 +18,21 @@ interface InputParams {
 const MinimizedChatBox = (props: InputParams): JSX.Element => {
 	return (
 		<MinimizedContainer>
-			<TopText>{props.chatName}</TopText>
-			<div style={{ display: "flex" }}>
-				<TopText onClick={() => props.onMinimizeClick()}>
-					<FaWindowMinimize />
-				</TopText>
-				<TopText onClick={() => props.onClose()}>✕</TopText>
-			</div>
+			<TopContainer>
+				<TopText>{props.chatName}</TopText>
+				<TopButtonsContainer>
+					<IconContainer onClick={() => props.onMinimizeClick()}>
+						<Maximize size={30} />
+					</IconContainer>
+					<IconContainer
+						onClick={() => props.onClose()}
+						color="#ff3a3a"
+						hoverColor="#cc3a3a"
+					>
+						<CloseIcon size={30} />
+					</IconContainer>
+				</TopButtonsContainer>
+			</TopContainer>
 		</MinimizedContainer>
 	);
 };
