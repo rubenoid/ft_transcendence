@@ -286,9 +286,8 @@ const Pong = (): JSX.Element => {
 				{displayStatus == GameStatus.finished ? (
 					<FinishedContainer>
 						<Text fontSize="20px">Game Finished!</Text>
-						<Text fontSize="20px" color="black">
-							{" "}
-							{scores[0]} - {scores[1]}{" "}
+						<Text fontSize="20px">
+							{scores[0]} - {scores[1]}
 						</Text>
 						<Button onClick={() => setDisplay(GameStatus.base)}>Back</Button>
 					</FinishedContainer>

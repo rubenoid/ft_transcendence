@@ -103,11 +103,12 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 								<SettingsIcon />
 							</IconContainer>
 						</Link>
-						<TopText onClick={() => props.setMinimized(true)}>
-							<IconContainer hoverColor="white">
-								<MinimizeIcon />
-							</IconContainer>
-						</TopText>
+						<IconContainer
+							hoverColor="white"
+							onClick={() => props.setMinimized(true)}
+						>
+							<MinimizeIcon />
+						</IconContainer>
 						<IconContainer
 							color="#ff3a3a"
 							hoverColor="#cc3a3a"

@@ -52,6 +52,7 @@ export class GameService {
 		const ret: runDownGame[] = [];
 		for (let i = 0; i < this.games.length; i++) {
 			const e = this.games[i];
+			if (e.players.length < 2) continue;
 			ret.push({
 				players: [
 					e.players[0] != undefined
@@ -87,7 +88,7 @@ export class GameService {
 				}
 			} else {
 				const playerIndex = game.players.findIndex(
-					(x) => x.user.id == client.user.id,
+					(x) => x != undefined && x.user.id == client.user.id,
 				);
 				if (playerIndex != -1) {
 					game.players[playerIndex] = client;
@@ -179,7 +180,7 @@ export class GameService {
 		}
 	}
 
-	leaveInvite(client: Socket, id: string): void {
+	leaveInvite(client: GuardedSocket, id: string): void {
 		const ind = this.games.findIndex((x) => x.roomId == id);
 
 		client.leave(this.games[ind].roomId);
