@@ -22,6 +22,8 @@ export class GameGateway {
 
 	handleDisconnect(client: Socket): void {
 		this.logger.log(`game::Client disconnected: ${client.id}`);
+		this.gameService.leaveInviteForced(client);
+		this.server.to("SpecBooth").emit("spectateUpdate");
 	}
 
 	handleConnection(client: Socket, ...args: string[]): void {
@@ -48,7 +50,9 @@ export class GameGateway {
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("createNewGame")
 	createNewGame(client: GuardedSocket, payload: string): string {
-		return this.gameService.createLobby(client, this.server);
+		const res = this.gameService.createLobby(client, this.server);
+		this.server.to("SpecBooth").emit("spectateUpdate");
+		return res;
 	}
 
 	@UseGuards(JwtAuthGuard)
@@ -61,5 +65,13 @@ export class GameGateway {
 	@SubscribeMessage("leaveSpectatorBooth")
 	leaveSpectatorBooth(client: GuardedSocket, payload: string): void {
 		client.leave("SpecBooth");
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@SubscribeMessage("leaveInvite")
+	leaveInvite(client: GuardedSocket, payload: string): void {
+		console.log("LEAVIN THE TING");
+		this.gameService.leaveInvite(client, payload);
+		this.server.to("SpecBooth").emit("spectateUpdate");
 	}
 }
