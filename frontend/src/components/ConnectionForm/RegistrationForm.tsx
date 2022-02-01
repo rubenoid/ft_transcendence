@@ -78,8 +78,8 @@ const RegistrationForm = (): JSX.Element => {
 						? qrcode.secret
 						: "",
 			});
-			setIsConnected(true);
 			await fetchData("/auth/logedin");
+			setIsConnected(true);
 			if (registration.twoFAValid) navigate("/checkTwoFA", { replace: true });
 			else navigate("/", { replace: true });
 		}
