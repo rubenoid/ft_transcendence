@@ -168,7 +168,7 @@ const Pong = (): JSX.Element => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
+					// console.log(err);
 				});
 		});
 
@@ -203,9 +203,9 @@ const Pong = (): JSX.Element => {
 
 	useEffect(() => {
 		return () => {
-			console.log(inviteLink, displayStatus);
+			// console.log(inviteLink, displayStatus);
 			if (GameStatus.inviteWait == displayStatus) {
-				console.log(inviteLink);
+				// console.log(inviteLink);
 				socket.emit("leaveInvite", inviteLink);
 			}
 		};

@@ -47,7 +47,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log(er);
+					// console.log(er);
 				});
 			fetchData(`/match/getUserHistory/${profileId}`)
 				.then((match: Match[]) => {
@@ -55,7 +55,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log(er);
+					// console.log(er);
 				});
 
 			fetchData(`/achievements/get/${profileId}`)
@@ -64,7 +64,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log(er);
+					// console.log(er);
 				});
 
 			fetchData(`/user/userStatus/${profileId}`)
@@ -73,7 +73,7 @@ const ProfileExtended = (): JSX.Element => {
 					setUser({ ...user });
 				})
 				.catch((er) => {
-					console.log(er);
+					// console.log(er);
 				});
 
 			return user;

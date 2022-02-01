@@ -92,7 +92,7 @@ const SettingsForm = (): JSX.Element => {
 		if (name.length == 0) setToInput({ ...toInput, userNameValid: false });
 		fetchData(endpoint)
 			.then((usr: User) => {
-				console.log(name, "User: ", usr);
+				// console.log(name, "User: ", usr);
 				if (usr && usr.id != userSettings.id)
 					setToInput({ ...toInput, userNameValid: false });
 				else setToInput({ ...toInput, userNameValid: true });

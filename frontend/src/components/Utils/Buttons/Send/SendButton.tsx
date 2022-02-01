@@ -6,7 +6,7 @@ const SendButton = (): JSX.Element => {
 	return (
 		<SendIconContainer
 			onClick={() => {
-				console.log("clicked on send");
+				// console.log("clicked on send");
 			}}
 		>
 			<SendIcon />

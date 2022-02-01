@@ -25,7 +25,7 @@ export const fetchData = async <T>(url: string): Promise<T> => {
 			return response.data;
 		})
 		.catch((error) => {
-			console.log("Error:", error);
+			// console.log("Error:", error);
 			throw "Error";
 		});
 };
@@ -48,6 +48,6 @@ export const postData = async <T>(
 			return response.data;
 		})
 		.catch((error) => {
-			console.log(error);
+			// console.log(error);
 		});
 };
