@@ -14,8 +14,8 @@ export const updateSocketHeaders = (force?: boolean): Promise<void> => {
 	const tmp: any = socket;
 	if (
 		!force &&
-		(socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") &&
-			socket.connected)
+		socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") &&
+		socket.connected
 	)
 		return;
 	tmp.disconnect();
