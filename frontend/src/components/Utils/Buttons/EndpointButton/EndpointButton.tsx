@@ -13,7 +13,6 @@ const EndpointButton = (props: InputParams): JSX.Element => {
 	const [isEnabled, setIsEnabled] = useState(false);
 
 	function handleChange(): void {
-		// console.log("Changing state!", !isEnabled);
 		if (!isEnabled) {
 			props.endpointRef((prevState) => {
 				return [...prevState, props.toSet];

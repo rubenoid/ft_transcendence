@@ -16,7 +16,7 @@ import socket from "../API/Socket";
 import { SharedUserStatuses } from "./UserStatuses";
 
 const App = (): JSX.Element => {
-	const { setUser } = SharedGlobalUser();
+	const { user, setUser } = SharedGlobalUser();
 	const { isConnected, setIsConnected } = SharedConnectionStatus();
 	const { userStatuses, setUserStatuses } = SharedUserStatuses();
 
@@ -48,7 +48,7 @@ const App = (): JSX.Element => {
 		return () => {
 			socket.off("userUpdate");
 		};
-	}, [updateStatus]);
+	}, [updateStatus, user]);
 
 	useEffect(() => {
 		updateHttpHeaders();
