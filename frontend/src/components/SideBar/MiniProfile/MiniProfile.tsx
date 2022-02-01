@@ -76,7 +76,9 @@ const MiniProfile = (): JSX.Element => {
 						<ImgContainer>
 							<Link to={"/"}>
 								<Img
-									src={"http://localhost:5000/" + user.avatar + "?" + newPicutre}
+									src={
+										"http://localhost:5000/" + user.avatar + "?" + newPicutre
+									}
 									alt="profileImg"
 								/>
 							</Link>
