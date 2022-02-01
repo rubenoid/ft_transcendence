@@ -76,7 +76,10 @@ export class GameService {
 		const game = this.getRunningGame(id);
 		if (game) {
 			client.join(game.roomId);
-			if (game.players.length < 2 && !game.players.find(x => x.user.id == client.user.id)) {
+			if (
+				game.players.length < 2 &&
+				!game.players.find((x) => x.user.id == client.user.id)
+			) {
 				game.players.push(client);
 				if (game.players.length == 2) {
 					game.run();
@@ -176,15 +179,17 @@ export class GameService {
 		}
 	}
 
-	leaveInvite(client: Socket, id: string) {
+	leaveInvite(client: Socket, id: string): void {
 		const ind = this.games.findIndex((x) => x.roomId == id);
-	
+
 		client.leave(this.games[ind].roomId);
 		this.games.splice(ind, 1);
 	}
 
-	leaveInviteForced(client: Socket) {
-		const ind = this.games.findIndex(x => x.players.length == 1 && x.players[0].id == client.id);
+	leaveInviteForced(client: Socket): void {
+		const ind = this.games.findIndex(
+			(x) => x.players.length == 1 && x.players[0].id == client.id,
+		);
 
 		this.games.splice(ind, 1);
 	}

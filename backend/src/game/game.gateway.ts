@@ -50,7 +50,7 @@ export class GameGateway {
 	@UseGuards(JwtAuthGuard)
 	@SubscribeMessage("createNewGame")
 	createNewGame(client: GuardedSocket, payload: string): string {
-		const res =this.gameService.createLobby(client, this.server);
+		const res = this.gameService.createLobby(client, this.server);
 		this.server.to("SpecBooth").emit("spectateUpdate");
 		return res;
 	}

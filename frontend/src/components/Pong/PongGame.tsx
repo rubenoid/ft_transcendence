@@ -202,7 +202,6 @@ const Pong = (): JSX.Element => {
 	}, [gameId]);
 
 	useEffect(() => {
-
 		return () => {
 			console.log(inviteLink, displayStatus);
 			if (GameStatus.inviteWait == displayStatus) {
@@ -296,14 +295,10 @@ const Pong = (): JSX.Element => {
 				) : displayStatus == GameStatus.base ? (
 					<ButtonContainer>
 						<Button onClick={addToQueue}>
-							<Text fontSize="15px">
-								Play Online
-							</Text>
+							<Text fontSize="15px">Play Online</Text>
 						</Button>
 						<Button onClick={createLinkGame}>
-							<Text fontSize="15px">
-								Create a link
-							</Text>
+							<Text fontSize="15px">Create a link</Text>
 						</Button>
 					</ButtonContainer>
 				) : displayStatus == GameStatus.inviteWait ? (
@@ -312,21 +307,19 @@ const Pong = (): JSX.Element => {
 						<Text fontSize="15px">http://localhost:8080/game/{inviteLink}</Text>
 						<Text>Waiting for players</Text>
 						<Button onClick={() => setDisplay(GameStatus.base)}>
-							<Text fontSize="15px">
-								Back
-							</Text>
+							<Text fontSize="15px">Back</Text>
 						</Button>
 					</FinishedContainer>
 				) : displayStatus == GameStatus.queuing ? (
 					<ButtonContainer>
 						<Header>In Queue</Header>
 						<Button onClick={addToQueue}>
-							<Text fontSize="15px">
-								Cancel
-							</Text>
+							<Text fontSize="15px">Cancel</Text>
 						</Button>
 					</ButtonContainer>
-				) : ""}
+				) : (
+					""
+				)}
 			</PongContainer>
 		</>
 	);
