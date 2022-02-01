@@ -12,7 +12,7 @@ import {
 	MsgOwnerText,
 } from "./ChatBoxElements";
 import { SharedChatState } from "../SideBar";
-import { SharedUserState } from "../../../App/UserStatus";
+import { SharedGlobalUser } from "../../../App/GlobalUser";
 import { Message } from "../../../Types/Types";
 import socket from "../../../API/Socket";
 import { outputChatName } from "../SideBar";
@@ -40,7 +40,7 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 	const [msgToSend, setMsgToSend] = useState<string>("");
 	const { channel, setChannel } = SharedChatState();
 	const [password, setPassword] = useState<string>("");
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 	const [colors, setColors] = useState(
 		colormap({
 			colormap: "warm",
@@ -103,11 +103,12 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 								<SettingsIcon />
 							</IconContainer>
 						</Link>
-						<TopText onClick={() => props.setMinimized(true)}>
-							<IconContainer hoverColor="white">
-								<MinimizeIcon />
-							</IconContainer>
-						</TopText>
+						<IconContainer
+							hoverColor="white"
+							onClick={() => props.setMinimized(true)}
+						>
+							<MinimizeIcon />
+						</IconContainer>
 						<IconContainer
 							color="#ff3a3a"
 							hoverColor="#cc3a3a"

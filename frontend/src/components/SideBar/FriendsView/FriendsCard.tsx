@@ -17,6 +17,11 @@ import { Text } from "../../Utils/Text/Text";
 import { IconContainer } from "../../Utils/IconContainer";
 import { TiMessages as ChatIcon } from "react-icons/ti";
 import { CgProfile as ProfileIcon } from "react-icons/cg";
+import {
+	SharedUserStatuses,
+	FindStatus,
+	StatusColors,
+} from "../../../App/UserStatuses";
 
 interface InputParams {
 	friends: User[];
@@ -25,6 +30,7 @@ interface InputParams {
 const FriendsCard = (props: InputParams): JSX.Element => {
 	const navigate = useNavigate();
 	const { channel, setChannel } = SharedChatState();
+	const { userStatuses, setUserStatuses } = SharedUserStatuses();
 
 	function goToProfile(id: number): void {
 		navigate(`/profile/${id}`, { replace: true });
@@ -37,6 +43,7 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 	}
 
 	const listFriends = props.friends.map((user: User, key: number) => {
+		const status = FindStatus(user.id, userStatuses);
 		return (
 			<Item key={user.id}>
 				<FriendsCardContainer>
@@ -46,11 +53,8 @@ const FriendsCard = (props: InputParams): JSX.Element => {
 						</FriendsImageContainer>
 						<FriendsNameContainer>
 							<Text>{user.userName}</Text>
-							<Text
-								fontSize="10"
-								color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
-							>
-								{user.status}
+							<Text fontSize="10" color={StatusColors.get(status)}>
+								{status}
 							</Text>
 						</FriendsNameContainer>
 					</FriendsTitleContainer>

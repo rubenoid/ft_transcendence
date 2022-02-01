@@ -16,6 +16,8 @@ import { User, ToSend } from "../../Types/Types";
 import SettingsTable from "./SettingsTable";
 import SettingsTwoFA from "./SettingsTwoFA";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
+import { SharedGlobalUser } from "../../App/GlobalUser";
+import { SharedUserFriends } from "../../App/UserFriends";
 
 export class formData {
 	image = "";
@@ -26,17 +28,18 @@ export class formData {
 }
 
 const SettingsForm = (): JSX.Element => {
-	const [user, setUser] = useState<User>(undefined);
 	const [toInput, setToInput] = useState(new formData());
 	const [newPicutre, setNewPicture] = useState(new Date().getTime());
-
 	const [endpoints, setEndpoints] = useState<string[]>([]);
 	const [removingEndpoints, setremovingEndpoints] = useState<ToSend[]>([]);
 	const [twoFAvalid, setTwoFAvalid] = useState<boolean>(true);
+	const [userSettings, setUserSettings] = useState<User>(undefined);
+	const { user, setUser } = SharedGlobalUser();
+	const { friends, setFriends } = SharedUserFriends();
 
 	async function getUser(): Promise<boolean> {
 		const user: User = await fetchData("/user/menFriendsnBlocked");
-		setUser(user);
+		setUserSettings(user);
 		if (user.twoFactorSecret.length == 0) {
 			return false;
 		} else {
@@ -65,7 +68,7 @@ const SettingsForm = (): JSX.Element => {
 			await fetchData(`/blocked/add/${user.id}`);
 		}
 		const form = new FormData();
-		form.append("user", JSON.stringify(user));
+		form.append("user", JSON.stringify(userSettings));
 		form.append("file", toInput.file);
 		await postData("/user/updateForm", form, {
 			"Content-Type": "multipart/form-data",
@@ -79,16 +82,18 @@ const SettingsForm = (): JSX.Element => {
 			return toReplace;
 		});
 		setNewPicture(new Date().getTime());
+		setUser(await fetchData("/user/me"));
+		setFriends(await fetchData("/friends/me"));
 	};
 
 	function getUsersforUsername(name: string): void {
 		const endpoint = `/user/getByUserName/${name}`;
-		setUser({ ...user, userName: name });
+		setUserSettings({ ...userSettings, userName: name });
 		if (name.length == 0) setToInput({ ...toInput, userNameValid: false });
 		fetchData(endpoint)
 			.then((usr: User) => {
 				console.log(name, "User: ", usr);
-				if (usr && usr.id != user.id)
+				if (usr && usr.id != userSettings.id)
 					setToInput({ ...toInput, userNameValid: false });
 				else setToInput({ ...toInput, userNameValid: true });
 			})
@@ -117,7 +122,7 @@ const SettingsForm = (): JSX.Element => {
 					<Text fontSize="20px">Username</Text>
 					<TextInput
 						type="text"
-						value={user.userName}
+						value={userSettings.userName}
 						onChange={(e) => {
 							getUsersforUsername(e.target.value);
 						}}
@@ -131,9 +136,9 @@ const SettingsForm = (): JSX.Element => {
 						<Text fontSize="20px">FirstName</Text>
 						<TextInput
 							type="text"
-							value={user.firstName}
+							value={userSettings.firstName}
 							onChange={(e) => {
-								setUser({ ...user, firstName: e.target.value });
+								setUserSettings({ ...userSettings, firstName: e.target.value });
 							}}
 						/>
 					</Item>
@@ -141,9 +146,9 @@ const SettingsForm = (): JSX.Element => {
 						<Text fontSize="20px">Lastname</Text>
 						<TextInput
 							type="text"
-							value={user.lastName}
+							value={userSettings.lastName}
 							onChange={(e) => {
-								setUser({ ...user, lastName: e.target.value });
+								setUserSettings({ ...userSettings, lastName: e.target.value });
 							}}
 						/>
 					</Item>
@@ -154,7 +159,10 @@ const SettingsForm = (): JSX.Element => {
 								<ImgContainer>
 									<Img
 										src={
-											"http://localhost:5000/" + user.avatar + "?" + newPicutre
+											"http://localhost:5000/" +
+											userSettings.avatar +
+											"?" +
+											newPicutre
 										}
 										alt="profileImg"
 										width="300"
@@ -175,7 +183,7 @@ const SettingsForm = (): JSX.Element => {
 						onChange={uploadAvatar}
 					/>
 					<SettingsTable
-						users={user.friends}
+						users={userSettings.friends}
 						endpoint={"/friends/remove/"}
 						setEndpoints={setremovingEndpoints}
 						stagedList={toInput.friendsToAdd}
@@ -191,7 +199,7 @@ const SettingsForm = (): JSX.Element => {
 					</SettingsTable>
 					<br />
 					<SettingsTable
-						users={user.blockedUsers}
+						users={userSettings.blockedUsers}
 						endpoint={"/blocked/remove/"}
 						setEndpoints={setremovingEndpoints}
 						stagedList={toInput.blockedToAdd}
@@ -208,7 +216,7 @@ const SettingsForm = (): JSX.Element => {
 					<br />
 					<SettingsTwoFA
 						setEndpoints={setEndpoints}
-						user={user}
+						user={userSettings}
 						setTwoFAvalid={setTwoFAvalid}
 					></SettingsTwoFA>
 				</MainContentWrapper>
@@ -234,7 +242,9 @@ const SettingsForm = (): JSX.Element => {
 		);
 	};
 	return (
-		<MainViewContainer>{user ? settingsData() : "loading"}</MainViewContainer>
+		<MainViewContainer>
+			{userSettings ? settingsData() : "loading"}
+		</MainViewContainer>
 	);
 };
 

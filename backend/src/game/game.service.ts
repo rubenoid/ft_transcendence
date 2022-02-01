@@ -52,6 +52,7 @@ export class GameService {
 		const ret: runDownGame[] = [];
 		for (let i = 0; i < this.games.length; i++) {
 			const e = this.games[i];
+			if (e.players.length < 2) continue;
 			ret.push({
 				players: [
 					e.players[0] != undefined
@@ -76,7 +77,10 @@ export class GameService {
 		const game = this.getRunningGame(id);
 		if (game) {
 			client.join(game.roomId);
-			if (game.players.length < 2) {
+			if (
+				game.players.length < 2 &&
+				!game.players.find((x) => x.user.id == client.user.id)
+			) {
 				game.players.push(client);
 				if (game.players.length == 2) {
 					game.run();
@@ -84,7 +88,7 @@ export class GameService {
 				}
 			} else {
 				const playerIndex = game.players.findIndex(
-					(x) => x.user.id == client.user.id,
+					(x) => x != undefined && x.user.id == client.user.id,
 				);
 				if (playerIndex != -1) {
 					game.players[playerIndex] = client;
@@ -174,5 +178,20 @@ export class GameService {
 		if (game != undefined) {
 			game.updatePos(keys, game.players[1].id == client.id ? 1 : 0);
 		}
+	}
+
+	leaveInvite(client: GuardedSocket, id: string): void {
+		const ind = this.games.findIndex((x) => x.roomId == id);
+
+		client.leave(this.games[ind].roomId);
+		this.games.splice(ind, 1);
+	}
+
+	leaveInviteForced(client: Socket): void {
+		const ind = this.games.findIndex(
+			(x) => x.players.length == 1 && x.players[0].id == client.id,
+		);
+
+		this.games.splice(ind, 1);
 	}
 }

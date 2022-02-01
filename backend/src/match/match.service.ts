@@ -39,9 +39,6 @@ export class MatchService {
 		if (queuedSock.find((x) => x.id == connection.id)) return;
 		queuedSock.push(connection);
 
-		const p1 = queuedSock.pop();
-		this.gameService.startMatch(p1, p1, server);
-
 		if (queuedSock.length >= 2) {
 			const p1 = queuedSock.pop();
 			const p2 = queuedSock.pop();
@@ -88,10 +85,12 @@ export class MatchService {
 		toAdd.players = [players[0], players[1]];
 		if (players[0].id == players[1].id) return;
 		this.MatchRepository.save(toAdd);
-		this.userService.saveUser(players[0]);
-		this.userService.saveUser(players[1]);
-		this.achievementsService.addACHV(players[0]);
-		this.achievementsService.addACHV(players[1]);
+		this.userService.saveUser(players[0]).then(() => {
+			this.achievementsService.addACHV(players[0]);
+		});
+		this.userService.saveUser(players[1]).then(() => {
+			this.achievementsService.addACHV(players[1]);
+		});
 	}
 
 	async getMatch(id: string): Promise<MatchEntity> {

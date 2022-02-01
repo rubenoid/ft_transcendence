@@ -9,11 +9,12 @@ const socketOptions = {
 
 const socket: Socket = io("http://localhost:5000", socketOptions);
 
-export const updateSocketHeaders = (): Promise<void> => {
+export const updateSocketHeaders = (force?: boolean): Promise<void> => {
 	// eslint-disable-next-line
 	const tmp: any = socket;
 	if (
-		socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") ||
+		!force &&
+		socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") &&
 		socket.connected
 	)
 		return;
@@ -24,7 +25,13 @@ export const updateSocketHeaders = (): Promise<void> => {
 	return null;
 };
 
+socket.on("exception", () => {
+	console.log("socket error");
+	socket.disconnect();
+});
+
 socket.on("connect", () => {
+	console.log("connected!");
 	socket.emit("userConnect");
 });
 

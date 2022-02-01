@@ -3,7 +3,7 @@ import { SideBarContainer, SideViewWrapper, Hr } from "./SideBarElements";
 import { Button } from "../Utils/Buttons/Button/Button";
 import FriendsView from "./FriendsView/FriendsView";
 import ChannelsView from "./ChannelsView/ChannelsView";
-import UserView from "../UserView/UserView";
+import UserView from "./UserView/UserView";
 import { Channel } from "../../Types/Types";
 import ChatBox from "./ChatBox/ChatBox";
 import { useBetween } from "use-between";

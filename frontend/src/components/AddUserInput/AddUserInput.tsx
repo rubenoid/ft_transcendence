@@ -6,6 +6,7 @@ import {
 	UserInputCheck,
 } from "./AddUserInputElements";
 import { User } from "../../Types/Types";
+import { TiDelete, TiTickOutline } from "react-icons/ti";
 
 type InputParams = {
 	onValidUser(cb: User): void;
@@ -51,7 +52,13 @@ const AddUserInput = (props: InputParams): JSX.Element => {
 				}}
 				value={text}
 			/>
-			<UserInputCheck>{isValidUser ? "✓" : "✗"}</UserInputCheck>
+			<UserInputCheck>
+				{isValidUser ? (
+					<TiTickOutline style={{ color: "white" }} size={24} />
+				) : (
+					<TiDelete style={{ color: "white" }} size={24} />
+				)}
+			</UserInputCheck>
 		</UserInputWrapper>
 	);
 };

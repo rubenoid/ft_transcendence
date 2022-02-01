@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User } from "../../Types/Types";
-import socket from "../../API/Socket";
+import { User } from "../../../Types/Types";
 import {
 	Table,
 	TableBody,
@@ -8,39 +7,33 @@ import {
 	TableHeader,
 	TableHeaderCell,
 	TableRow,
-} from "../Utils/Table/Table";
-import { Text } from "../Utils/Text/Text";
+} from "../../Utils/Table/Table";
+import { Text } from "../../Utils/Text/Text";
 import { Link } from "react-router-dom";
-import { getAllUsers, userStatus } from "./getUsers";
+import { fetchData } from "../../../API/API";
+import {
+	SharedUserStatuses,
+	FindStatus,
+	StatusColors,
+} from "../../../App/UserStatuses";
 
 const UserView = (): JSX.Element => {
 	const [users, setUsers] = useState<User[]>([]);
+	const { userStatuses, setUserStatuses } = SharedUserStatuses();
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
-			const allUsers: User[] = await getAllUsers();
+			const allUsers: User[] = await fetchData("/user/all");
 			setUsers(allUsers);
 		}
 		getUsers();
-	}, [users]);
-
-	useEffect(() => {
-		socket.on("userUpdate", (data: userStatus) => {
-			const found = users.find((user) => user.id == data.id);
-			if (found) {
-				found.status = data.status;
-			}
-		});
-
-		return () => {
-			socket.off("userUpdate");
-		};
-	}, []);
+	}, [userStatuses]);
 
 	function getListUsers(): JSX.Element[] {
 		const rows = [];
 		for (let i = 0; i < users.length; i++) {
 			const user = users[i];
+			const status = FindStatus(user.id, userStatuses);
 			rows.push(
 				<TableRow key={i}>
 					<TableCell>
@@ -55,11 +48,8 @@ const UserView = (): JSX.Element => {
 						<Text fontSize="10">{user.losses}</Text>
 					</TableCell>
 					<TableCell>
-						<Text
-							fontSize="10"
-							color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
-						>
-							{user.status}
+						<Text fontSize="10" color={StatusColors.get(status)}>
+							{status}
 						</Text>
 					</TableCell>
 				</TableRow>,

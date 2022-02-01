@@ -66,9 +66,15 @@ export interface ToSend {
 	data: object;
 }
 
+export interface UserStatus {
+	id: number;
+	status: string;
+}
+
 export interface Achievement {
 	id: number;
 	date: number;
 	title: string;
 	description: string;
+	icon: JSX.Element;
 }
