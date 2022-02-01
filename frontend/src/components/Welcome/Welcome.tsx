@@ -28,7 +28,7 @@ const WelcomeComponent = (): JSX.Element => {
 						<ListItem>
 							<Img
 								src={"http://localhost:5000/img/amber_van_dam.jpeg"}
-								alt="profileImg"
+								alt="Amber van Dam"
 							/>
 							<div>
 								<a href="https://github.com/avan-dam">Github</a>
@@ -42,7 +42,7 @@ const WelcomeComponent = (): JSX.Element => {
 						<ListItem>
 							<Img
 								src={"http://localhost:5000/img/oscar_kruithof.jpeg"}
-								alt="profileImg"
+								alt="Oscar Kruithof"
 							/>
 							<div>
 								<a href="https://github.com/Alpha1337k">Github</a>
@@ -56,7 +56,7 @@ const WelcomeComponent = (): JSX.Element => {
 						<ListItem>
 							<Img
 								src={"http://localhost:5000/img/haroutioun_achtchian.jpeg"}
-								alt="profileImg"
+								alt="Haroutioun Achtchian"
 							/>
 							<div>
 								<a href="https://github.com/harou24">Github</a>
@@ -70,7 +70,7 @@ const WelcomeComponent = (): JSX.Element => {
 						<ListItem>
 							<Img
 								src={"http://localhost:5000/img/ruben_van_schaik.jpeg"}
-								alt="profileImg"
+								alt="Ruben van Schaik"
 							/>
 							<div>
 								<a href="https://github.com/rubenoid">Github</a>
