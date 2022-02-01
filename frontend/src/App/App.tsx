@@ -21,14 +21,14 @@ const App = (): JSX.Element => {
 	const { userStatuses, setUserStatuses } = SharedUserStatuses();
 
 	function updateStatus(data: UserStatus): void {
-		console.log(data, userStatuses);
+		// console.log(data, userStatuses);
 		const found = userStatuses.find((x) => x.id == data.id);
 		if (found) {
-			console.log("Found and updated a status");
+			// console.log("Found and updated a status");
 			found.status = data.status;
 			setUserStatuses([...userStatuses]);
 		} else {
-			console.log("Didnt find, still added");
+			// console.log("Didnt find, still added");
 			setUserStatuses([...userStatuses, data]);
 		}
 	}
@@ -36,12 +36,12 @@ const App = (): JSX.Element => {
 	async function loadStatus(): Promise<void> {
 		if (userStatuses.length != 0) return;
 		const statuses: UserStatus[] = await fetchData("/user/getAllStatus");
-		console.log("statuses", statuses);
+		// console.log("statuses", statuses);
 		setUserStatuses([...statuses]);
 	}
 
 	useEffect(() => {
-		console.log("EFFECT");
+		// console.log("EFFECT");
 		loadStatus().then(() => {
 			socket.on("userUpdate", updateStatus);
 		});
