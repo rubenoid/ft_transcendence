@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchData } from "../../../API/API";
 import { SharedConnectionStatus } from "../../../App/ConnectionStatus";
-import { SharedUserState } from "../../../App/UserStatus";
+import { SharedGlobalUser } from "../../../App/GlobalUser";
 import {
 	Img,
 	ImgContainer,
@@ -15,6 +15,12 @@ import { Text } from "../../Utils/Text/Text";
 import { DivSpacing } from "./MiniProfileElements";
 import { IconContainer } from "../../Utils/IconContainer";
 import { AiOutlineLogout as LogoutIcon } from "react-icons/ai";
+import {
+	FindStatus,
+	SharedUserStatuses,
+	StatusColors,
+} from "../../../App/UserStatuses";
+import { updateSocketHeaders } from "../../../API/Socket";
 
 function deleteCookie(
 	name: string,
@@ -38,29 +44,23 @@ function getCookie(name: string): boolean {
 }
 
 const MiniProfile = (): JSX.Element => {
-	const navigate = useNavigate();
-
-	const { user, setUser } = SharedUserState();
+	const { userStatuses, setUserStatuses } = SharedUserStatuses();
+	const { user, setUser } = SharedGlobalUser();
 	const { isConnected, setIsConnected } = SharedConnectionStatus();
+	const navigate = useNavigate();
 	const [status, setStatus] = useState<string>("");
 
 	async function logout(): Promise<void> {
-		const endpoint = "/auth/logout";
-		await fetchData(endpoint);
+		await fetchData("/auth/logout");
 		deleteCookie("AuthToken", undefined, undefined);
+		updateSocketHeaders(true);
 		setIsConnected(false);
 		navigate("/", { replace: true });
 	}
 
 	useEffect(() => {
-		async function getMyStatus(): Promise<void> {
-			const foundStatus: string = await fetchData(
-				`/user/userStatus/${user.id}`,
-			);
-			setStatus(foundStatus);
-		}
-		getMyStatus();
-	}, []);
+		setStatus(FindStatus(user.id, userStatuses));
+	}, [userStatuses]);
 
 	const userInfo = (): JSX.Element => {
 		return (
@@ -78,10 +78,7 @@ const MiniProfile = (): JSX.Element => {
 						<Text>{user.userName}</Text>
 						<Text>{user.firstName}</Text>
 						<Text>{user.lastName}</Text>
-						<Text
-							fontSize="10"
-							color={status === "Online" ? "#04aa6d" : "#ff3a3a"}
-						>
+						<Text fontSize="10" color={StatusColors.get(status)}>
 							{status ? status : "Offline"}
 						</Text>
 					</DivSpacing>

@@ -3,7 +3,7 @@ import { fetchData } from "../../../API/API";
 import { Message } from "../../../Types/Types";
 import socket from "../../../API/Socket";
 import { SharedChatState } from "../SideBar";
-import { SharedUserState } from "../../../App/UserStatus";
+import { SharedGlobalUser } from "../../../App/GlobalUser";
 import { outputChatName } from "../SideBar";
 import MinimizedChatBox from "./MinimizedChatBox";
 import OpenChatContainer from "./OpenChatContainer";
@@ -14,7 +14,7 @@ const ChatBox = (): JSX.Element => {
 
 	const [isMinimized, setMinimized] = useState<boolean>(false);
 	const { channel, setChannel } = SharedChatState();
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 
 	useEffect(() => {
 		if (!channel) return;

@@ -64,3 +64,8 @@ export interface ToSend {
 	endpoint: string;
 	data: object;
 }
+
+export interface UserStatus {
+	id: number;
+	status: string;
+}

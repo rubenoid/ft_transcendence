@@ -20,15 +20,20 @@ export class AchievementsService {
 		desc: string,
 		userRef: UserEntity,
 	): Promise<void> {
+		const user = await this.userService.getUserQueryOne({
+			where: { id: userRef.id },
+			relations: ["achievements"],
+		});
+
 		const toAdd = new AchievementsEntity();
 
 		toAdd.title = title;
 		toAdd.description = desc;
 		toAdd.date = Math.floor(Date.now() / 1000);
 
-		userRef.achievements.push(toAdd);
+		user.achievements.push(toAdd);
 
-		await this.userService.saveUser(userRef);
+		await this.userService.saveUser(user);
 	}
 
 	firstWin(user: UserEntity): void {

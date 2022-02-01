@@ -12,7 +12,7 @@ import {
 	MsgOwnerText,
 } from "./ChatBoxElements";
 import { SharedChatState } from "../SideBar";
-import { SharedUserState } from "../../../App/UserStatus";
+import { SharedGlobalUser } from "../../../App/GlobalUser";
 import { Message } from "../../../Types/Types";
 import socket from "../../../API/Socket";
 import { outputChatName } from "../SideBar";
@@ -40,7 +40,7 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 	const [msgToSend, setMsgToSend] = useState<string>("");
 	const { channel, setChannel } = SharedChatState();
 	const [password, setPassword] = useState<string>("");
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 	const [colors, setColors] = useState(
 		colormap({
 			colormap: "warm",

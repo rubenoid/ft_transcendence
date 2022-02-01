@@ -6,14 +6,14 @@ import { Button } from "../../Utils/Buttons/Button/Button";
 import { Channel, User } from "../../../Types/Types";
 import { SharedChatState, outputChatName } from "../SideBar";
 import { ChannelTitleContainer, ChannelCard } from "./ChannelsViewElements";
-import { SharedUserState } from "../../../App/UserStatus";
+import { SharedGlobalUser } from "../../../App/GlobalUser";
 import CreateGroupForm from "./ChannelCreate";
 
 const ChannelsView = (): JSX.Element => {
 	const [channels, setChannels] = useState<Channel[]>([]);
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const { channel, setChannel } = SharedChatState();
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 
 	async function getChannels(): Promise<Channel[]> {
 		let channels: Channel[] = await fetchData("/chat/public");
