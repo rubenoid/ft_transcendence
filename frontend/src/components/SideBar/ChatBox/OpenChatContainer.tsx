@@ -52,7 +52,12 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 
 	const history = props.msgHistory.map((msg: Message, key: number) => {
 		const foundUserIndex = channel.users.findIndex((x) => x.id == msg.senderId);
+		if (foundUserIndex == -1) {
+			console.log("didnt find user", msg);
+			return <div key={key}></div>;
+		}
 		const foundUser = channel.users[foundUserIndex];
+		console.log("FOUND->", foundUser);
 		return (
 			<div key={key}>
 				{msg.senderId != user.id ? (

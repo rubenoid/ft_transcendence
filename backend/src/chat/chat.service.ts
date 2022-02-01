@@ -162,6 +162,7 @@ export class ChatService {
 		toadd.name = name;
 		toadd.muted = [];
 		toadd.users = [];
+		toadd.messages = [];
 		const uniqueUsers = [...new Set(userIds)];
 		if (password != "") {
 			toadd.password = await this.protectorService.hash(password);
