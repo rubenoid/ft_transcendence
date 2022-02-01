@@ -9,13 +9,11 @@ import FriendsCard from "./FriendsCard";
 import { SharedUserFriends } from "../../../App/UserFriends";
 
 const FriendsView = (): JSX.Element => {
-	// const [friends, setFriends] = useState<User[]>([]);
 	const { friends, setFriends } = SharedUserFriends();
 
 	async function getFriends(): Promise<User[]> {
 		const friends: User[] = await fetchData("/friends/me");
 		setFriends(friends);
-		// status to be added
 		return friends;
 	}
 
