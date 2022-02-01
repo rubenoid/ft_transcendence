@@ -66,7 +66,6 @@ export interface ToSend {
 	data: object;
 }
 
-
 export interface UserStatus {
 	id: number;
 	status: string;
