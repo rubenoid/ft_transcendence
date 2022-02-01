@@ -24,6 +24,6 @@ export const SharedUserStatuses = (): {
 
 export function FindStatus(id: number, userStatuses: UserStatus[]): string {
 	const found: UserStatus = userStatuses.find((x) => x.id == id);
-	if (!found) return "Offlinee";
+	if (!found) return "";
 	return found.status;
 }

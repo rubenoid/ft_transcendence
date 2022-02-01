@@ -59,7 +59,7 @@ const MiniProfile = (): JSX.Element => {
 	}
 
 	useEffect(() => {
-		setStatus(FindStatus(user.id, userStatuses));
+		if (user) setStatus(FindStatus(user.id, userStatuses));
 	}, [userStatuses]);
 
 	const userInfo = (): JSX.Element => {
