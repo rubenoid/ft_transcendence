@@ -1,21 +1,54 @@
 import React, { useEffect } from "react";
 import { GlobalStyle } from "./App.styles";
-import { SharedUserState } from "./UserStatus";
+import { SharedGlobalUser } from "./GlobalUser";
 import { SharedConnectionStatus } from "./ConnectionStatus";
 import { Navigate } from "react-router-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { fetchData, updateHttpHeaders } from "../API/API";
 import { updateSocketHeaders } from "../API/Socket";
-import { User } from "../Types/Types";
+import { User, UserStatus } from "../Types/Types";
 import RegistrationForm from "../components/ConnectionForm/RegistrationForm";
 import AdminView from "../components/AdminView/AdminView";
 import DashBoard from "../components/DashBoard/DashBoard";
 import ConnectionForm from "../components/ConnectionForm/ConnectionForm";
 import TwoFACheck from "../components/ConnectionForm/twoFACheck";
+import socket from "../API/Socket";
+import { SharedUserStatuses } from "./UserStatuses";
 
 const App = (): JSX.Element => {
-	const { setUser } = SharedUserState();
+	const { setUser } = SharedGlobalUser();
 	const { isConnected, setIsConnected } = SharedConnectionStatus();
+	const { userStatuses, setUserStatuses } = SharedUserStatuses();
+
+	function updateStatus(data: UserStatus): void {
+		console.log(data, userStatuses);
+		const found = userStatuses.find((x) => x.id == data.id);
+		if (found) {
+			console.log("Found and updated a status");
+			found.status = data.status;
+			setUserStatuses([...userStatuses]);
+		} else {
+			console.log("Didnt find, still added");
+			setUserStatuses([...userStatuses, data]);
+		}
+	}
+
+	async function loadStatus(): Promise<void> {
+		if (userStatuses.length != 0) return;
+		const statuses: UserStatus[] = await fetchData("/user/getAllStatus");
+		console.log("statuses", statuses);
+		setUserStatuses([...statuses]);
+	}
+
+	useEffect(() => {
+		console.log("EFFECT");
+		loadStatus().then(() => {
+			socket.on("userUpdate", updateStatus);
+		});
+		return () => {
+			socket.off("userUpdate");
+		};
+	}, [updateStatus]);
 
 	useEffect(() => {
 		updateHttpHeaders();

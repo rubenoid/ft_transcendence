@@ -176,11 +176,14 @@ export class UserService {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
-		if (
-			(await this.getUserQueryOne({ where: { userName: user.userName } })) ==
-			undefined
-		)
+		try {
+			const userFound = await this.getUserQueryOne({
+				where: { userName: userName },
+			});
+		} catch {
 			user.userName = userName;
+		}
+
 		user.registered = true;
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
 
@@ -263,7 +266,7 @@ export class UserService {
 	}
 
 	async findUser(name: string): Promise<UserEntity[]> {
-		return await this.UserRepository.find({ userName: Like(`%${name}%`) });
+		return await this.UserRepository.find({ userName: Like(`${name}%`) });
 	}
 
 	// async insert(

@@ -9,12 +9,13 @@ const socketOptions = {
 
 const socket: Socket = io("http://localhost:5000", socketOptions);
 
-export const updateSocketHeaders = (): Promise<void> => {
+export const updateSocketHeaders = (force?: boolean): Promise<void> => {
 	// eslint-disable-next-line
 	const tmp: any = socket;
 	if (
-		socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") ||
-		socket.connected
+		!force &&
+		(socketOptions.extraHeaders.Authorization == Cookies.get("AuthToken") ||
+			socket.connected)
 	)
 		return;
 	tmp.disconnect();
