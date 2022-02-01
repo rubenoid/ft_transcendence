@@ -31,7 +31,7 @@ const FindFriends = (props: InputParams): JSX.Element => {
 		if (key == "Enter") {
 			setSimilarUsers([]);
 			setUserName("");
-			props.onEnter(similarUsers[0]);
+			if (similarUsers.length) props.onEnter(similarUsers[0]);
 		}
 	}
 
