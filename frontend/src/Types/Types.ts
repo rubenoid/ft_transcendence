@@ -76,4 +76,5 @@ export interface Achievement {
 	date: number;
 	title: string;
 	description: string;
+	icon: JSX.Element;
 }
