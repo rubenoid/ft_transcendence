@@ -15,6 +15,7 @@ import { Text } from "../../Utils/Text/Text";
 import { DivSpacing } from "./MiniProfileElements";
 import { IconContainer } from "../../Utils/IconContainer";
 import { AiOutlineLogout as LogoutIcon } from "react-icons/ai";
+import { Link } from "react-router-dom";
 import {
 	FindStatus,
 	SharedUserStatuses,
@@ -73,10 +74,14 @@ const MiniProfile = (): JSX.Element => {
 				<ProfileHeader>
 					<DivSpacing text-align="-webkit-center">
 						<ImgContainer>
-							<Img
-								src={"http://localhost:5000/" + user.avatar + "?" + newPicutre}
-								alt="profileImg"
-							/>
+							<Link to={"/"}>
+								<Img
+									src={
+										"http://localhost:5000/" + user.avatar + "?" + newPicutre
+									}
+									alt="profileImg"
+								/>
+							</Link>
 						</ImgContainer>
 					</DivSpacing>
 					<DivSpacing>

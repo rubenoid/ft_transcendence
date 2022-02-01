@@ -9,13 +9,15 @@ import ProfileExtended from "../ProfileExtended/ProfileExtended";
 import ChatSettings from "../ChatSettings/ChatSettings";
 import SideBar from "../SideBar/SideBar";
 import PongView from "../Pong/Pong";
+import WelcomeComponent from "../Welcome/Welcome";
 
 export const DashBoard = (): JSX.Element => {
 	return (
 		<DashBoardContainer>
 			<DashBoardContentWrapper>
 				<Routes>
-					<Route path="/" element={<p>Welcome!</p>} />
+					{/* <Route path="/" element={<p>Welcome!</p>} /> */}
+					<Route path="/" element={<WelcomeComponent />} />
 					<Route path="chat/:chatId" element={<ChatSettings />} />
 					<Route path="profile/:profileId" element={<ProfileExtended />} />
 					<Route path="game/:gameId" element={<PongView />} />
