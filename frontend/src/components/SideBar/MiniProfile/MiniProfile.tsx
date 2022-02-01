@@ -47,6 +47,7 @@ const MiniProfile = (): JSX.Element => {
 	const { userStatuses, setUserStatuses } = SharedUserStatuses();
 	const { user, setUser } = SharedGlobalUser();
 	const { isConnected, setIsConnected } = SharedConnectionStatus();
+	const [newPicutre, setNewPicture] = useState(new Date().getTime());
 	const navigate = useNavigate();
 	const [status, setStatus] = useState<string>("");
 
@@ -62,6 +63,10 @@ const MiniProfile = (): JSX.Element => {
 		if (user) setStatus(FindStatus(user.id, userStatuses));
 	}, [userStatuses]);
 
+	useEffect(() => {
+		setNewPicture(new Date().getTime());
+	}, [user]);
+
 	const userInfo = (): JSX.Element => {
 		return (
 			<>
@@ -69,7 +74,7 @@ const MiniProfile = (): JSX.Element => {
 					<DivSpacing text-align="-webkit-center">
 						<ImgContainer>
 							<Img
-								src={"http://localhost:5000/" + user.avatar}
+								src={"http://localhost:5000/" + user.avatar + "?" + newPicutre}
 								alt="profileImg"
 							/>
 						</ImgContainer>
