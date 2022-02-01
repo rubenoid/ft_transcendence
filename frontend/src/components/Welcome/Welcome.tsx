@@ -20,7 +20,7 @@ const WelcomeComponent = (): JSX.Element => {
 			<MainContentWrapper>
 				<Text>
 					This is the project done by four young ambitious software engineers.
-					It makes the end of their journey into Codam advanced. We hope you
+					It marks the end of their journey within Codam Core. We hope you
 					enjoy browsing this website as much as we enjoyed making it.
 				</Text>
 				<ParentDiv>
