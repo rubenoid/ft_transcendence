@@ -6,12 +6,11 @@ import {
 	StyledName,
 } from "./ChatSettingsElements";
 import { Link } from "react-router-dom";
-import { User } from "../../Types/Types";
-import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
+import { User, ChatData, ToSend } from "../../Types/Types";
 import { Text } from "../Utils/Text/Text";
 import { roleLevel } from "./ChatSettings";
-import { SharedUserState } from "../../App/UserStatus";
-import { ChatData, ToSend } from "../../Types/Types";
+import { SharedGlobalUser } from "../../App/GlobalUser";
+import EndpointButton from "../Utils/Buttons/EndpointButton/EndpointButton";
 
 interface InputParams {
 	chatData: ChatData;
@@ -21,7 +20,7 @@ interface InputParams {
 }
 
 const UserList = (props: InputParams): JSX.Element => {
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 
 	const listUsers = (): JSX.Element[] => {
 		return props.chatData.users.map((mapUser: User, key: number) => {

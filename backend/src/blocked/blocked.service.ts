@@ -2,12 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { FriendsService } from "../friends/friends.service";
 import { UserEntity } from "src/user/user.entity";
+import { AchievementsService } from "src/achievements/achievements.service";
 
 @Injectable()
 export class BlockedService {
 	constructor(
 		private readonly userService: UserService,
 		private readonly friendService: FriendsService,
+		private readonly achievementsService: AchievementsService,
 	) {}
 
 	async findUserWithBlocked(id: number): Promise<UserEntity> {
@@ -36,6 +38,7 @@ export class BlockedService {
 		await this.userService.saveUser(user);
 		await this.userService.saveUser(userToBlock);
 		this.friendService.remove(idMe, idToBlock);
+		this.achievementsService.addACHV(user);
 	}
 
 	async getAll(id: number): Promise<Array<UserEntity>> {

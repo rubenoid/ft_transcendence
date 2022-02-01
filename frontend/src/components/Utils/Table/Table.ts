@@ -32,6 +32,7 @@ export const AdminTableCell = styled.td`
 `;
 
 export const TableRow = styled.tr``;
+
 export const TableCell = styled.td`
 	padding: 10px;
 `;

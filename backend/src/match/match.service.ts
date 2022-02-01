@@ -8,6 +8,7 @@ import { GameService } from "src/game/game.service";
 import { RunningGame } from "src/game/runningGame.service";
 import { GuardedSocket } from "src/overloaded";
 import { RatingService } from "src/rating/rating";
+import { AchievementsService } from "src/achievements/achievements.service";
 
 const queuedSock: GuardedSocket[] = [];
 
@@ -20,6 +21,7 @@ export class MatchService {
 		private ratingService: RatingService,
 		@Inject(forwardRef(() => GameService))
 		private gameService: GameService,
+		private achievementsService: AchievementsService,
 	) {}
 
 	async removeFromQueue(socket: Socket): Promise<void> {
@@ -83,8 +85,12 @@ export class MatchService {
 		toAdd.players = [players[0], players[1]];
 		if (players[0].id == players[1].id) return;
 		this.MatchRepository.save(toAdd);
-		this.userService.saveUser(players[0]);
-		this.userService.saveUser(players[1]);
+		this.userService.saveUser(players[0]).then(() => {
+			this.achievementsService.addACHV(players[0]);
+		});
+		this.userService.saveUser(players[1]).then(() => {
+			this.achievementsService.addACHV(players[1]);
+		});
 	}
 
 	async getMatch(id: string): Promise<MatchEntity> {

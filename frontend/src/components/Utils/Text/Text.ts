@@ -3,6 +3,7 @@ import styled from "styled-components";
 type TextProps = {
 	color?: string;
 	fontSize?: string;
+	hoverColor?: string;
 };
 
 export const Text = styled.p<TextProps>`
@@ -16,6 +17,11 @@ export const Text = styled.p<TextProps>`
 
 	@media screen and (max-width: 480px) {
 		font-size: 18px;
+	}
+
+	:hover {
+		background-color: ${(props: TextProps) =>
+			props.hoverColor ? props.hoverColor : ""};
 	}
 `;
 

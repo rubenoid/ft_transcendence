@@ -72,6 +72,7 @@ export class UserService {
 		newUser.losses = 0;
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
+		newUser.achievements = [];
 		newUser.registered = false;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
@@ -98,6 +99,7 @@ export class UserService {
 		newUser.friends = [];
 		newUser.blockedBy = [];
 		newUser.blockedUsers = [];
+		newUser.achievements = [];
 		newUser.registered = registered;
 		newUser.twoFactorSecret = "";
 		newUser.twoFactorvalid = false;
@@ -131,6 +133,7 @@ export class UserService {
 				"blockedUsers",
 				"blockedBy",
 				"channels",
+				"achievements",
 			],
 		});
 		if (User.length === 0) throw "user not found";
@@ -139,6 +142,28 @@ export class UserService {
 
 	async deleteAll(): Promise<void> {
 		await this.UserRepository.remove(await this.getAll());
+	}
+
+	async insert(
+		firstName: string,
+		lastName: string,
+		userName: string,
+	): Promise<number> {
+		const newUser: UserEntity = new UserEntity();
+		newUser.id = currentId++;
+		newUser.firstName = firstName;
+		newUser.lastName = lastName;
+		newUser.userName = userName;
+		newUser.rating = 1500;
+		newUser.wins = 0;
+		newUser.losses = 0;
+		newUser.friends = [];
+		newUser.blockedBy = [];
+		newUser.blockedUsers = [];
+		newUser.achievements = [];
+		newUser.logedin = false; //?
+		await this.UserRepository.save(newUser);
+		return newUser.id;
 	}
 
 	async update(
@@ -151,11 +176,14 @@ export class UserService {
 		const user = await this.getUserQueryOne({ where: { id: id } });
 		user.firstName = firstName;
 		user.lastName = lastName;
-		if (
-			(await this.getUserQueryOne({ where: { userName: user.userName } })) ==
-			undefined
-		)
+		try {
+			const userFound = await this.getUserQueryOne({
+				where: { userName: userName },
+			});
+		} catch {
 			user.userName = userName;
+		}
+
 		user.registered = true;
 		if (twoFASecret && twoFASecret != "") user.twoFactorSecret = twoFASecret;
 
@@ -203,7 +231,6 @@ export class UserService {
 	async getAllStatus(): Promise<object[]> {
 		const tosend = [];
 		const users = await this.UserRepository.find();
-
 		for (let i = 0; i < users.length; i++) {
 			const e = users[i];
 			const foundStatus = userStatus.get(e.id);
@@ -239,7 +266,7 @@ export class UserService {
 	}
 
 	async findUser(name: string): Promise<UserEntity[]> {
-		return await this.UserRepository.find({ userName: Like(`%${name}%`) });
+		return await this.UserRepository.find({ userName: Like(`${name}%`) });
 	}
 
 	// async insert(

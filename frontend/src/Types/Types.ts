@@ -17,6 +17,7 @@ export type User = {
 	initial2FAEnabled: boolean;
 	matches: Match[];
 	status: string;
+	achievements: Achievement[];
 };
 
 export type Match = {
@@ -63,4 +64,16 @@ export interface MutedUser {
 export interface ToSend {
 	endpoint: string;
 	data: object;
+}
+
+export interface UserStatus {
+	id: number;
+	status: string;
+}
+
+export interface Achievement {
+	id: number;
+	date: number;
+	title: string;
+	description: string;
 }

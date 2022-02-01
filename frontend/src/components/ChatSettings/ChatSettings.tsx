@@ -13,7 +13,7 @@ import { Button } from "../Utils/Buttons/Button/Button";
 import { LinkButton } from "../Utils/Buttons/Button/LinkButton";
 import AddUserInput from "../AddUserInput/AddUserInput";
 import { UserWrapper, UserRowContainer } from "./ChatSettingsElements";
-import { SharedUserState } from "../../App/UserStatus";
+import { SharedGlobalUser } from "../../App/GlobalUser";
 import UserList from "./UserList";
 import PunishedList from "./PunishedList";
 import OwnerSettings from "./OwnerSettings";
@@ -42,7 +42,7 @@ const ChatSettings = (): JSX.Element => {
 	const { chatId } = useParams();
 	const [chatData, setChatData] = useState<ChatData>(undefined);
 	const [myRole, setMyRole] = useState<roleLevel>(0);
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 	const [endpoints, setEndpoints] = useState<ToSend[]>([]);
 	const [usersToAdd, setUsersToAdd] = useState<User[]>([]);
 	const [settingsForm, setSettingsForm] = useState<ChatSettingsForm>(undefined);

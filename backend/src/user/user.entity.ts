@@ -1,6 +1,14 @@
-import { Entity, Column, PrimaryColumn, JoinTable, ManyToMany } from "typeorm";
+import {
+	Entity,
+	Column,
+	PrimaryColumn,
+	JoinTable,
+	ManyToMany,
+	OneToMany,
+} from "typeorm";
 import { ChatEntity } from "src/chat/chat.entity";
 import { MatchEntity } from "src/match/match.entity";
+import { AchievementsEntity } from "src/achievements/achievements.entity";
 
 @Entity()
 export class UserEntity {
@@ -63,4 +71,9 @@ export class UserEntity {
 
 	@ManyToMany(() => ChatEntity, (chat) => chat.users) //, UserEntity => UserEntity.Friends)
 	channels: ChatEntity[];
+
+	@OneToMany(() => AchievementsEntity, (target) => target.target, {
+		cascade: true,
+	})
+	achievements: AchievementsEntity[];
 }

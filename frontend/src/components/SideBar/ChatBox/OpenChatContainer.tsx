@@ -12,14 +12,14 @@ import {
 	MsgOwnerText,
 } from "./ChatBoxElements";
 import { SharedChatState } from "../SideBar";
-import { SharedUserState } from "../../../App/UserStatus";
+import { SharedGlobalUser } from "../../../App/GlobalUser";
 import { Message } from "../../../Types/Types";
 import socket from "../../../API/Socket";
 import { outputChatName } from "../SideBar";
 import { postData } from "../../../API/API";
 import { Link } from "react-router-dom";
 import { AiOutlineSend as SendIcon } from "react-icons/ai";
-import { FaWindowMinimize } from "react-icons/fa";
+import { FaWindowMinimize as MinimizeIcon } from "react-icons/fa";
 import { Text } from "../../Utils/Text/Text";
 import { TextInput } from "../../Utils/TextInput/TextInput";
 import { Button } from "../../Utils/Buttons/Button/Button";
@@ -40,7 +40,7 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 	const [msgToSend, setMsgToSend] = useState<string>("");
 	const { channel, setChannel } = SharedChatState();
 	const [password, setPassword] = useState<string>("");
-	const { user, setUser } = SharedUserState();
+	const { user, setUser } = SharedGlobalUser();
 	const [colors, setColors] = useState(
 		colormap({
 			colormap: "warm",
@@ -99,10 +99,14 @@ const OpenChatContainer = (props: InputParams): JSX.Element => {
 					<TopText>{outputChatName(channel, user, channel.name)}</TopText>
 					<TopButtonsContainer>
 						<Link to={`/chat/${channel.id}`}>
-							<SettingsIcon />
+							<IconContainer hoverColor="white">
+								<SettingsIcon />
+							</IconContainer>
 						</Link>
 						<TopText onClick={() => props.setMinimized(true)}>
-							<FaWindowMinimize />
+							<IconContainer hoverColor="white">
+								<MinimizeIcon />
+							</IconContainer>
 						</TopText>
 						<IconContainer
 							color="#ff3a3a"

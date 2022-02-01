@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchData } from "../../../API/API";
 import { User } from "../../../Types/Types";
-import socket from "../../../API/Socket";
 import {
 	Table,
 	TableBody,
@@ -11,56 +9,37 @@ import {
 	TableRow,
 } from "../../Utils/Table/Table";
 import { Text } from "../../Utils/Text/Text";
-
-interface userStatus {
-	id: number;
-	status: string;
-}
+import { Link } from "react-router-dom";
+import { fetchData } from "../../../API/API";
+import {
+	SharedUserStatuses,
+	FindStatus,
+	StatusColors,
+} from "../../../App/UserStatuses";
 
 const UserView = (): JSX.Element => {
 	const [users, setUsers] = useState<User[]>([]);
-	const [usersStatus, setUsersStatus] = useState<userStatus[]>([]);
+	const { userStatuses, setUserStatuses } = SharedUserStatuses();
 
 	useEffect(() => {
 		async function getUsers(): Promise<void> {
 			const allUsers: User[] = await fetchData("/user/all");
-			const allStatus: userStatus[] = await fetchData("/user/getAllStatus");
 			setUsers(allUsers);
-			setUsersStatus(allStatus);
 		}
 		getUsers();
-	}, [users]);
-
-	function setUserStatus(user: User): void {
-		const found = usersStatus.find((currentUser) => currentUser.id == user.id);
-		if (found) {
-			user.status = found.status;
-		}
-	}
-
-	useEffect(() => {
-		socket.on("userUpdate", (data: userStatus) => {
-			const found = users.find((user) => user.id == data.id);
-			if (found) {
-				found.status = data.status;
-				getListUsers();
-			}
-		});
-
-		return () => {
-			socket.off("userUpdate");
-		};
-	}, []);
+	}, [userStatuses]);
 
 	function getListUsers(): JSX.Element[] {
 		const rows = [];
 		for (let i = 0; i < users.length; i++) {
 			const user = users[i];
-			setUserStatus(user);
+			const status = FindStatus(user.id, userStatuses);
 			rows.push(
 				<TableRow key={i}>
 					<TableCell>
-						<Text fontSize="10">{user.userName}</Text>
+						<Link to={`/profile/${user.id}`}>
+							<Text hoverColor="#3f3fff">{user.userName}</Text>
+						</Link>
 					</TableCell>
 					<TableCell>
 						<Text fontSize="10">{user.wins}</Text>
@@ -69,11 +48,8 @@ const UserView = (): JSX.Element => {
 						<Text fontSize="10">{user.losses}</Text>
 					</TableCell>
 					<TableCell>
-						<Text
-							fontSize="10"
-							color={user.status === "Online" ? "#04aa6d" : "#ff3a3a"}
-						>
-							{user.status ? user.status : "Offline"}
+						<Text fontSize="10" color={StatusColors.get(status)}>
+							{status}
 						</Text>
 					</TableCell>
 				</TableRow>,
